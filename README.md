@@ -77,7 +77,7 @@ Si deciden usar Tkinter, les dejamos un código mínimo para que puedan tener la
 
 Deben poder agregar argumentos por línea de comando a su programa. Como mínimo, deben poder pasar la IP y puerto con el que deben conectarse. Por ejemplo, el cliente debe poder ejecutarse de forma similar a la siguiente:
 
-python tpf_NOMBRE_DE_GRUPO_cliente.py --ip 127.0.0.1:8000
+    python tpf_NOMBRE_DE_GRUPO_cliente.py --ip 127.0.0.1:8000
 
 Siendo 127.0.0.1 la dirección IP y 8000 el puerto que se usarán para comunicarse con el servidor. Pueden agregar otros argumentos que consideren necesarios en todos los programas que creen.
 
@@ -87,7 +87,7 @@ El trabajo se realizará en grupos de hasta 4 personas. Los grupos deben estar i
 
 Se debe realizar la entrega de los archivos de Python generados a través de la tarea creada en el campus de la materia. En la misma (y en el calendario) se encuentra la fecha de entrega.
 
-Los archivos deben llamarse tpf_NOMBRE_DE_GRUPO_X.py. Por ejemplo, si el grupo llama ‘LINAR’, los archivos que creen deberán tener el nombre: tpf_linar_{nombre_representativo}.py
+    Los archivos deben llamarse tpf_NOMBRE_DE_GRUPO_X.py. Por ejemplo, si el grupo llama ‘LINAR’, los archivos que creen deberán tener el nombre: tpf_linar_{nombre_representativo}.py
 
 Se recuerda a los estudiantes que las entregas deben ser un producto original de cada estudiante, por lo que se les pide revisar la sección 6 del programa de la materia y el Código de Honor y Ética.
 
