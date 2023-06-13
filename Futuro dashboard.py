@@ -39,11 +39,9 @@ while not c.is_over():
             
             column += 1
     
-    c.next_iteration('Los cracks',{'Pipe':{'direction':10,'speed':20}})
-    c.next_iteration('Los cracks',{'Santi':{'direction':10,'speed':20}})
-    c.next_iteration('Los lentos',{'Gian':{'direction':10,'speed':20}})
-    c.next_iteration('Los lentos',{'Joaco':{'direction':10,'speed':20}})
     
+    while(not c.next_iteration('Los lentos', directives2)):
+        continue
     # Actualizar los datos cada segundo
     root.update()
     
