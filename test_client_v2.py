@@ -1,6 +1,5 @@
 from communication.client.client import MountainClient
 import tkinter as tk
-from start_moving import start
 import time
 
 c = MountainClient()
