@@ -25,8 +25,10 @@ def __main__():
     c = MountainClient()
     c.add_team('Los cracks', ['Santi'])
     c.finish_registration()
-    
-    maximos = Lagrange_walk.lagrange_walk('Los cracks','Santi',0,10)
+    rayos_max=10
+    maximos = Lagrange_walk.lagrange_walk('Los cracks','Santi',0,rayos_max)
+    angulo = maximos[2]*(math.pi/4)/rayos_max
+    coordenadas = [math.asin(maximos[0]),math.sqrt((maximos[0])**2-math.asin(maximos[0])**2)]
     
     
     while not c.is_over():
