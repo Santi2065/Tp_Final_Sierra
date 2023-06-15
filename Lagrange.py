@@ -1,4 +1,5 @@
 from scipy.interpolate import lagrange
+import numpy as np
 RADIO_MONTANA = 23000
 
 def estimate_max_height(points):
@@ -11,7 +12,8 @@ def estimate_max_height(points):
     # Encontrar el valor máximo de z en el rango de x
     x_new = np.linspace(-RADIO_MONTANA, RADIO_MONTANA, num=1000)
     z_new = poly(x_new)
+    index_max = np.argmax(z_new)
+    x_max = x_new[index_max]
     max_height = max(z_new)
-    index = z_new.index(max_height)
-    coordenadas = (x_new[index], max_height, index)
+    coordenadas = [x_max, max_height]
     return coordenadas
