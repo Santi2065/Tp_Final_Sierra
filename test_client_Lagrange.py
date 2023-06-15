@@ -69,7 +69,7 @@ def __main__():
     direction = -0.78539
     print(direction)
     
-    while dic["Los cracks"]["Santi"]["x"] != 0 and dic[team]["Santi"]["y"] != 0:
+    while not -10 < dic["Los cracks"]["Santi"]["x"] < 10 and not -10 < dic[team]["Santi"]["y"] < 10:
         while (not c.next_iteration(team,{"Santi":{'direction':direction,'speed':MAX_SPEED}})):
                 continue
         dic = c.get_data()
