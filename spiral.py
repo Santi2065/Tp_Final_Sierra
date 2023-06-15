@@ -1,41 +1,51 @@
 from communication.client.client import MountainClient
+from test_hiker import Hiker
 import math
 #TODO: hacer que vayan todos al centro (0,0)
 
-def spiral():
+def register(names: list[str]):
+    print('Conectando a servidor...')
     c = MountainClient()
-    #team = ['Santi', 'Pipe', 'Gian', 'Joaco']
-    #team = ['Santi']
-    c.add_team('Los cracks', ['Santi'])
+    c.add_team('Los cracks', names)
     c.finish_registration()
-    teams = c.get_data()
+    return c
 
-    separation = 100 #* len(team)
-    b = separation / (2 * math.pi)
-    #offsets = [(2*math.pi/len(team)) * i for i in range(team)]
+def spiral():
+    names = ['Santi']
+    c = register(names)
+
     offsets = [0]
-    directives = {}
+    #offsets = [(2*math.pi/len(names)) * i for i in range(names)]
 
-    for climber, offset in zip(teams['Los cracks'], offsets):
-        directives[climber] = {'direction': offset, 'speed': 50}
+    directives = {}
+    for hiker, offset in zip(names, offsets):
+        directives[hiker] = {'direction': offset, 'speed': 50}
+    hikers = [Hiker(directives[name], name) for name in names]
+
+    separation = 100 * len(names)
+    b = separation / (2 * math.pi)
+    
     c.next_iteration('Los cracks', directives)
 
     while True:
-        for team in teams:
-            for climber, offset in zip(teams[team], offsets):
-                x, y = teams[team][climber]['x'], teams[team][climber]['y']
-                current_loc = (x, y)
-                current_theta = get_theta(current_loc)
+        for hiker, offset in zip(hikers, offsets):
+            if hiker.cima():
+                print(f'{hiker.nombre}: Estoy en cima')
+                break
+            x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
+            current_loc = (x, y)
+            current_theta = get_theta(current_loc)
 
-                next_theta = current_theta + (50 / separation)
-                next_radius = b * (next_theta - offset)
-                next_loc = get_point(next_radius, next_theta)
+            next_theta = current_theta + (50 / separation)
+            next_radius = b * (next_theta - offset)
+            next_loc = get_point(next_radius, next_theta)
 
-                direction = get_direction(current_loc, next_loc)
-                directives[climber] = {'direction': direction, 'speed': 50}
+            direction = get_direction(current_loc, next_loc)
+            hiker.change_direction(direction)
+            directives[hiker.nombre] = hiker.ordenes
 
-            while not c.next_iteration(team, directives):
-                continue
+        while not c.next_iteration('Los cracks', directives):
+            continue
         if c.is_over():
             break
 
@@ -66,14 +76,33 @@ def get_direction(current_loc: tuple, next_loc: tuple) -> float:
 def get_theta(loc: tuple | list) -> float:
     return math.atan(loc[1] / loc[0])
 
-def get_point(radius: float, theta: float) -> tuple:
+def get_point(radius: float, theta: float) -> tuple[float, float]:
     x = radius * math.cos(theta)
     y = radius * math.sin(theta)
     return (x, y)
 
-
 spiral()
 '''
+
+hikers = []
+hikers.append(Hiker(directives['Gian'],'Gian'))
+hikers.append(Hiker(directives['Gian2'],'Gian2'))
+hikers.append(Hiker(directives['Gian3'],'Gian3'))
+hikers.append(Hiker(directives['Gian4'],'Gian4'))
+
+while not c.is_over():
+
+    print(hikers[2].actual_pos())
+    c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
+    if hikers[0].almost_out() is True:
+        hikers[0].random()
+    if hikers[1].almost_out() is True:
+        hikers[1].random()
+    if hikers[2].almost_out() is True:
+        hikers[2].random()
+    if hikers[3].almost_out() is True:
+        hikers[3].random()
+
 directives = {
         'Pipe':{'direction':10,'speed':20},
         'Santi':{'direction':10,'speed':20},
