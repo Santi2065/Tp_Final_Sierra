@@ -1,22 +1,20 @@
-from communication.client.client import MountainClient
 import random
 import math
 VELOCIDAD_MAX = 50
 
-c = MountainClient()
-
 class Hiker:
     
-    def __init__(self, nombre:str, ordenes: list = [0,VELOCIDAD_MAX]):
+    def __init__(self, nombre:str, c, ordenes: list = [0,VELOCIDAD_MAX]):
 
         self.nombre = nombre # Hacer esto automaticamente (que no haya que pasarlo como arg de clase)
         self.ordenes = {'direction':ordenes[0],'speed':ordenes[1]} # Es una lista así lo puedo modificar en el marco global. Lo uso como diccionario.
         self.radio_montania = 23000
+        self.comms = c
         self.team = 'Los cracks' # Hacer esto automaticamente
 
     def actual_pos(self):
         # Returns actual pos (x,y,z) of the hiker
-        dic = c.get_data()
+        dic = self.comms.get_data()
         x =  dic[self.team][self.nombre]['x'] # x actual
         y =  dic[self.team][self.nombre]['y'] # y actual
         z = dic[self.team][self.nombre]['z'] # z actual
@@ -78,72 +76,10 @@ class Hiker:
     
     def cima(self) -> bool:
         # Devuelve si esta en la cima o no
-        return c.get_data()[self.team][self.nombre]['cima']
-    
-class Team:
-    def __init__(self,nombre,hikers) -> None:
-        self.nombre = nombre
-        self.hikers = hikers
-
-    def face_out(self):
-        direction=0
-        for hiker in self.hikers:
-            hiker.change_direction(direction)
-            direction += math.pi/2
-
-    def move_all(self,hikers) -> None:
-        c.next_iteration(self.nombre, {h.nombre: h.ordenes for h in hikers})
-        for hiker in hikers:
-            if hiker.almost_out():
-                hiker.random()
+        return self.comms.get_data()[self.team][self.nombre]['cima']
 
 
 def direction(hiker: list, objective: list) -> float:
     dx = objective[0] - hiker[0]
     dy = objective[1] - hiker [1]
     return math.atan2(dy,dx)
-
-def go_center(team):
-    #apuntan al centro
-    for hiker in team.hikers:
-        hiker.go_to([0,0])
-
-    #se mueven hasta que llegan
-    llegada = {x : 0 for x in team.hikers}
-    no_llegaron = True
-    while no_llegaron:
-        team.move_all(team.hikers)
-        info = c.get_data()
-        for hiker in team.hikers:
-            x =  info[team.nombre][hiker.nombre]['x']
-            y =  info[team.nombre][hiker.nombre]['y']
-            if -1 < x < 1 and -1 < y < 1:
-                llegada[hiker] = 1
-                hiker.stay_still()
-        no_llegaron = False
-        for x in llegada:
-            if x == 0:
-                no_llegaron = True
-    print("En el centro")
-            
-
-def start_search():
-    pass
-
-
-
-def main():
-    
-    hikers_names = [Hiker('Gian').nombre,Hiker('Pipe').nombre,Hiker('Santi').nombre,Hiker('Joaco').nombre]
-    hikers = [Hiker('Gian'),Hiker('Pipe'),Hiker('Santi'),Hiker('Joaco')]
-    team = Team('Los cracks',hikers)
-    
-    c.add_team(team.nombre, hikers_names)
-    c.finish_registration()
-
-    go_center(team)
-
-    
-if __name__ == "__main__":
-    main()
-
