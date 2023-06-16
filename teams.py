@@ -1,4 +1,5 @@
 from HIKERS import Hiker
+import math
 
 class Team:
     def __init__(self,nombre,hikers,c) -> None:
