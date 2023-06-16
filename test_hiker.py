@@ -1,18 +1,17 @@
 from communication.client.client import MountainClient
 import random
 import math
+import time
 
 c = MountainClient()
 
 class Hiker:
-    
-    def __init__(self, nombre:str, ordenes: list = {'direction':0,'speed':50}):
-
+    def __init__(self,ordenes: dict[str, int], nombre: str):
         self.nombre = nombre # Hacer esto automaticamente (que no haya que pasarlo como arg de clase)
-        self.ordenes = ordenes # Es una lista así lo puedo modificar en el marco global. Lo uso como diccionario.
+        self.ordenes = ordenes # Es una lista así lo puedo modiciar en el marco global. Lo uso como diccionario.
         self.radio_montania = 23000
         self.team = 'Los cracks' # Hacer esto automaticamente
-    
+
     def almost_out(self)-> bool:
         """Devuelve verdadero si el escalador se ira del mapa en la siguiente iteracion. Falso en caso contrario."""
         dic = c.get_data()
@@ -44,7 +43,7 @@ class Hiker:
         # El escalador se dirige hacia la nueva direccion (radianes)
         self.ordenes['direction'] = new_direction #Provisional, para hacer pruebas.
 
-    def change_speed(self, new_speed: float|int):
+    def change_speed(self, new_speed:float|int):
         # Cambia la velocidad en la que el escalador se mueve (max 50)
         self.ordenes['speed'] = new_speed
 
@@ -77,39 +76,12 @@ class Hiker:
     def actual_pos(self):
         # Returns actual pos (x,y,z) of the hiker
         dic = c.get_data()
-        x =  dic[self.team][self.nombre]['x'] # x actual
-        y =  dic[self.team][self.nombre]['y'] # y actual
+        x = dic[self.team][self.nombre]['x'] # x actual
+        y = dic[self.team][self.nombre]['y'] # y actual
         z = dic[self.team][self.nombre]['z'] # z actual
 
-        return (x,y,z)
+        return (x, y, z)
     
     def cima(self) -> bool:
         # Devuelve si esta en la cima o no
         return c.get_data()[self.team][self.nombre]['cima']
-
-
-def main():
-    
-    team = 'Los cracks'
-    hikers_names = [Hiker('Gian').nombre,Hiker('Pipe').nombre,Hiker('Santi').nombre,Hiker('Joaco').nombre]
-    hikers = [Hiker('Gian'),Hiker('Pipe'),Hiker('Santi'),Hiker('Joaco')]
-    
-    c.add_team(team, hikers_names)
-    c.finish_registration()
-
-    initial_directives = {hikers[0]:{'direction':0,'speed':50}, hikers[1]:{'direction':10,'speed':50}, hikers[2]:{'direction':5,'speed':50}, hikers[3]:{'direction':3,'speed':50}}
-
-    for hiker in hikers:
-        hiker.ordenes = initial_directives[hiker]
-
-    while not c.is_over():
-
-        print(hikers[2].actual_pos())
-        c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
-        for hiker in hikers:
-            if hiker.almost_out():
-                hiker.random()
-    
-if __name__ == "__main__":
-    main()
-
