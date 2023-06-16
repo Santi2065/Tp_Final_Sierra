@@ -14,10 +14,11 @@ def spiral():
     names = ['Santi']
     c = register(names)
 
-    offsets = [0]
-    #offsets = [(2*math.pi/len(names)) * i for i in range(names)]
 
     directives = {}
+
+    offsets = [0]
+    #offsets = [(2*math.pi/len(names)) * i for i in range(names)]
     for hiker, offset in zip(names, offsets):
         directives[hiker] = {'direction': offset, 'speed': 50}
     hikers = [Hiker(directives[name], name) for name in names]
@@ -29,10 +30,11 @@ def spiral():
 
     while True:
         for hiker, offset in zip(hikers, offsets):
-            if hiker.cima():
+            if hiker.in_summit():
                 print(f'{hiker.nombre}: Estoy en cima')
                 break
             x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
+            print(f'{hiker.nombre}: x={x}, y={y}')
             current_loc = (x, y)
             current_theta = get_theta(current_loc)
 
@@ -49,14 +51,14 @@ def spiral():
         if c.is_over():
             break
 
+def difference(p1: tuple|list, p2: tuple|list) -> tuple:
+    return (p1[0] - p2[0], p1[1] - p2[1])
+def dot_product(v1: tuple|list, v2: tuple|list) -> float:
+    return v1[0] * v2[0] + v1[1] * v2[1]
+def magnitude(v: tuple) -> float:
+    return math.sqrt(math.pow(v[0], 2) + math.pow(v[1], 2))
 
 def get_direction(current_loc: tuple, next_loc: tuple) -> float:
-    def difference(p1: tuple, p2: tuple) -> tuple:
-        return (p1[0] - p2[0], p1[1] - p2[1])
-    def dot_product(v1: tuple, v2: tuple) -> float:
-        return v1[0] * v2[0] + v1[1] * v2[1]
-    def magnitude(v: tuple) -> float:
-        return math.sqrt(v[0]**2 + v[1]**2)
     x1, x2 = current_loc[0], next_loc[0]
     y1, y2 = current_loc[1], next_loc[1]
     aux = (x2, y1)

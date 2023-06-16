@@ -47,7 +47,7 @@ class Hiker:
         # Cambia la velocidad en la que el escalador se mueve (max 50)
         self.ordenes['speed'] = new_speed
 
-    def go_to(self, coordenadas:tuple) -> float|int:
+    def go_to(self, coordenadas: tuple) -> float|int:
         # Devuelve el angulo nesceario para ir desde posicion actual --> coordenadas ingresadas (x,y)
         dic = c.get_data() # Esto quiza pasarlo a un diccionario general
         x =  dic[self.team][self.nombre]['x'] # pos actual
