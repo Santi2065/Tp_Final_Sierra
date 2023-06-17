@@ -1,61 +1,104 @@
 from communication.client.client import MountainClient
 from test_hiker import Hiker
+import time
 import math
-#TODO: hacer que vayan todos al centro (0,0)
 
 def register(names: list[str]):
     print('Conectando a servidor...')
+    #c = MountainClient("10.42.0.1", 8888)
     c = MountainClient()
     c.add_team('Los cracks', names)
     c.finish_registration()
     return c
 
+def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float]) -> None:
+    # Makes all hikers to go to the desired point
+    directives = {}
+    close_to_point = {hiker.nombre: magnitude(difference(hiker.actual_pos(), point)) < 30 for hiker in hikers}
+
+    while False in close_to_point.values():
+        for hiker in hikers:
+            print(f'{hiker.nombre}: x={hiker.actual_pos()[0]}, y={hiker.actual_pos()[1]} yendo a {point}')
+            if close_to_point[hiker.nombre]:
+                hiker.change_direction(0)
+                hiker.change_speed(0)
+                directives[hiker.nombre] = hiker.ordenes
+                continue
+
+            distance = magnitude(difference(hiker.actual_pos(), point))
+            hiker.change_direction(hiker.go_to((0, 0)))
+            if distance < 50:
+                hiker.change_speed(distance)
+            directives[hiker.nombre] = hiker.ordenes
+            close_to_point[hiker.nombre] = distance < 30
+
+        c.next_iteration('Los cracks', directives)
+    return True
+
 def spiral():
     names = ['Santi']
     c = register(names)
 
-
-    directives = {}
-
-    offsets = [0]
-    #offsets = [(2*math.pi/len(names)) * i for i in range(names)]
-    for hiker, offset in zip(names, offsets):
-        directives[hiker] = {'direction': offset, 'speed': 50}
+    directives = {name: {'speed': 50, 'direction': 0} for name in names}
     hikers = [Hiker(directives[name], name) for name in names]
+    all_go_to_point(hikers, c, (0, 0))
+
+    print('llegue')
+
+    # Angulos iniciales para que queden separados uniformemente
+    offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
+
+    for hiker, offset in zip(hikers, offsets):
+        directives[hiker.nombre] = {'speed': 50, 'direction': offset}
+    
+    print(directives)
+    c.next_iteration('Los cracks', directives)
+    #time.sleep(.04)
+    '''while not c.next_iteration('Los cracks', directives):
+        continue'''
 
     separation = 100 * len(names)
     b = separation / (2 * math.pi)
-    
-    c.next_iteration('Los cracks', directives)
+    hikers_thetas = {hiker.nombre: offset for hiker, offset in zip(hikers, offsets)}
+    found_summit = False
 
-    while True:
+    while not found_summit:
         for hiker, offset in zip(hikers, offsets):
+            hiker.change_speed(50)
+            x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
+            current_loc = (x, y)
+            current_theta = hikers_thetas[hiker.nombre]
+
             if hiker.in_summit():
                 print(f'{hiker.nombre}: Estoy en cima')
+                summit_loc, found_summit = current_loc, True
                 break
-            x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
-            print(f'{hiker.nombre}: x={x}, y={y}')
-            current_loc = (x, y)
-            current_theta = get_theta(current_loc)
 
-            next_theta = current_theta + (50 / separation)
+            next_theta = estimate_theta2(current_theta, b)        
+            hikers_thetas[hiker.nombre] = next_theta
             next_radius = b * (next_theta - offset)
             next_loc = get_point(next_radius, next_theta)
 
             direction = get_direction(current_loc, next_loc)
+            #direction = hiker.go_to(next_loc)
             hiker.change_direction(direction)
             directives[hiker.nombre] = hiker.ordenes
 
-        while not c.next_iteration('Los cracks', directives):
-            continue
+            print(f'{hiker.nombre}: x={x:02f} y={y:02f} θ1={current_theta} θ2={next_theta} Δθ{next_theta-current_theta} dir:{directives[hiker.nombre]}')
+
+        if found_summit:
+            all_go_to_point(summit_loc, c, summit_loc)
+        c.next_iteration('Los cracks', directives)
+        #time.sleep(.04)
         if c.is_over():
             break
 
 def difference(p1: tuple|list, p2: tuple|list) -> tuple:
+    # returns the x y coords of the vector going from p2 to p1, ignores z value
     return (p1[0] - p2[0], p1[1] - p2[1])
 def dot_product(v1: tuple|list, v2: tuple|list) -> float:
     return v1[0] * v2[0] + v1[1] * v2[1]
-def magnitude(v: tuple) -> float:
+def magnitude(v: tuple[float, float]) -> float:
     return math.sqrt(math.pow(v[0], 2) + math.pow(v[1], 2))
 
 def get_direction(current_loc: tuple, next_loc: tuple) -> float:
@@ -76,14 +119,57 @@ def get_direction(current_loc: tuple, next_loc: tuple) -> float:
             return -theta
 
 def get_theta(loc: tuple | list) -> float:
-    return math.atan(loc[1] / loc[0])
+    if loc[0] == 0:
+        return math.pi/2 if loc[1] > 0 else (3*math.pi)/2
+    return math.atan2(loc[1], loc[0])
 
 def get_point(radius: float, theta: float) -> tuple[float, float]:
     x = radius * math.cos(theta)
     y = radius * math.sin(theta)
     return (x, y)
 
-spiral()
+def integral(theta: float, b: float):
+    return (b * (math.log(abs(math.sqrt(theta**2 + 1) + theta)) + theta*math.sqrt(theta**2 + 1)))/2
+
+def estimate_theta2(theta1: float, b: float) -> float:
+    theta2 = theta1
+    change = 0.1
+    lower, higher = 49, 51 
+    distance1 = 0
+
+    if higher > integral(theta2 + change, b) - integral(theta1, b) > lower:
+        return theta2 + change
+
+    while not (higher > distance1 > lower):
+        distance2 = integral(theta2 + change, b) - integral(theta1, b)
+        #print(f'distance1: {distance1}, distance2: {distance2}, theta2:{theta2}, change:{change}')
+        if distance2 < lower or higher > distance2 > lower:
+            distance1 = distance2
+            theta2 += change
+        elif distance2 > higher:
+            change /= 2
+            #print(f'cambie change: {change}')
+
+    return theta2
+
+
+def test_gets():
+    def test_get_point():
+        print(f'get_point(10, pi/2):  {get_point(10, math.pi/2)}')
+        print(f'get_point(10, pi):    {get_point(10, math.pi)}')
+        print(f'get_point(10, 3pi/2): {get_point(10, 3*math.pi/2)}')
+        print(f'get_point(10, 2pi):   {get_point(10, 2*math.pi)}')
+        print(f'get_point(10, 5pi/2): {get_point(10, 5*math.pi/2)}')
+        print(f'get_point(10, -pi/2): {get_point(10, -math.pi/2)}')
+        print(f'get_point(10, -pi): {get_point(10, -math.pi)}')
+        print(f'get_point(10, 0): {get_point(10, 0)}')
+    test_get_point()
+
+
+#test_gets()
+if __name__ == '__main__':
+    #print(estimate_theta2(61.54999999999904, 100/(2*math.pi)))
+    spiral()
 '''
 
 hikers = []

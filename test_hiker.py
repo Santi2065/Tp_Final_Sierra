@@ -3,6 +3,7 @@ import random
 import math
 import time
 
+#c = MountainClient("10.42.0.1", 8888)
 c = MountainClient()
 
 class Hiker:
