@@ -5,26 +5,9 @@ CANTIDAD_DE_PUNTOS = 50
 MAX_SPEED = 50
 
 def ang(hiker: list, flag: list):
-    v1 = []
-    v2 = []
-    aux = []
-    if hiker[1] > flag[1]:
-        aux.append(flag[0])
-        aux.append(hiker[1])
-        for i in range(2):
-            v1 += [flag[i] - hiker[i]]
-            v2 += [aux[i] - hiker[i]]
-    else:
-        aux.append(hiker[0])
-        aux.append(flag[1])
-        for i in range(2):
-            v1 += [hiker[i] - flag[i]]
-            v2 += [aux[i] - flag[i]]
-    
-    product = v1[0] * v2[0] + v1[1] * v2[1]
-    norm1 = math.sqrt((v1[0]**2)+(v1[1]**2))
-    norm2 = math.sqrt((v2[0]**2)+(v2[1]**2))
-    return math.acos(product / (norm1 * norm2))
+    dx = flag[0] - hiker[0]
+    dy = flag[1] - hiker [1]
+    return math.atan2(dy,dx)
 
 def go_to_goal(coords, team, hiker, c):
     dic = c.get_data()
