@@ -1,5 +1,6 @@
 from communication.client.client import MountainClient
-from test_hiker import Hiker
+from test_hiker import Hiker, Grafico_2d_equipo
+from essential_functions import magnitude, dot_product, difference
 import time
 import math
 
@@ -11,14 +12,16 @@ def register(names: list[str]):
     c.finish_registration()
     return c
 
-def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float]) -> None:
+def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo) -> None:
     # Makes all hikers to go to the desired point
     directives = {}
     close_to_point = {hiker.nombre: magnitude(difference(hiker.actual_pos(), point)) < 30 for hiker in hikers}
-
+    i = 0
     while False in close_to_point.values():
         for hiker in hikers:
+
             print(f'{hiker.nombre}: x={hiker.actual_pos()[0]}, y={hiker.actual_pos()[1]} yendo a {point}')
+
             if close_to_point[hiker.nombre]:
                 hiker.change_direction(0)
                 hiker.change_speed(0)
@@ -27,12 +30,12 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
 
             distance = magnitude(difference(hiker.actual_pos(), point))
             hiker.change_direction(hiker.go_to(point))
-            if distance < 50:
-                hiker.change_speed(distance)
+            hiker.change_speed(hiker.step_to_point(point))
             directives[hiker.nombre] = hiker.ordenes
             close_to_point[hiker.nombre] = distance < 30 or hiker.in_summit()
 
         c.next_iteration('Los cracks', directives)
+        i += 1
     return True
 
 def spiral():
@@ -41,7 +44,10 @@ def spiral():
 
     directives = {name: {'speed': 50, 'direction': 0} for name in names}
     hikers = [Hiker(directives[name], name) for name in names]
-    all_go_to_point(hikers, c, (0, 0))
+    graf = Grafico_2d_equipo(hikers)
+
+    # Se dirige al origen
+    all_go_to_point(hikers, c, (0, 0), graf)
 
     print('llegue')
 
@@ -49,9 +55,10 @@ def spiral():
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
 
     for hiker, offset in zip(hikers, offsets):
-        directives[hiker.nombre] = {'speed': 50, 'direction': offset}
+        directives[hiker.nombre] = {'speed': 15, 'direction': offset}
     
     print(directives)
+    graf.coordenadas()
     c.next_iteration('Los cracks', directives)
     #time.sleep(.04)'
 
@@ -60,9 +67,14 @@ def spiral():
     hikers_thetas = {hiker.nombre: offset for hiker, offset in zip(hikers, offsets)}
     found_summit = False
 
+    i = 0
+    # Comienza el proceso de ir en espiral
     while not found_summit:
+        if i % 1 == 0:
+            graf.coordenadas()
+
         for hiker, offset in zip(hikers, offsets):
-            hiker.change_speed(50)
+            #hiker.change_speed(50)
             x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
             current_loc = (x, y)
             current_theta = hikers_thetas[hiker.nombre]
@@ -79,26 +91,22 @@ def spiral():
 
             direction = get_direction(current_loc, next_loc)
             #direction = hiker.go_to(next_loc)
+            hiker.change_speed(hiker.step_to_point(next_loc))
             hiker.change_direction(direction)
             directives[hiker.nombre] = hiker.ordenes
 
-            print(f'{hiker.nombre}: x={x:9.2f} y={y:9.2f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ{next_theta-current_theta:.18f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:.3f}')
+            print(f'{hiker.nombre}: x={x:9.2f} y={y:9.2f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ{next_theta-current_theta:.18f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:4.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
         if found_summit:
             all_go_to_point(hikers, c, summit_loc)
+        i += 1
         c.next_iteration('Los cracks', directives)
+        time.sleep(0.1)
         #time.sleep(.04)
         if c.is_over():
             break
 
 
-def difference(p1: tuple|list, p2: tuple|list) -> tuple:
-    # returns the x y coords of the vector going from p2 to p1, ignores z value
-    return (p1[0] - p2[0], p1[1] - p2[1])
-def dot_product(v1: tuple|list, v2: tuple|list) -> float:
-    return v1[0] * v2[0] + v1[1] * v2[1]
-def magnitude(v: tuple[float, float]) -> float:
-    return math.sqrt(math.pow(v[0], 2) + math.pow(v[1], 2))
 
 def get_direction(current_loc: tuple, next_loc: tuple) -> float:
     x1, x2 = current_loc[0], next_loc[0]
@@ -133,7 +141,7 @@ def integral(theta: float, b: float):
 def estimate_theta2(theta1: float, b: float) -> float:
     theta2 = theta1
     change = 0.1
-    lower, higher = 49, 51
+    lower, higher = 49.5, 50.5
     distance1 = 0
 
     if higher > integral(theta2 + change, b) - integral(theta1, b) > lower:
