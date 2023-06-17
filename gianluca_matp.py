@@ -161,7 +161,6 @@ class Grafico_todos:
         plt.pause(0.5)
         plt.cla()
 
-        print(lista)
         lista.clear()
         jugadores_ordenados.clear()
         altura_ordenados.clear()
@@ -209,10 +208,5 @@ while not c.is_over():
         hikers[3].random()
 
 
-
-
-
-
- 
-    time.sleep(0.2) # Para que no colapse el server
+    time.sleep(0.5) # Para que no colapse el server
 
