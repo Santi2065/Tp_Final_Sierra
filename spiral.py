@@ -19,8 +19,9 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
     i = 0
     while False in close_to_point.values():
         for hiker in hikers:
-
-            print(f'{hiker.nombre}: x={hiker.actual_pos()[0]}, y={hiker.actual_pos()[1]} yendo a {point}')
+            if i % 50 == 0 and i >= 100000:
+                graf.coordenadas()
+            print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
 
             if close_to_point[hiker.nombre]:
                 hiker.change_direction(0)
@@ -56,9 +57,9 @@ def spiral():
 
     for hiker, offset in zip(hikers, offsets):
         directives[hiker.nombre] = {'speed': 15, 'direction': offset}
-    
-    print(directives)
+
     graf.coordenadas()
+
     c.next_iteration('Los cracks', directives)
     #time.sleep(.04)'
 
@@ -70,11 +71,12 @@ def spiral():
     i = 0
     # Comienza el proceso de ir en espiral
     while not found_summit:
-        if i % 1 == 0:
+        #  cada cuanto     desde donde
+        #      v                v
+        if i % 100 == 0 and i >= 100000:
             graf.coordenadas()
 
         for hiker, offset in zip(hikers, offsets):
-            #hiker.change_speed(50)
             x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
             current_loc = (x, y)
             current_theta = hikers_thetas[hiker.nombre]
@@ -95,14 +97,13 @@ def spiral():
             hiker.change_direction(direction)
             directives[hiker.nombre] = hiker.ordenes
 
-            print(f'{hiker.nombre}: x={x:9.2f} y={y:9.2f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ{next_theta-current_theta:.18f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:4.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+            print(f'{hiker.nombre}: x={x:8.1f} y={y:8.2f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:.18f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
         if found_summit:
-            all_go_to_point(hikers, c, summit_loc)
+            all_go_to_point(hikers, c, summit_loc, graf)
         i += 1
         c.next_iteration('Los cracks', directives)
-        time.sleep(0.1)
-        #time.sleep(.04)
+        time.sleep(0.05)
         if c.is_over():
             break
 

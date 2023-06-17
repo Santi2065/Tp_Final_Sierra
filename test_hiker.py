@@ -91,6 +91,7 @@ class Hiker:
         return c.get_data()[self.team][self.nombre]['cima']
     
     def step_to_point(self, p: tuple|float) -> float|int:
+        # Devuelve la distancia que tiene que hacer hiker para llegar al punto
         distance = magnitude(difference(self.actual_pos(), p))
         if distance < 50:
             return distance
@@ -100,12 +101,10 @@ class Hiker:
 class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con los jugadores que quieras
     def __init__(self, hikers: list[Hiker]):
         self.hikers = hikers
-
-        
         self.fig, self.ax = plt.subplots()
         self.labels = []
-        #nombres = [self.hiker1.nombre,self.hiker2.nombre,self.hiker3.nombre,self.hiker4.nombre] # esto es lo de automatizar
         nombres = [hiker.nombre for hiker in hikers]
+
         for i in range(len(hikers)):
             label = self.ax.text(0, 0, nombres[i], ha='center', va='bottom')
             self.labels.append(label)
@@ -113,11 +112,6 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
         self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico 
 
     def coordenadas(self):
-        '''co_h1 = self.hiker1.actual_pos()
-        co_h2 = self.hiker2.actual_pos() # automatizar esto
-        co_h3 = self.hiker3.actual_pos()
-        co_h4 = self.hiker4.actual_pos()'''
-
         coords = [hiker.actual_pos() for hiker in self.hikers]
 
         x =[coord[0] for coord in coords]
@@ -125,7 +119,7 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
 
         #plt.xlim(-23000,23000)
         #plt.ylim(-23000,23000)
-        size = 1500
+        size = 23000
         plt.xlim(-size, size)
         plt.ylim(-size, size)
         plt.xticks([])
