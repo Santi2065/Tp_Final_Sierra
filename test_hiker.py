@@ -2,6 +2,9 @@ from communication.client.client import MountainClient
 import random
 import math
 import time
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from essential_functions import difference, magnitude
 
 #c = MountainClient("10.42.0.1", 8888)
 c = MountainClient()
@@ -86,3 +89,54 @@ class Hiker:
     def in_summit(self) -> bool:
         # Devuelve si esta en la cima o no
         return c.get_data()[self.team][self.nombre]['cima']
+    
+    def step_to_point(self, p: tuple|float) -> float|int:
+        distance = magnitude(difference(self.actual_pos(), p))
+        if distance < 50:
+            return distance
+        return 50
+
+
+class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con los jugadores que quieras
+    def __init__(self, hikers: list[Hiker]):
+        self.hikers = hikers
+
+        
+        self.fig, self.ax = plt.subplots()
+        self.labels = []
+        #nombres = [self.hiker1.nombre,self.hiker2.nombre,self.hiker3.nombre,self.hiker4.nombre] # esto es lo de automatizar
+        nombres = [hiker.nombre for hiker in hikers]
+        for i in range(len(hikers)):
+            label = self.ax.text(0, 0, nombres[i], ha='center', va='bottom')
+            self.labels.append(label)
+
+        self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico 
+
+    def coordenadas(self):
+        '''co_h1 = self.hiker1.actual_pos()
+        co_h2 = self.hiker2.actual_pos() # automatizar esto
+        co_h3 = self.hiker3.actual_pos()
+        co_h4 = self.hiker4.actual_pos()'''
+
+        coords = [hiker.actual_pos() for hiker in self.hikers]
+
+        x =[coord[0] for coord in coords]
+        y =[coord[1] for coord in coords]
+
+        #plt.xlim(-23000,23000)
+        #plt.ylim(-23000,23000)
+        size = 1500
+        plt.xlim(-size, size)
+        plt.ylim(-size, size)
+        plt.xticks([])
+        plt.yticks([])
+        #self.ax.imshow(self.imagen, extent=[-23000, 23000, -23000, 23000], aspect='auto')
+        self.ax.imshow(self.imagen, extent=[-size, size, -size, size], aspect='auto') # Que la imagen cunpla con los limites
+
+        for i in range(len(x)):
+            self.labels[i].set_position((x[i], y[i]))
+        
+
+        plt.scatter(x,y,c='c')
+        plt.show(block=False)
+        plt.pause(0.005)

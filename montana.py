@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from communication.server.mountain.easy_mountain import EasyMountain
+from communication.server.mountain.mishra_mountain import MishraBirdMountain
 import numpy as np
 
 # Crear una instancia de EasyMountain
-mountain = EasyMountain(50, 23000)
+mountain = MishraBirdMountain(50, 23000)
 
 # Obtener los puntos de la montaña
 x = np.linspace(-23000, 23000, 100)

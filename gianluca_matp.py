@@ -86,16 +86,14 @@ class Hiker:
         return (x,y,z)
 
 class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con los jugadores que quieras
-    def __init__(self,hikers:list ):
-        self.hiker1 = hikers[0]
-        self.hiker2=hikers[1]
-        self.hiker3=hikers[2]
-        self.hiker4=hikers[3]
+    def __init__(self, hikers: list[Hiker]):
+        self.hikers = hikers
 
         
         self.fig, self.ax = plt.subplots()
         self.labels = []
-        nombres =[self.hiker1.nombre,self.hiker2.nombre,self.hiker3.nombre,self.hiker4.nombre] # esto es lo de automatizar
+        #nombres = [self.hiker1.nombre,self.hiker2.nombre,self.hiker3.nombre,self.hiker4.nombre] # esto es lo de automatizar
+        nombres = [hiker.nombre for hiker in hikers]
         for i in range(len(hikers)):
             label = self.ax.text(0, 0, nombres[i], ha='center', va='bottom')
             self.labels.append(label)
@@ -103,30 +101,33 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
         self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico 
 
     def coordenadas(self):
-        co_h1 = self.hiker1.actual_pos()
+        '''co_h1 = self.hiker1.actual_pos()
         co_h2 = self.hiker2.actual_pos() # automatizar esto
         co_h3 = self.hiker3.actual_pos()
-        co_h4 = self.hiker4.actual_pos()
+        co_h4 = self.hiker4.actual_pos()'''
 
-        x =[co_h1[0],co_h2[0],co_h3[0],co_h4[0]]
-        y =[co_h1[1],co_h2[1],co_h3[1],co_h4[1]]
+        coords = [hiker.actual_pos() for hiker in self.hikers]
 
-        plt.xlim(-23000,23000)
-        plt.ylim(-23000,23000)
+        x =[coord[0] for coord in coords]
+        y =[coord[1] for coord in coords]
+
+        #plt.xlim(-23000,23000)
+        #plt.ylim(-23000,23000)
+        size = 1500
+        plt.xlim(-size, size)
+        plt.ylim(-size, size)
         plt.xticks([])
         plt.yticks([])
-        self.ax.imshow(self.imagen, extent=[-23000, 23000, -23000, 23000], aspect='auto') # Que la imagen cunpla con los limites
+        #self.ax.imshow(self.imagen, extent=[-23000, 23000, -23000, 23000], aspect='auto')
+        self.ax.imshow(self.imagen, extent=[-size, size, -size, size], aspect='auto') # Que la imagen cunpla con los limites
 
-        
-        
         for i in range(len(x)):
             self.labels[i].set_position((x[i], y[i]))
         
 
-
         plt.scatter(x,y,c='c')
         plt.show(block=False)
-        plt.pause(0.5)
+        plt.pause(0.005)
 
 class leader_board:
     def __init__(self) :
