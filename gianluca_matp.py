@@ -183,7 +183,7 @@ hikers.append(Hiker(directives['Gian4'],'Gian4'))
 
 
 
-grafico = Grafico_todos()
+
 
 while not c.is_over():
 
