@@ -1,33 +1,7 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
 from teams import Team
-
-
-def go_center(team,c):
-    #apuntan al centro
-    for hiker in team.hikers:
-        hiker.go_to([0,0])
-
-    #se mueven hasta que llegan
-    llegada = {x : 0 for x in team.hikers}
-    no_llegaron = True
-    while no_llegaron:
-        team.move_all(team.hikers,c)
-        info = c.get_data()
-        for hiker in team.hikers:
-            x =  info[team.nombre][hiker.nombre]['x']
-            y =  info[team.nombre][hiker.nombre]['y']
-            if -1 < x < 1 and -1 < y < 1:
-                llegada[hiker] = 1
-                hiker.stay_still()
-        no_llegaron = False
-        for x in llegada:
-            if x == 0:
-                no_llegaron = True
-    print("En el centro")
-
-def start_search():
-    pass
+from empinado import empinado as estrategia
 
 def main():
 
@@ -45,7 +19,7 @@ def main():
     c.add_team(team.nombre, hikers_names)
     c.finish_registration()
 
-    go_center(team,c)
+    estrategia(team)
 
     
 if __name__ == "__main__":
