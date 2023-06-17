@@ -56,7 +56,7 @@ def spiral():
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
 
     for hiker, offset in zip(hikers, offsets):
-        directives[hiker.nombre] = {'speed': 15, 'direction': offset}
+        directives[hiker.nombre] = {'speed': 5, 'direction': offset}
 
     graf.coordenadas()
 
