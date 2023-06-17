@@ -38,7 +38,7 @@ class Team(Hiker):
                     llegada[hiker] = 1
                     hiker.stay_still()
             no_llegaron = False
-            for x in llegada:
+            for x in llegada.values():
                 if x == 0:
                     no_llegaron = True
         print("En el centro")

@@ -1,14 +1,16 @@
 from teams import Team
 from HIKERS import Hiker
 import math
+from graph import Grafico_2d_equipo
 import random
 
 def empinado(team:Team):
-    team.go_center()
+    #team.go_center()
     team.face_out()
-    for i in range(50):
+    for i in range(5):
         team.move_all()
     searching = True
+    grafico = Grafico_2d_equipo(team.hikers)
     info = team.comms.get_data()
     for hiker in team.hikers:
         x = info[team.nombre][hiker.nombre]['x']
@@ -20,6 +22,7 @@ def empinado(team:Team):
         hiker.cambio_estado('subiendo')
     while searching:
         info = team.comms.get_data()
+        grafico.coordenadas(team.hikers,info)
         for hiker in team.hikers:
             x = info[team.nombre][hiker.nombre]['x']
             y = info[team.nombre][hiker.nombre]['y']
@@ -43,7 +46,22 @@ def empinado(team:Team):
                     # Si el escalador ha terminado de bajar
                     hiker.cambio_estado('subiendo')
             if hiker.cima():
+                hiker.stay_still()
+                hiker.cambio_estado('quieto')
+                flag = [info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y']]
                 searching = False
         team.move_all()
+    for hiker in team.hikers:
+        hiker.go_to(flag)
+    llegaron = False
+    while(not llegaron):
+        llegaron = True
         for hiker in team.hikers:
-            print(hiker.estado)
+            if hiker.cima():
+                hiker.stay_still()
+                hiker.cambio_estado('quieto')
+            else:
+                llegaron = False
+        team.move_all()
+
+
