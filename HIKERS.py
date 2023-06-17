@@ -19,7 +19,7 @@ class Hiker:
         dic = self.comms.get_data()
         x =  dic[self.team][self.nombre]['x'] # x actual
         y =  dic[self.team][self.nombre]['y'] # y actual
-        z = dic[self.team][self.nombre]['z'] # z actual
+        z =  dic[self.team][self.nombre]['z'] # z actual
 
         return (x,y,z)
     
