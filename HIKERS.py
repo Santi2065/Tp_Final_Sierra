@@ -11,6 +11,7 @@ class Hiker:
         self.ordenes = {'direction':ordenes[0],'speed':ordenes[1]} # Es una lista así lo puedo modificar en el marco global. Lo uso como diccionario.
         self.radio_montania = 23000
         self.comms = c
+        self.estado = 'quieto'
         self.team = 'Los cracks' # Hacer esto automaticamente
 
     def actual_pos(self):
@@ -21,6 +22,9 @@ class Hiker:
         z = dic[self.team][self.nombre]['z'] # z actual
 
         return (x,y,z)
+    
+    def cambio_estado(self, nuevo_estado):
+        self.estado = nuevo_estado
     
     def almost_out(self)-> bool:
         """Devuelve verdadero si el escalador se ira del mapa en la siguiente iteracion. Falso en caso contrario."""
@@ -74,6 +78,7 @@ class Hiker:
     def stay_still(self):
         # Recuce la velocidad del personaje a valores insignificativos.
         self.change_speed(0.0000000000001)
+        self.estado = 'quieto'
     
     def cima(self) -> bool:
         # Devuelve si esta en la cima o no
