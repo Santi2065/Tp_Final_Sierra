@@ -26,17 +26,17 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
                 continue
 
             distance = magnitude(difference(hiker.actual_pos(), point))
-            hiker.change_direction(hiker.go_to((0, 0)))
+            hiker.change_direction(hiker.go_to(point))
             if distance < 50:
                 hiker.change_speed(distance)
             directives[hiker.nombre] = hiker.ordenes
-            close_to_point[hiker.nombre] = distance < 30
+            close_to_point[hiker.nombre] = distance < 30 or hiker.in_summit()
 
         c.next_iteration('Los cracks', directives)
     return True
 
 def spiral():
-    names = ['Santi']
+    names = ['Santi', 'Joaco', 'Gian ', 'Pipe ']
     c = register(names)
 
     directives = {name: {'speed': 50, 'direction': 0} for name in names}
@@ -53,9 +53,7 @@ def spiral():
     
     print(directives)
     c.next_iteration('Los cracks', directives)
-    #time.sleep(.04)
-    '''while not c.next_iteration('Los cracks', directives):
-        continue'''
+    #time.sleep(.04)'
 
     separation = 100 * len(names)
     b = separation / (2 * math.pi)
@@ -84,14 +82,15 @@ def spiral():
             hiker.change_direction(direction)
             directives[hiker.nombre] = hiker.ordenes
 
-            print(f'{hiker.nombre}: x={x:02f} y={y:02f} θ1={current_theta} θ2={next_theta} Δθ{next_theta-current_theta} dir:{directives[hiker.nombre]}')
+            print(f'{hiker.nombre}: x={x:9.2f} y={y:9.2f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ{next_theta-current_theta:.18f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:.3f}')
 
         if found_summit:
-            all_go_to_point(summit_loc, c, summit_loc)
+            all_go_to_point(hikers, c, summit_loc)
         c.next_iteration('Los cracks', directives)
         #time.sleep(.04)
         if c.is_over():
             break
+
 
 def difference(p1: tuple|list, p2: tuple|list) -> tuple:
     # returns the x y coords of the vector going from p2 to p1, ignores z value
@@ -134,7 +133,7 @@ def integral(theta: float, b: float):
 def estimate_theta2(theta1: float, b: float) -> float:
     theta2 = theta1
     change = 0.1
-    lower, higher = 49, 51 
+    lower, higher = 49, 51
     distance1 = 0
 
     if higher > integral(theta2 + change, b) - integral(theta1, b) > lower:
