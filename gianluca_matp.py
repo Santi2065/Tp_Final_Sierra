@@ -159,9 +159,9 @@ class Grafico_todos:
         plt.title('Jugador mas alto por equipo en este momento')
         plt.show()
         plt.pause(0.5)
-        plt.cla()
+        plt.cla() # borra datos anteriores
 
-        lista.clear()
+        lista.clear() # limpia listas para no interferir con las nuevas listas
         jugadores_ordenados.clear()
         altura_ordenados.clear()
 
