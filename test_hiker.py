@@ -1,31 +1,22 @@
+from communication.client.client import MountainClient
 import random
 import math
-VELOCIDAD_MAX = 50
+import time
+
+c = MountainClient()
 
 class Hiker:
-    
-    def __init__(self, nombre:str, c, ordenes: list = [0,VELOCIDAD_MAX]):
-
+    def __init__(self,ordenes: dict[str, int], nombre: str):
         self.nombre = nombre # Hacer esto automaticamente (que no haya que pasarlo como arg de clase)
-        self.ordenes = {'direction':ordenes[0],'speed':ordenes[1]} # Es una lista así lo puedo modificar en el marco global. Lo uso como diccionario.
+        self.ordenes = ordenes # Es una lista así lo puedo modiciar en el marco global. Lo uso como diccionario.
         self.radio_montania = 23000
-        self.comms = c
         self.team = 'Los cracks' # Hacer esto automaticamente
 
-    def actual_pos(self):
-        # Returns actual pos (x,y,z) of the hiker
-        dic = self.comms.get_data()
-        x =  dic[self.team][self.nombre]['x'] # x actual
-        y =  dic[self.team][self.nombre]['y'] # y actual
-        z = dic[self.team][self.nombre]['z'] # z actual
-
-        return (x,y,z)
-    
     def almost_out(self)-> bool:
         """Devuelve verdadero si el escalador se ira del mapa en la siguiente iteracion. Falso en caso contrario."""
-        info = self.actual_pos()
-        x = info[0]
-        y = info[1]
+        dic = c.get_data()
+        x = dic[self.team][self.nombre]['x']
+        y = dic[self.team][self.nombre]['y']
 
         norma = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
         paso_previo = 22900 # Radio del circulo menos dos pasos , chequear que este bien
@@ -36,9 +27,9 @@ class Hiker:
             return False
         
     def next_step(self)-> tuple:
-        info = self.actual_pos()
-        x = info[0]
-        y = info[1]
+        dic = c.get_data()
+        x = dic[self.team][self.nombre]['x'] # pos actual
+        y = dic[self.team][self.nombre]['y'] # pos actual
         
 
         next_x = x + self.ordenes['speed'] * math.cos(self.ordenes['direction']) # pos actual post iteracion (trigonometria)
@@ -52,14 +43,22 @@ class Hiker:
         # El escalador se dirige hacia la nueva direccion (radianes)
         self.ordenes['direction'] = new_direction #Provisional, para hacer pruebas.
 
-    def change_speed(self, new_speed: float|int):
+    def change_speed(self, new_speed:float|int):
         # Cambia la velocidad en la que el escalador se mueve (max 50)
         self.ordenes['speed'] = new_speed
 
-    def go_to(self,objective:list):
-        info = self.actual_pos()
-        hiker_coords = [info[0],info[1]]
-        self.ordenes = {'direction':direction(hiker_coords,objective),'speed':VELOCIDAD_MAX}
+    def go_to(self, coordenadas: tuple) -> float|int:
+        # Devuelve el angulo nesceario para ir desde posicion actual --> coordenadas ingresadas (x,y)
+        dic = c.get_data() # Esto quiza pasarlo a un diccionario general
+        x =  dic[self.team][self.nombre]['x'] # pos actual
+        y =  dic[self.team][self.nombre]['y'] # pos actual
+        
+        x_destino = (coordenadas[0]) # pos destino
+        y_destino = (coordenadas[1]) # pos destino
+
+        angulo = math.atan2(y_destino - y, x_destino - x) # angulo para ir desde pos hasta destino. El orden es importante.
+
+        return angulo # Devuelve el angulo
   
     def random(self):
         # El hiker entra en un estado de aleatoriedad y rebota por todo el mapa.
@@ -73,13 +72,16 @@ class Hiker:
     def stay_still(self):
         # Recuce la velocidad del personaje a valores insignificativos.
         self.change_speed(0.0000000000001)
+
+    def actual_pos(self):
+        # Returns actual pos (x,y,z) of the hiker
+        dic = c.get_data()
+        x = dic[self.team][self.nombre]['x'] # x actual
+        y = dic[self.team][self.nombre]['y'] # y actual
+        z = dic[self.team][self.nombre]['z'] # z actual
+
+        return (x, y, z)
     
-    def cima(self) -> bool:
+    def in_summit(self) -> bool:
         # Devuelve si esta en la cima o no
-        return self.comms.get_data()[self.team][self.nombre]['cima']
-
-
-def direction(hiker: list, objective: list) -> float:
-    dx = objective[0] - hiker[0]
-    dy = objective[1] - hiker [1]
-    return math.atan2(dy,dx)
+        return c.get_data()[self.team][self.nombre]['cima']

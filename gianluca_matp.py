@@ -85,7 +85,7 @@ class Hiker:
 
         return (x,y,z)
 
-class Grafico_2d_equipo: # anda
+class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con los jugadores que quieras
     def __init__(self,hikers:list ):
         self.hiker1 = hikers[0]
         self.hiker2=hikers[1]
@@ -95,7 +95,7 @@ class Grafico_2d_equipo: # anda
         
         self.fig, self.ax = plt.subplots()
         self.labels = []
-        nombres =[self.hiker1.nombre,self.hiker2.nombre,self.hiker3.nombre,self.hiker4.nombre]
+        nombres =[self.hiker1.nombre,self.hiker2.nombre,self.hiker3.nombre,self.hiker4.nombre] # esto es lo de automatizar
         for i in range(len(hikers)):
             label = self.ax.text(0, 0, nombres[i], ha='center', va='bottom')
             self.labels.append(label)
@@ -104,7 +104,7 @@ class Grafico_2d_equipo: # anda
 
     def coordenadas(self):
         co_h1 = self.hiker1.actual_pos()
-        co_h2 = self.hiker2.actual_pos()
+        co_h2 = self.hiker2.actual_pos() # automatizar esto
         co_h3 = self.hiker3.actual_pos()
         co_h4 = self.hiker4.actual_pos()
 
@@ -128,20 +128,17 @@ class Grafico_2d_equipo: # anda
         plt.show(block=False)
         plt.pause(0.5)
 
-class Grafico_todos:
+class leader_board:
     def __init__(self) :
         pass
-
-        
-        
+ 
     def graficar(self):
 
         diccionario = c.get_data()
         jugador_max = None # Chequear si cambian de algo
         altura_max = None
         lista= []
-        jugadores_ordenados =[]
-        altura_ordenados = []
+
 
         for equipo, jugadores in diccionario.items():
             jugador_max,altura_max= max(jugadores.items(),key=lambda item:item[1]['z'])
@@ -149,21 +146,17 @@ class Grafico_todos:
 
         ordenar_lista = sorted(lista,key=lambda x:x[1]) # De mas alto a mas chico
         
-        for i in range(len(ordenar_lista)):
-            jugadores_ordenados.append(ordenar_lista[i][0])
-            altura_ordenados.append(ordenar_lista[i][1])
 
-        plt.plot(jugadores_ordenados,altura_ordenados,marker='o')
-        plt.xlabel('Jugador')
-        plt.ylabel('Altura alcanzada')
-        plt.title('Jugador mas alto por equipo en este momento')
-        plt.show()
-        plt.pause(0.5)
-        plt.cla() # borra datos anteriores
+
+       
+        print("*** Leader per team ***")
+        print("Position | player | z")
+        for i in range(len(ordenar_lista)):
+            print(f"{i+1}: {ordenar_lista[i][0]} | {round(ordenar_lista[i][1],3)}")
+
 
         lista.clear() # limpia listas para no interferir con las nuevas listas
-        jugadores_ordenados.clear()
-        altura_ordenados.clear()
+       
 
 
 
