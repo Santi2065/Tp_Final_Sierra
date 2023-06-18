@@ -4,6 +4,7 @@ import math
 import time
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import numpy as np
 from essential_functions import difference, magnitude
 
 #c = MountainClient("10.42.0.1", 8888)
@@ -91,7 +92,7 @@ class Hiker:
         return c.get_data()[self.team][self.nombre]['cima']
     
     def step_to_point(self, p: tuple|float) -> float|int:
-        # Devuelve la distancia que tiene que hacer hiker para llegar al punto
+        # Devuelve la distancia del paso que tiene que hacer hiker para llegar al punto
         distance = magnitude(difference(self.actual_pos(), p))
         if distance < 50:
             return distance
@@ -119,7 +120,7 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
 
         #plt.xlim(-23000,23000)
         #plt.ylim(-23000,23000)
-        size = 23000
+        size = 1000
         plt.xlim(-size, size)
         plt.ylim(-size, size)
         plt.xticks([])
@@ -131,6 +132,58 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
             self.labels[i].set_position((x[i], y[i]))
         
 
-        plt.scatter(x,y,c='c')
+        plt.scatter(x, y, c='c', s=10)
         plt.show(block=False)
         plt.pause(0.005)
+    
+    def coordenadas2(self, data: dict[str, dict[str, list[float]]]):
+        # grafico que toma listas de coordenadas y las muestra
+        # argumento: data={'nombre1': {'x': [], 'y': []}, 'nombre2': {'x': [], 'y': []}, ...}
+        plt.cla()
+        colors = 'r', 'c', 'g', 'magenta'
+
+        x_max = float('-inf')
+        y_max = float('-inf')
+
+        for name, coords, colr in zip(data, data.values(), colors):
+            x = np.array(coords['x'])
+            y = np.array(coords['y'])
+
+            num_points = len(x)  # Number of data points
+            marker_size = 10 / np.sqrt(num_points)  # Scaling factor for marker size
+
+            x_max = max(x_max, np.max(np.abs(x)))
+            y_max = max(y_max, np.max(np.abs(y)))
+
+            plt.scatter(x, y, s=marker_size, color=colr)
+
+            last_coord = (coords['x'][-1], coords['y'][-1])
+            plt.text(last_coord[0], last_coord[1], name, fontsize=9)
+
+            plt.axis('equal')
+        
+        limit = max(x_max, y_max)
+        limit += limit/10
+        plt.xlim(-limit, limit) # Medio bugeado
+        plt.ylim(-limit, limit)
+        self.ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
+        #plt.figure(figsize=(6, 6)) #! hacer que sea cuadrada la ventana
+
+        plt.show(block=False)
+        plt.pause(0.005)
+
+        '''
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        x = np.array([5,7,8,7,2,17,2,9,4,11,12,9,6])
+        y = np.array([99,86,87,88,111,86,103,87,94,78,77,85,86])
+        plt.scatter(x, y, color = 'hotpink')
+
+        x = np.array([2,2,8,1,15,8,12,9,7,3,11,4,7,14,12])
+        y = np.array([100,105,84,105,90,99,90,95,94,100,79,112,91,80,85])
+        plt.scatter(x, y, color = '#88c999')
+
+        plt.show()
+        '''
+        pass

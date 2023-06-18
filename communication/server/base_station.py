@@ -1,6 +1,6 @@
 """DO NOT MODIFY THIS FILE"""
 
-from communication.server.mountain.mountain import Mountain
+from communication.server.mountain.abstract.mountain import Mountain
 from typing import List
 import math
 import threading
