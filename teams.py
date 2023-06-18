@@ -3,13 +3,13 @@ from HIKERS import Hiker
 import math
 
 class Team(Hiker):
-    def __init__(self,nombre:str,hikers:list,c:MountainClient) -> None:
+    def __init__(self, nombre: str, hikers: list[Hiker], c:MountainClient) -> None:
         self.nombre = nombre
         self.hikers = hikers
         self.comms = c
 
     def face_out(self):
-        direction=0
+        directio = 0
         for hiker in self.hikers:
             hiker.change_direction(direction)
             direction += math.pi/2

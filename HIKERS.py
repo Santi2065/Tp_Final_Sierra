@@ -82,7 +82,7 @@ class Hiker:
         self.change_speed(0.0000000000001)
         self.estado = 'quieto'
     
-    def cima(self) -> bool:
+    def in_summit(self) -> bool:
         '''Devuelve si esta en la cima o no'''
         return self.comms.get_data()[self.team][self.nombre]['cima']
 

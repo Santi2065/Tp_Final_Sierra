@@ -4,7 +4,7 @@ import math
 from graph import Grafico_2d_equipo
 
 def empinado(team:Team):
-    hikers_buscando=team.hikers
+    hikers_buscando = team.hikers
     #team.go_center()
     team.face_out()
     for i in range(5):
@@ -45,7 +45,7 @@ def empinado(team:Team):
                 if  producto_punto >= 0:
                     # Si el escalador ha terminado de bajar
                     hiker.cambio_estado('subiendo')
-            if hiker.cima():
+            if hiker.in_summit():
                 hiker.stay_still()
                 hiker.cambio_estado('quieto')
                 hikers_buscando.remove(hiker)
@@ -58,7 +58,7 @@ def empinado(team:Team):
     while(not llegaron):
         llegaron = True
         for hiker in hikers_buscando:
-            if hiker.cima():
+            if hiker.in_summit():
                 hiker.stay_still()
                 hiker.cambio_estado('quieto')
                 hikers_buscando.remove(hiker)
@@ -66,6 +66,6 @@ def empinado(team:Team):
                 hiker.go_to(flag)
                 llegaron = False
         team.move_all()
-    print(f"fin {[h.cima() for h in team.hikers]}")
+    print(f"fin {[h.in_summit() for h in team.hikers]}")
 
 
