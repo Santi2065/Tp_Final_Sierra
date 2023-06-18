@@ -185,7 +185,7 @@ hikers.append(Hiker(directives['Gian4'],'Gian4'))
 
 
 
-
+grafico = leader_board()
 while not c.is_over():
 
     print(c.get_data())
