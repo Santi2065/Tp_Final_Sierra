@@ -59,7 +59,6 @@ leader = leader_board()
 
 while not c.is_over():
 
-    print(c.get_data())
     leader.graficar()
 
     c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
