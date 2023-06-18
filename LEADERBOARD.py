@@ -20,7 +20,7 @@ class leader_board:
             jugador_max,altura_max= max(jugadores.items(),key=lambda item:item[1]['z'])
             lista.append([jugador_max,altura_max['z']]) # [nombre,z]
 
-        ordenar_lista = sorted(lista,key=lambda x:x[1]) # De mas alto a mas chico
+        ordenar_lista = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico
         
 
 
