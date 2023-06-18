@@ -4,7 +4,7 @@ from typing import Tuple, List
 from socketserver import BaseRequestHandler, TCPServer
 
 from communication.server.handler import TCPHandler
-from communication.server.mountain.mountain import Mountain
+from communication.server.mountain.abstract.mountain import Mountain
 from communication.server.base_station import BaseStation
 from communication.util.logger import logger
 

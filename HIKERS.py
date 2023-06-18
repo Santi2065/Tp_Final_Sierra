@@ -1,6 +1,7 @@
 from communication.client.client import MountainClient
 import random
 import math
+from essential_functions import difference, magnitude
 VELOCIDAD_MAX = 50
 
 class Hiker:
@@ -83,6 +84,13 @@ class Hiker:
     def cima(self) -> bool:
         # Devuelve si esta en la cima o no
         return self.comms.get_data()[self.team][self.nombre]['cima']
+
+    def step_to_point(self, p: tuple|float) -> float|int:
+        # Devuelve la distancia del paso que tiene que hacer hiker para llegar al punto
+        distance = magnitude(difference(self.actual_pos(), p))
+        if distance < 50:
+            return distance
+        return 50
 
 
 def direction(hiker: list, objective: list) -> float:

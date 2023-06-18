@@ -91,7 +91,7 @@ class Hiker:
         return c.get_data()[self.team][self.nombre]['cima']
     
     def step_to_point(self, p: tuple|float) -> float|int:
-        # Devuelve la distancia que tiene que hacer hiker para llegar al punto
+        # Devuelve la distancia del paso que tiene que hacer hiker para llegar al punto
         distance = magnitude(difference(self.actual_pos(), p))
         if distance < 50:
             return distance
@@ -119,7 +119,7 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
 
         #plt.xlim(-23000,23000)
         #plt.ylim(-23000,23000)
-        size = 23000
+        size = 1000
         plt.xlim(-size, size)
         plt.ylim(-size, size)
         plt.xticks([])
@@ -131,6 +131,6 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
             self.labels[i].set_position((x[i], y[i]))
         
 
-        plt.scatter(x,y,c='c')
+        plt.scatter(x, y, c='c', s=10)
         plt.show(block=False)
         plt.pause(0.005)
