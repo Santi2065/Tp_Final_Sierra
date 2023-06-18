@@ -12,10 +12,12 @@ def spiral():
 
     directives = {name: {'speed': 50, 'direction': 0} for name in names}
     hikers = [Hiker(directives[name], name) for name in names]
+    coords = {hiker.nombre: {'x': [hiker.actual_pos()[0]], 'y': [hiker.actual_pos()[1]]} for hiker in hikers}
     graf = Grafico_2d_equipo(hikers)
 
+    print(coords)
     # Se dirige al origen
-    all_go_to_point(hikers, c, (0, 0), graf)
+    all_go_to_point(hikers, c, (0, 0), graf, coords)
 
     print('llegue')
 
@@ -26,7 +28,7 @@ def spiral():
     for hiker, offset in zip(hikers, offsets):
         directives[hiker.nombre] = {'speed': 5, 'direction': offset}
 
-    graf.coordenadas()
+    #* graf.coordenadas()
 
     c.next_iteration('Los cracks', directives)
     time.sleep(.05)
@@ -41,13 +43,15 @@ def spiral():
     while not found_summit:
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 1 == 0 and i >= 0:
-            graf.coordenadas()
+        if i % 1 == 0 and i >= 1:
+            graf.coordenadas2(coords)
 
         for hiker, offset in zip(hikers, offsets):
             x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
             current_loc = (x, y)
             current_theta = hikers_thetas[hiker.nombre]
+            coords[hiker.nombre]['x'] += [current_loc[0]]
+            coords[hiker.nombre]['y'] += [current_loc[1]]
 
             # If it is in the summit, all hikers go to the coord of the hiker in the summit
             if hiker.in_summit():
@@ -62,7 +66,6 @@ def spiral():
 
             direction = hiker.go_to(next_loc)
             hiker.change_speed(hiker.step_to_point(next_loc))
-            #hiker.change_speed(50)
             hiker.change_direction(direction)
             directives[hiker.nombre] = hiker.ordenes
 
@@ -73,7 +76,8 @@ def spiral():
 
         i += 1
         c.next_iteration('Los cracks', directives)
-        time.sleep(0.05)
+        #*time.sleep(0.05)
+        #TODO: fijarse si es posible conocer los minutos
         if c.is_over():
             break
     print('Todos estamos en la cima :)')
@@ -86,15 +90,17 @@ def register(names: list[str]) -> MountainClient:
     c.finish_registration()
     return c
 
-def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo) -> None:
+def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords) -> None:
     # Makes all hikers to go to the desired point
     directives = {}
     close_to_point = {hiker.nombre: magnitude(difference(hiker.actual_pos(), point)) < 30 for hiker in hikers}
     i = 0
     while False in close_to_point.values():
+        if i % 1 == 0 and i >= 0:
+            graf.coordenadas2(coords)
+
         for hiker in hikers:
-            if i % 50 == 0 and i >= 100000:
-                graf.coordenadas()
+            
             print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
 
             if close_to_point[hiker.nombre]:
@@ -102,6 +108,10 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
                 hiker.change_speed(0)
                 directives[hiker.nombre] = hiker.ordenes
                 continue
+            
+            x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
+            coords[hiker.nombre]['x'] += [x]
+            coords[hiker.nombre]['y'] += [y]
 
             distance = magnitude(difference(hiker.actual_pos(), point))
             hiker.change_direction(hiker.go_to(point))
