@@ -1,9 +1,9 @@
 from communication.client.client import MountainClient
 from test_hiker import Hiker, Grafico_2d_equipo
 from essential_functions import magnitude, dot_product, difference
+import matplotlib.pyplot as plt
 import time
 import math
-
 
 
 def spiral():
@@ -12,10 +12,11 @@ def spiral():
 
     directives = {name: {'speed': 50, 'direction': 0} for name in names}
     hikers = [Hiker(directives[name], name) for name in names]
-    coords = {hiker.nombre: {'x': [hiker.actual_pos()[0]], 'y': [hiker.actual_pos()[1]]} for hiker in hikers}
+
+    coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
+    update_coords(coords, hikers)
     graf = Grafico_2d_equipo(hikers)
 
-    print(coords)
     # Se dirige al origen
     all_go_to_point(hikers, c, (0, 0), graf, coords)
 
@@ -43,16 +44,13 @@ def spiral():
     while not found_summit:
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 1 == 0 and i >= 1:
+        if i % 20 == 0 and i >= 0:
             graf.coordenadas2(coords)
 
         for hiker, offset in zip(hikers, offsets):
             x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
             current_loc = (x, y)
             current_theta = hikers_thetas[hiker.nombre]
-            coords[hiker.nombre]['x'] += [current_loc[0]]
-            coords[hiker.nombre]['y'] += [current_loc[1]]
-
             # If it is in the summit, all hikers go to the coord of the hiker in the summit
             if hiker.in_summit():
                 print(f'{hiker.nombre}: Estoy en cima')
@@ -76,7 +74,8 @@ def spiral():
 
         i += 1
         c.next_iteration('Los cracks', directives)
-        #*time.sleep(0.05)
+        update_coords(coords, hikers)
+        time.sleep(0.05)
         #TODO: fijarse si es posible conocer los minutos
         if c.is_over():
             break
@@ -90,7 +89,7 @@ def register(names: list[str]) -> MountainClient:
     c.finish_registration()
     return c
 
-def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords) -> None:
+def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:
     # Makes all hikers to go to the desired point
     directives = {}
     close_to_point = {hiker.nombre: magnitude(difference(hiker.actual_pos(), point)) < 30 for hiker in hikers}
@@ -108,10 +107,6 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
                 hiker.change_speed(0)
                 directives[hiker.nombre] = hiker.ordenes
                 continue
-            
-            x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
-            coords[hiker.nombre]['x'] += [x]
-            coords[hiker.nombre]['y'] += [y]
 
             distance = magnitude(difference(hiker.actual_pos(), point))
             hiker.change_direction(hiker.go_to(point))
@@ -120,6 +115,7 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
             close_to_point[hiker.nombre] = distance < 30 or hiker.in_summit()
 
         c.next_iteration('Los cracks', directives)
+        update_coords(coords, hikers)
         i += 1
 
 def get_direction(current_loc: tuple, next_loc: tuple) -> float:
@@ -155,24 +151,30 @@ def integral(theta: float, b: float):
 def estimate_theta2(theta1: float, b: float) -> float:
     theta2 = theta1
     change = 0.1
-    lower, higher = 49.5, 50.5
+    lower, higher = 49, 49.4
+    integral1 = integral(theta1, b)
     distance1 = 0
 
-    if higher > integral(theta2 + change, b) - integral(theta1, b) > lower:
+    if higher > integral(theta2 + change, b) - integral1 > lower:
         return theta2 + change
 
     while not (higher > distance1 > lower):
-        distance2 = integral(theta2 + change, b) - integral(theta1, b)
+        distance2 = integral(theta2 + change, b) - integral1
         #print(f'distance1: {distance1}, distance2: {distance2}, theta2:{theta2}, change:{change}')
+
         if distance2 < lower or higher > distance2 > lower:
             distance1 = distance2
             theta2 += change
         elif distance2 > higher:
             change /= 2
-            #print(f'cambie change: {change}')
 
     return theta2
 
+def update_coords(coords: dict[str, dict[str, list[float]]], hikers: list[Hiker]) -> None:
+    for hiker in hikers:
+        coords[hiker.nombre]['x'] += [hiker.actual_pos()[0]]
+        coords[hiker.nombre]['y'] += [hiker.actual_pos()[1]]
+        coords[hiker.nombre]['z'] += [hiker.actual_pos()[2]]
 
 def test_gets():
     def test_get_point():

@@ -135,10 +135,12 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
         plt.scatter(x, y, c='c', s=10)
         plt.show(block=False)
         plt.pause(0.005)
-    
+
+
     def coordenadas2(self, data: dict[str, dict[str, list[float]]]):
         # grafico que toma listas de coordenadas y las muestra
-        # argumento: data={'nombre1': {'x': [], 'y': []}, 'nombre2': {'x': [], 'y': []}, ...}
+        # argumento: data=({'nombre1': {'x': [], 'y': []}}, (fig, ax))
+        
         plt.cla()
         colors = 'r', 'c', 'g', 'magenta'
 
@@ -149,8 +151,9 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
             x = np.array(coords['x'])
             y = np.array(coords['y'])
 
-            num_points = len(x)  # Number of data points
-            marker_size = 10 / np.sqrt(num_points)  # Scaling factor for marker size
+            # Achica el tamaño de los puntos a medida que hay mas
+            num_points = len(x)
+            marker_size = 10 / np.sqrt(num_points)
 
             x_max = max(x_max, np.max(np.abs(x)))
             y_max = max(y_max, np.max(np.abs(y)))
@@ -162,12 +165,14 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
 
             plt.axis('equal')
         
+        # Ajusta la escala a medida que creceel rango, medio bugeado
         limit = max(x_max, y_max)
         limit += limit/10
-        plt.xlim(-limit, limit) # Medio bugeado
+        plt.xlim(-limit, limit) 
         plt.ylim(-limit, limit)
+
         self.ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
-        #plt.figure(figsize=(6, 6)) #! hacer que sea cuadrada la ventana
+        #! hacer que sea cuadrada la ventana
 
         plt.show(block=False)
         plt.pause(0.005)
