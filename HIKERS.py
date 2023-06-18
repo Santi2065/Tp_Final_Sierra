@@ -6,7 +6,7 @@ VELOCIDAD_MAX = 50
 
 class Hiker:
     
-    def __init__(self, nombre:str, c:MountainClient, ordenes: list = [0,VELOCIDAD_MAX]):
+    def __init__(self, nombre: str, c: MountainClient, ordenes: list = [0,VELOCIDAD_MAX]):
 
         self.nombre = nombre # Hacer esto automaticamente (que no haya que pasarlo como arg de clase)
         self.ordenes = {'direction':ordenes[0],'speed':ordenes[1]} # Es una lista así lo puedo modificar en el marco global. Lo uso como diccionario.
@@ -16,13 +16,13 @@ class Hiker:
         self.team = 'Los cracks' # Hacer esto automaticamente
 
     def actual_pos(self):
-        # Returns actual pos (x,y,z) of the hiker
+        '''Returns actual pos (x, y, z) of the hiker'''
         dic = self.comms.get_data()
         x =  dic[self.team][self.nombre]['x'] # x actual
         y =  dic[self.team][self.nombre]['y'] # y actual
         z =  dic[self.team][self.nombre]['z'] # z actual
 
-        return (x,y,z)
+        return (x, y, z)
     
     def cambio_estado(self, nuevo_estado):
         self.estado = nuevo_estado
@@ -33,7 +33,7 @@ class Hiker:
         x = info[0]
         y = info[1]
 
-        norma = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
+        norma = magnitude((x, y))
         paso_previo = 22900 # Radio del circulo menos dos pasos , chequear que este bien
 
         if norma > paso_previo:
@@ -50,7 +50,7 @@ class Hiker:
         next_x = x + self.ordenes['speed'] * math.cos(self.ordenes['direction']) # pos actual post iteracion (trigonometria)
         next_y = y + self.ordenes['speed'] * math.sin(self.ordenes['direction']) # pos actual post iteracion (trigonometria)
 
-        afuera = math.sqrt(pow(next_x,2) + pow(next_y,2)) # si esto es mas chico que el radio, estoy dentro de la montaña.
+        afuera = magnitude((next_x, next_y)) # si esto es mas chico que el radio, estoy dentro de la montaña.
 
         return (next_x, next_y)
 
@@ -62,11 +62,12 @@ class Hiker:
         # Cambia la velocidad en la que el escalador se mueve (max 50)
         self.ordenes['speed'] = new_speed
 
-    def go_to(self,objective:list):
+    def go_to(self, objective: list) -> None:
         info = self.actual_pos()
-        hiker_coords = [info[0],info[1]]
-        self.ordenes = {'direction':direction(hiker_coords,objective),'speed':VELOCIDAD_MAX}
-  
+        hiker_coords = [info[0], info[1]]
+        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point(objective)}
+        # return self.ordenes     <- podria agregar esto
+
     def random(self):
         # El hiker entra en un estado de aleatoriedad y rebota por todo el mapa.
         # Se eligen de fomra aleatoria dos coordenadas por el centro del mapa --> sigue de largo, repite.
@@ -82,18 +83,18 @@ class Hiker:
         self.estado = 'quieto'
     
     def cima(self) -> bool:
-        # Devuelve si esta en la cima o no
+        '''Devuelve si esta en la cima o no'''
         return self.comms.get_data()[self.team][self.nombre]['cima']
 
-    def step_to_point(self, p: tuple|float) -> float|int:
-        # Devuelve la distancia del paso que tiene que hacer hiker para llegar al punto
-        distance = magnitude(difference(self.actual_pos(), p))
+    def step_to_point(self, objective: tuple|float) -> float|int:
+        '''Devuelve la distancia del paso que tiene que hacer hiker
+        para llegar al punto'''
+        distance = magnitude(difference(self.actual_pos(), objective))
         if distance < 50:
             return distance
         return 50
 
 
-def direction(hiker: list, objective: list) -> float:
-    dx = objective[0] - hiker[0]
-    dy = objective[1] - hiker [1]
-    return math.atan2(dy,dx)
+def direction(hiker_coord: list[float, float], objective: list[float, float]) -> float:
+    dx, dy = difference(hiker_coord, objective)
+    return math.atan2(dy, dx)

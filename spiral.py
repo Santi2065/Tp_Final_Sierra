@@ -7,6 +7,7 @@ import math
 
 
 def spiral():
+    # Define y registra en el servidor el equipo
     names = ['Santi', 'Joaco', 'Gian ', 'Pipe ']
     c = register(names)
 
@@ -25,14 +26,12 @@ def spiral():
     # Angulos iniciales para que queden separados uniformemente
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
 
-    # Hace el primer movimiento para alejarse del centro
+    '''# Hace el primer movimiento para alejarse del centro
     for hiker, offset in zip(hikers, offsets):
         directives[hiker.nombre] = {'speed': 5, 'direction': offset}
 
-    #* graf.coordenadas()
-
     c.next_iteration('Los cracks', directives)
-    time.sleep(.05)
+    time.sleep(.05)'''
 
     separation = 100 * len(names)
     b = separation / (2 * math.pi)
@@ -44,13 +43,14 @@ def spiral():
     while not found_summit:
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 20 == 0 and i >= 0:
+        if i % 1 == 0 and i >= 0:
             graf.coordenadas2(coords)
 
         for hiker, offset in zip(hikers, offsets):
             x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
             current_loc = (x, y)
             current_theta = hikers_thetas[hiker.nombre]
+
             # If it is in the summit, all hikers go to the coord of the hiker in the summit
             if hiker.in_summit():
                 print(f'{hiker.nombre}: Estoy en cima')
@@ -65,6 +65,9 @@ def spiral():
             direction = hiker.go_to(next_loc)
             hiker.change_speed(hiker.step_to_point(next_loc))
             hiker.change_direction(direction)
+
+            # hiker.go_to(next_loc) y borrar 3 lineas arriba
+
             directives[hiker.nombre] = hiker.ordenes
 
             print(f'{hiker.nombre}: x={x:8.1f} y={y:8.2f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
@@ -91,11 +94,17 @@ def register(names: list[str]) -> MountainClient:
 
 def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:
     # Makes all hikers to go to the desired point
-    directives = {}
-    close_to_point = {hiker.nombre: magnitude(difference(hiker.actual_pos(), point)) < 30 for hiker in hikers}
+    directives, close_to_point = {}, {}
+
+    # Makes a dictionary that tells if hiker is near the point or not
+    for hiker in hikers:
+        distance_to_point = magnitude(difference(hiker.actual_pos(), point))
+        close_to_point[hiker.nombre] = distance_to_point < 5 or hiker.in_summit()
     i = 0
+
+    # Runs until all hikers are near the point
     while False in close_to_point.values():
-        if i % 1 == 0 and i >= 0:
+        if i % 1 == 0 and i >= 100000:
             graf.coordenadas2(coords)
 
         for hiker in hikers:
@@ -111,11 +120,17 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
             distance = magnitude(difference(hiker.actual_pos(), point))
             hiker.change_direction(hiker.go_to(point))
             hiker.change_speed(hiker.step_to_point(point))
+
+            # hiker.go_to(point) y sacar .change_direction y .change_speed
+
             directives[hiker.nombre] = hiker.ordenes
-            close_to_point[hiker.nombre] = distance < 30 or hiker.in_summit()
+            close_to_point[hiker.nombre] = distance < 5 or hiker.in_summit()
 
         c.next_iteration('Los cracks', directives)
+        
+        time.sleep(0.05)
         update_coords(coords, hikers)
+        
         i += 1
 
 def get_direction(current_loc: tuple, next_loc: tuple) -> float:
@@ -191,7 +206,6 @@ def test_gets():
 
 #test_gets()
 if __name__ == '__main__':
-    #print(estimate_theta2(61.54999999999904, 100/(2*math.pi)))
     spiral()
 '''
 

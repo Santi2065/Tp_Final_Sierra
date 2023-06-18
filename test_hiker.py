@@ -99,7 +99,7 @@ class Hiker:
         return 50
 
 
-class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con los jugadores que quieras
+class Grafico_2d_equipo:
     def __init__(self, hikers: list[Hiker]):
         self.hikers = hikers
         self.fig, self.ax = plt.subplots()
@@ -138,10 +138,10 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
 
 
     def coordenadas2(self, data: dict[str, dict[str, list[float]]]):
-        # grafico que toma listas de coordenadas y las muestra
-        # argumento: data=({'nombre1': {'x': [], 'y': []}}, (fig, ax))
-        
-        plt.cla()
+        '''grafico que toma listas de coordenadas y las muestra
+        argumento: data={'nombre1': {'x': [], 'y': [], 'z': []}}'''
+
+        self.ax.cla()
         colors = 'r', 'c', 'g', 'magenta'
 
         x_max = float('-inf')
@@ -158,37 +158,25 @@ class Grafico_2d_equipo: # anda, pero hay que automatizar para que funcione con 
             x_max = max(x_max, np.max(np.abs(x)))
             y_max = max(y_max, np.max(np.abs(y)))
 
-            plt.scatter(x, y, s=marker_size, color=colr)
+            self.ax.scatter(x, y, s=marker_size, color=colr)
 
+            # Pone el nombre del escalador en el ultimo punto que estuvo
             last_coord = (coords['x'][-1], coords['y'][-1])
-            plt.text(last_coord[0], last_coord[1], name, fontsize=9)
+            self.ax.text(last_coord[0], last_coord[1], name, fontsize=9)
 
-            plt.axis('equal')
-        
-        # Ajusta la escala a medida que creceel rango, medio bugeado
+        # Ajusta la escala a medida que crece el rango, medio bugeado
         limit = max(x_max, y_max)
         limit += limit/10
-        plt.xlim(-limit, limit) 
-        plt.ylim(-limit, limit)
+        self.ax.set_xlim(-limit, limit) 
+        self.ax.set_ylim(-limit, limit)
 
+        # Hace que sea un cuadrado la ventana
+        self.ax.set_aspect('equal')
+
+        # Pone la imagen en el fondo
         self.ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
-        #! hacer que sea cuadrada la ventana
 
-        plt.show(block=False)
+        # Actualiza el grafico, por performance
+        self.fig.canvas.draw_idle()
+
         plt.pause(0.005)
-
-        '''
-        import matplotlib.pyplot as plt
-        import numpy as np
-
-        x = np.array([5,7,8,7,2,17,2,9,4,11,12,9,6])
-        y = np.array([99,86,87,88,111,86,103,87,94,78,77,85,86])
-        plt.scatter(x, y, color = 'hotpink')
-
-        x = np.array([2,2,8,1,15,8,12,9,7,3,11,4,7,14,12])
-        y = np.array([100,105,84,105,90,99,90,95,94,100,79,112,91,80,85])
-        plt.scatter(x, y, color = '#88c999')
-
-        plt.show()
-        '''
-        pass
