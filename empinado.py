@@ -2,9 +2,9 @@ from teams import Team
 from HIKERS import Hiker
 import math
 from graph import Grafico_2d_equipo
-import random
 
 def empinado(team:Team):
+    hikers_buscando=team.hikers
     #team.go_center()
     team.face_out()
     for i in range(5):
@@ -48,6 +48,7 @@ def empinado(team:Team):
             if hiker.cima():
                 hiker.stay_still()
                 hiker.cambio_estado('quieto')
+                hikers_buscando.remove(hiker)
                 flag = [info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y']]
                 searching = False
         team.move_all()
@@ -56,12 +57,15 @@ def empinado(team:Team):
     llegaron = False
     while(not llegaron):
         llegaron = True
-        for hiker in team.hikers:
+        for hiker in hikers_buscando:
             if hiker.cima():
                 hiker.stay_still()
                 hiker.cambio_estado('quieto')
+                hikers_buscando.remove(hiker)
             else:
+                hiker.go_to(flag)
                 llegaron = False
         team.move_all()
+    print(f"fin {[h.cima() for h in team.hikers]}")
 
 

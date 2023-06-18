@@ -3,32 +3,33 @@ from test_hiker import Hiker
 import time
 
 c = MountainClient()
-class leader_board:
-
-    def __init__(self) :
-        pass
- 
-    def graficar(self):
-
-        diccionario = c.get_data()
-        jugador_max = None # Chequear si cambian de algo
-        altura_max = None
-        lista= []
 
 
-        for equipo, jugadores in diccionario.items():
-            jugador_max,altura_max= max(jugadores.items(),key=lambda item:item[1]['z'])
-            lista.append([jugador_max,altura_max['z'],equipo]) # [nombre,z,equipo]
 
-        ordenar_lista = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
-        
+class AlturaPromedio: # Esta clase devuelve la altura promedio por iteracion de todos los jugadores
+    def __init__(self) -> None:
+        pass 
+    def agarrar_datos(self):
+        dic = c.get_data()
+        altura = [] # Aca se almacenara momentanteamente todos los z
+
+        for i in dic:
+            for x in dic[i]:
+                altura.append(dic[i][x]['z'])
+
+        promedio = sum(altura) / len(altura) # Calcula el promedio
+
+        print(round(promedio,2)) # Redondeo, si no queda un choclo
+        altura.clear()
 
 
-        for i in range(len(ordenar_lista)):
-            print(f"{i+1} -> {ordenar_lista[i][2]} | {ordenar_lista[i][0]} | {round(ordenar_lista[i][1],3)}")
 
 
-        lista.clear() # limpia listas para no interferir con las nuevas listas
+
+
+
+
+
 
 
 
@@ -53,13 +54,13 @@ escala.append(Hiker(ord['esc2'],'esc2'))
 escala.append(Hiker(ord['esc3'],'esc3'))
 escala.append(Hiker(ord['esc4'],'esc4'))
 
-
-
-leader = leader_board()
+altura = AlturaPromedio()
 
 while not c.is_over():
 
-    leader.graficar()
+    print(c.get_data())
+
+    altura.agarrar_datos()
 
     c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
     c.next_iteration('puto',{i.nombre: i.ordenes for i in escala})
@@ -74,3 +75,6 @@ while not c.is_over():
 
 
     time.sleep(0.5) # Para que no colapse el server
+
+
+

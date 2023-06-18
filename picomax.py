@@ -1,34 +1,29 @@
+
 from communication.client.client import MountainClient
 from test_hiker import Hiker
 import time
 
 c = MountainClient()
-class leader_board:
-
-    def __init__(self) :
-        pass
- 
-    def graficar(self):
-
-        diccionario = c.get_data()
-        jugador_max = None # Chequear si cambian de algo
-        altura_max = None
-        lista= []
 
 
-        for equipo, jugadores in diccionario.items():
-            jugador_max,altura_max= max(jugadores.items(),key=lambda item:item[1]['z'])
-            lista.append([jugador_max,altura_max['z'],equipo]) # [nombre,z,equipo]
-
-        ordenar_lista = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
+class AlturaMaxima: # Calculo el pico maximo alcanzado por el equipo ingresado
+    def __init__(self,equipo):
+        self.equipo = equipo 
         
+    def calcular(self):
+        dic = c.get_data()
+        lista_aux = [] # va a guardar las alturas por iteracion de cada integrante del equipo
+        lista_max = [] # Va guardando todos los picos maximos por iteracion
 
+        for i in dic[self.equipo]:
+            lista_aux.append(dic[i]['z'])
 
-        for i in range(len(ordenar_lista)):
-            print(f"{i+1} -> {ordenar_lista[i][2]} | {ordenar_lista[i][0]} | {round(ordenar_lista[i][1],3)}")
+        maximo = max(lista_aux) # ESTO SE PUEDE HACER DE UNA, PERO QUEDA MAS PROLIJO ASI.
+        lista_max.append(maximo) # Imprime el maximo de todos los maximos (lo que busco)
 
+        print(max(lista_max))
+        lista_aux.clear()
 
-        lista.clear() # limpia listas para no interferir con las nuevas listas
 
 
 
@@ -53,13 +48,13 @@ escala.append(Hiker(ord['esc2'],'esc2'))
 escala.append(Hiker(ord['esc3'],'esc3'))
 escala.append(Hiker(ord['esc4'],'esc4'))
 
-
-
-leader = leader_board()
+pico = AlturaMaxima('Los cracks')
 
 while not c.is_over():
 
-    leader.graficar()
+    print(c.get_data())
+
+    pico.calcular()
 
     c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
     c.next_iteration('puto',{i.nombre: i.ordenes for i in escala})
