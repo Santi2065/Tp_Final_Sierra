@@ -18,14 +18,14 @@ class leader_board:
 
         for equipo, jugadores in diccionario.items():
             jugador_max,altura_max= max(jugadores.items(),key=lambda item:item[1]['z'])
-            lista.append([jugador_max,altura_max['z']]) # [nombre,z]
+            lista.append([jugador_max,altura_max['z'],equipo]) # [nombre,z,equipo]
 
         ordenar_lista = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico
         
 
 
         for i in range(len(ordenar_lista)):
-            print(f"{i+1}: {ordenar_lista[i][0]} | {round(ordenar_lista[i][1],3)}")
+            print(f"{i+1} -> {ordenar_lista[i][2]} | {ordenar_lista[i][0]} | {round(ordenar_lista[i][1],3)}")
 
 
         lista.clear() # limpia listas para no interferir con las nuevas listas
