@@ -6,7 +6,7 @@ import os
 import threading
 import pyfiglet
 from PIL import Image
-from LEADERBOARD import leader_board
+#from LEADERBOARD import leader_board
 
 # Esto lo que hace es darnos la herramienta para poder pasar de light a dark.
 customtkinter.set_appearance_mode("Dark") 
@@ -25,7 +25,7 @@ class Dashboard(customtkinter.CTk):
         
         self.title("Mountain Dashboard")
 
-        leader = leader_board()
+        #leader = leader_board()
         # Largo y alto de la ventana.
 
         self.geometry("800x600")
@@ -151,12 +151,12 @@ class Dashboard(customtkinter.CTk):
         self.animacion_et.place(x = 0, y = 0, relwidth = 1, relheight = 1)
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        self.leaderboard_fondo = customtkinter.CTkLabel(self, width = 200, height = 200, bg_color = "#111111", text = "")
-        self.leaderboard_fondo.place(x = 609, y = 200)
+        #self.leaderboard_fondo = customtkinter.CTkLabel(self, width = 200, height = 200, bg_color = "#111111", text = "")
+        #self.leaderboard_fondo.place(x = 609, y = 200)
 
-        self.leaderboard = customtkinter.CTkLabel(self.leaderboard_fondo, text = "", text_color = "FFFFFF", font = ("Verdana", 12, "bold"), anchor = "nw")
-        self.leaderboard.place(x = 0, y = 0, relwidth = 1, relheight = 1)
-        self.leaderboard.configure(text = leader.graficar())
+        #self.leaderboard = customtkinter.CTkLabel(self.leaderboard_fondo, text = "", text_color = "FFFFFF", font = ("Verdana", 12, "bold"), anchor = "nw")
+        #self.leaderboard.place(x = 0, y = 0, relwidth = 1, relheight = 1)
+        #self.leaderboard.configure(text = self.generar_leader())
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Barra deslizadora
         self.brillo_slider = customtkinter.CTkSlider(self, from_ = 0, to = 255, orientation = "vertical", button_length = 20, button_color = "#FFFFFF", button_corner_radius = 1)
@@ -204,12 +204,13 @@ class Dashboard(customtkinter.CTk):
 
     #-----------------------------------------------------------------------------------------------------------------------------------------------
 
-    #def leader(self):
-    #   leader = leader_board().graficar()
-    #    self.
-
+    def generar_leader(self):
+        leader = leader_board().graficar()
+        self.leaderboard.configure(text = leader)
+        pass
 
 if __name__ == "__main__":
     mountain_dash = Dashboard()
     mountain_dash.comienzo_animacion()
     mountain_dash.mainloop()
+    #mountain_dash.leader_leader()
