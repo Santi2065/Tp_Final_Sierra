@@ -40,7 +40,7 @@ class leader_board:
         else:
             self.contador_racha = 0
 
-        self.anterior_top1 = top_1
+        self.anterior_top1 = top_1 # Chequear si lo puedo hacer mas corto el metodo de antes.
 
         for i in range(len(ordenar_lista)):
             if self.contador_racha > 4 and i == 0:
