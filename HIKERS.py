@@ -62,7 +62,7 @@ class Hiker:
         # Cambia la velocidad en la que el escalador se mueve (max 50)
         self.ordenes['speed'] = new_speed
 
-    def go_to(self, objective: list) -> None:
+    def go_to(self, objective: list[float, float]) -> None:
         info = self.actual_pos()
         hiker_coords = [info[0], info[1]]
         self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point(objective)}

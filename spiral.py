@@ -1,6 +1,7 @@
 from communication.client.client import MountainClient
-from test_hiker import Hiker, Grafico_2d_equipo
-from essential_functions import magnitude, dot_product, difference
+from HIKERS import Hiker
+from test_hiker import Grafico_2d_equipo
+from essential_functions import magnitude, dot_product, difference, distance_between
 import matplotlib.pyplot as plt
 import time
 import math
@@ -12,9 +13,12 @@ def spiral():
     c = register(names)
 
     directives = {name: {'speed': 50, 'direction': 0} for name in names}
-    hikers = [Hiker(directives[name], name) for name in names]
+    hikers = [Hiker(name, c) for name in names]
 
-    coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
+    #*coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
+    coords = {}
+    for hiker in hikers:
+        coords[hiker.nombre] = {'x': [],'y': [],'z': []}
     update_coords(coords, hikers)
     graf = Grafico_2d_equipo(hikers)
 
@@ -25,13 +29,6 @@ def spiral():
 
     # Angulos iniciales para que queden separados uniformemente
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
-
-    '''# Hace el primer movimiento para alejarse del centro
-    for hiker, offset in zip(hikers, offsets):
-        directives[hiker.nombre] = {'speed': 5, 'direction': offset}
-
-    c.next_iteration('Los cracks', directives)
-    time.sleep(.05)'''
 
     separation = 100 * len(names)
     b = separation / (2 * math.pi)
@@ -57,20 +54,20 @@ def spiral():
                 summit_loc, found_summit = current_loc, True
                 break
 
-            next_theta = estimate_theta2(current_theta, b)        
+            next_theta = estimate_theta2(current_theta, b, 49.5)
             hikers_thetas[hiker.nombre] = next_theta
             next_radius = b * (next_theta - offset)
             next_loc = get_point(next_radius, next_theta)
 
-            direction = hiker.go_to(next_loc)
+            '''direction = hiker.go_to(next_loc)
             hiker.change_speed(hiker.step_to_point(next_loc))
-            hiker.change_direction(direction)
+            hiker.change_direction(direction)'''
 
-            # hiker.go_to(next_loc) y borrar 3 lineas arriba
+            hiker.go_to(next_loc) #y borrar 3 lineas arriba
 
             directives[hiker.nombre] = hiker.ordenes
 
-            print(f'{hiker.nombre}: x={x:8.1f} y={y:8.2f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+            print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
         if found_summit:
             all_go_to_point(hikers, c, summit_loc, graf)
@@ -82,6 +79,7 @@ def spiral():
         #TODO: fijarse si es posible conocer los minutos
         if c.is_over():
             break
+
     print('Todos estamos en la cima :)')
 
 def register(names: list[str]) -> MountainClient:
@@ -98,7 +96,7 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
 
     # Makes a dictionary that tells if hiker is near the point or not
     for hiker in hikers:
-        distance_to_point = magnitude(difference(hiker.actual_pos(), point))
+        distance_to_point = distance_between(hiker.actual_pos(), point)
         close_to_point[hiker.nombre] = distance_to_point < 5 or hiker.in_summit()
     i = 0
 
@@ -109,7 +107,7 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
 
         for hiker in hikers:
             
-            print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
+            
 
             if close_to_point[hiker.nombre]:
                 hiker.change_direction(0)
@@ -117,14 +115,16 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
                 directives[hiker.nombre] = hiker.ordenes
                 continue
 
-            distance = magnitude(difference(hiker.actual_pos(), point))
-            hiker.change_direction(hiker.go_to(point))
-            hiker.change_speed(hiker.step_to_point(point))
+            distance = distance_between(hiker.actual_pos(), point)
+            '''hiker.change_direction(hiker.go_to(point))
+            hiker.change_speed(hiker.step_to_point(point))'''
 
-            # hiker.go_to(point) y sacar .change_direction y .change_speed
+            hiker.go_to(point) #y sacar .change_direction y .change_speed
 
             directives[hiker.nombre] = hiker.ordenes
             close_to_point[hiker.nombre] = distance < 5 or hiker.in_summit()
+
+            print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}, dir:{directives[hiker.nombre]["direction"]}')
 
         c.next_iteration('Los cracks', directives)
         
@@ -133,29 +133,8 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
         
         i += 1
 
-def get_direction(current_loc: tuple, next_loc: tuple) -> float:
-    x1, x2 = current_loc[0], next_loc[0]
-    y1, y2 = current_loc[1], next_loc[1]
-    aux = (x2, y1)
-    v1, v2 = difference(current_loc, aux), difference(current_loc, next_loc)
-    theta = math.acos(dot_product(v1, v2) / (magnitude(v1) * magnitude(v2)))
-    if x1 > x2:
-        if y1 < y2:
-            return math.pi - theta
-        else:
-            return math.pi + theta
-    else:
-        if y1 < y2:
-            return theta
-        else:
-            return -theta
-
-def get_theta(loc: tuple | list) -> float:
-    if loc[0] == 0:
-        return math.pi/2 if loc[1] > 0 else (3*math.pi)/2
-    return math.atan2(loc[1], loc[0])
-
 def get_point(radius: float, theta: float) -> tuple[float, float]:
+    '''Returns x y coords given theta and radius'''
     x = radius * math.cos(theta)
     y = radius * math.sin(theta)
     return (x, y)
@@ -163,10 +142,12 @@ def get_point(radius: float, theta: float) -> tuple[float, float]:
 def integral(theta: float, b: float):
     return (b * (math.log(abs(math.sqrt(theta**2 + 1) + theta)) + theta*math.sqrt(theta**2 + 1)))/2
 
-def estimate_theta2(theta1: float, b: float) -> float:
+def estimate_theta2(theta1: float, b: float, distance: float) -> float:
+    '''Dado un theta inicial, constante b y distancia a recorrer estima el theta2 tal que
+    la distancia entre theta1 y theta2 ronde la distancia dada'''
     theta2 = theta1
     change = 0.1
-    lower, higher = 49, 49.4
+    lower, higher = distance - 0.2, distance + 0.2
     integral1 = integral(theta1, b)
     distance1 = 0
 
@@ -190,6 +171,20 @@ def update_coords(coords: dict[str, dict[str, list[float]]], hikers: list[Hiker]
         coords[hiker.nombre]['x'] += [hiker.actual_pos()[0]]
         coords[hiker.nombre]['y'] += [hiker.actual_pos()[1]]
         coords[hiker.nombre]['z'] += [hiker.actual_pos()[2]]
+
+def get_next_loc(current_theta: float, hikers: list[Hiker], hikers_thetas: dict[str, float], offsets: list[float], b: float):
+    '''Estima la distancia que debe recorrer por el espiral para que la distancia
+    entre el punto actual y el que debe ir ronde 50. Usa el espiral sin offset para el calculo
+    y despues devuelve los equivalentes con el offset.'''
+
+    distancia1 = 30
+    # El escalador con menor theta es el del espiral sin offset.
+    theta1 = min(hikers_thetas.values())
+    next_theta = estimate_theta2(current_theta, b)
+    
+    '''hikers_thetas[hiker.nombre] = next_theta
+    next_radius = b * (next_theta - offset)
+    next_loc = get_point(next_radius, next_theta)'''
 
 def test_gets():
     def test_get_point():

@@ -13,9 +13,13 @@ def magnitude(v: tuple[float, float]) -> float:
     return math.sqrt(math.pow(v[0], 2) + math.pow(v[1], 2))
 
 def distance_between(p1: tuple[float, float], p2: tuple[float,float]) -> float:
+    '''returns the distance between p1 and p2, ignores z value'''
     v = difference(p1, p2)
     return magnitude(v)
 
 def direction(hiker_coord: list[float, float], objective: list[float, float]) -> float:
-    dx, dy = difference(hiker_coord, objective)
+    '''returns the angle in radians for hiker to go in direction to objetive'''
+    dx, dy = difference(objective, hiker_coord)
+    #dx = objective[0] - hiker_coord[0]
+    #dy = objective[1] - hiker_coord[1]
     return math.atan2(dy, dx)
