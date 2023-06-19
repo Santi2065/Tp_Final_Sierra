@@ -40,7 +40,7 @@ def spiral():
         if i % 30 == 0 and i >= 0:
             start = time.time()
             graf.coordenadas2(coords)
-            print(f'graf: {time.time() - start}')
+            print(f'graf: {time.time() - start}-------------------------------------------------------')
 
         start = time.time()
         determine_next_thetas(hikers_thetas, b)

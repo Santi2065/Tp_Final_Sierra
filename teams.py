@@ -9,7 +9,7 @@ class Team(Hiker):
         self.comms = c
 
     def face_out(self):
-        directio = 0
+        direction = 0
         for hiker in self.hikers:
             hiker.change_direction(direction)
             direction += math.pi/2
