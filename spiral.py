@@ -170,9 +170,10 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
 
 def update_coords(coords: dict[str, dict[str, list[float]]], hikers: list[Hiker]) -> None:
     for hiker in hikers:
-        coords[hiker.nombre]['x'] += [hiker.actual_pos()[0]]
-        coords[hiker.nombre]['y'] += [hiker.actual_pos()[1]]
-        coords[hiker.nombre]['z'] += [hiker.actual_pos()[2]]
+        x, y, z = hiker.actual_pos()
+        coords[hiker.nombre]['x'] += [x]
+        coords[hiker.nombre]['y'] += [y]
+        coords[hiker.nombre]['z'] += [z]
 
 def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
 
