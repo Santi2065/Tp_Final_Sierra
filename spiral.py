@@ -12,13 +12,9 @@ def spiral():
     names = ['Santi', 'Joaco', 'Gian ', 'Pipe ']
     c = register(names)
 
-    directives = {name: {'speed': 50, 'direction': 0} for name in names}
     hikers = [Hiker(name, c) for name in names]
 
-    #*coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
-    coords = {}
-    for hiker in hikers:
-        coords[hiker.nombre] = {'x': [],'y': [],'z': []}
+    coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
     update_coords(coords, hikers)
     graf = Grafico_2d_equipo(hikers)
 
@@ -30,6 +26,7 @@ def spiral():
     # Angulos iniciales para que queden separados uniformemente
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
 
+    directives = {}
     separation = 100 * len(names)
     b = separation / (2 * math.pi)
     hikers_thetas = {hiker.nombre: offset for hiker, offset in zip(hikers, offsets)}
@@ -40,9 +37,13 @@ def spiral():
     while not found_summit:
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 1 == 0 and i >= 0:
+        if i % 30 == 0 and i >= 0:
+            start = time.time()
             graf.coordenadas2(coords)
+            print(f'graf: {time.time() - start}')
 
+        start = time.time()
+        determine_next_thetas(hikers_thetas, b)
         for hiker, offset in zip(hikers, offsets):
             x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
             current_loc = (x, y)
@@ -54,28 +55,29 @@ def spiral():
                 summit_loc, found_summit = current_loc, True
                 break
 
-            next_theta = estimate_theta2(current_theta, b, 49.5)
-            hikers_thetas[hiker.nombre] = next_theta
+            '''next_theta = estimate_theta2(current_theta, b, 49.5)
+            hikers_thetas[hiker.nombre] = next_theta'''
+            next_theta = hikers_thetas[hiker.nombre]
             next_radius = b * (next_theta - offset)
             next_loc = get_point(next_radius, next_theta)
 
-            '''direction = hiker.go_to(next_loc)
-            hiker.change_speed(hiker.step_to_point(next_loc))
-            hiker.change_direction(direction)'''
-
-            hiker.go_to(next_loc) #y borrar 3 lineas arriba
+            hiker.go_to(next_loc)
 
             directives[hiker.nombre] = hiker.ordenes
 
             print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
+        calculation_time = time.time() - start
+        print(f'calculations: {calculation_time}')
         if found_summit:
-            all_go_to_point(hikers, c, summit_loc, graf)
+            all_go_to_point(hikers, c, summit_loc, graf, coords)
 
         i += 1
         c.next_iteration('Los cracks', directives)
-        update_coords(coords, hikers)
         time.sleep(0.05)
+
+        update_coords(coords, hikers)
+        
         #TODO: fijarse si es posible conocer los minutos
         if c.is_over():
             break
@@ -172,19 +174,21 @@ def update_coords(coords: dict[str, dict[str, list[float]]], hikers: list[Hiker]
         coords[hiker.nombre]['y'] += [hiker.actual_pos()[1]]
         coords[hiker.nombre]['z'] += [hiker.actual_pos()[2]]
 
-def get_next_loc(current_theta: float, hikers: list[Hiker], hikers_thetas: dict[str, float], offsets: list[float], b: float):
-    '''Estima la distancia que debe recorrer por el espiral para que la distancia
-    entre el punto actual y el que debe ir ronde 50. Usa el espiral sin offset para el calculo
-    y despues devuelve los equivalentes con el offset.'''
+def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
 
-    distancia1 = 30
+    distance = 49.5
+
     # El escalador con menor theta es el del espiral sin offset.
     theta1 = min(hikers_thetas.values())
-    next_theta = estimate_theta2(current_theta, b)
-    
-    '''hikers_thetas[hiker.nombre] = next_theta
-    next_radius = b * (next_theta - offset)
-    next_loc = get_point(next_radius, next_theta)'''
+    theta2 = estimate_theta2(theta1, b, distance)
+
+    delta_theta = theta2 - theta1
+
+    for hiker_name in hikers_thetas:
+        hikers_thetas[hiker_name] += delta_theta
+
+def spiral_move_all():
+    pass
 
 def test_gets():
     def test_get_point():

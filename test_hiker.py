@@ -142,7 +142,7 @@ class Grafico_2d_equipo:
         argumento: data={'nombre1': {'x': [], 'y': [], 'z': []}}'''
 
         self.ax.cla()
-        colors = 'r', 'c', 'g', 'magenta'
+        colors = 'r', 'c', 'g', 'magenta', 'grey'
 
         x_max = float('-inf')
         y_max = float('-inf')
@@ -155,6 +155,7 @@ class Grafico_2d_equipo:
             num_points = len(x)
             marker_size = 10 / np.sqrt(num_points)
 
+            # Encuentra los maximos en estos puntos
             x_max = max(x_max, np.max(np.abs(x)))
             y_max = max(y_max, np.max(np.abs(y)))
 
