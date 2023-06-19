@@ -27,15 +27,9 @@ class leader_board:
         ordenar_lista = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
         
         top_1 = ordenar_lista[0][0]
-        aux_racha.append(top_1) # El jugador top 1
+    
 
-        for x in aux_racha:
-            if x != top_1:
-                corto_racha = True
-                self.contador_racha = 0
-                aux_racha.clear()
-
-        if corto_racha is False and (self.anterior_top1 == None or self.anterior_top1 == top_1):
+        if self.anterior_top1 == None or self.anterior_top1 == top_1:
             self.contador_racha += 1
         else:
             self.contador_racha = 0
