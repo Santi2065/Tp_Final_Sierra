@@ -9,7 +9,7 @@ class Team(Hiker):
         self.comms = c
 
     def face_out(self):
-        directio = 0
+        direction = 0
         for hiker in self.hikers:
             hiker.change_direction(direction)
             direction += math.pi/2
@@ -23,7 +23,7 @@ class Team(Hiker):
     def go_center(self):
         #apuntan al centro
         for hiker in self.hikers:
-            hiker.go_to([0,0])
+            hiker.go_to([0, 0])
 
         #se mueven hasta que llegan
         llegada = {x : 0 for x in self.hikers}
@@ -37,8 +37,10 @@ class Team(Hiker):
                 if -1 < x < 1 and -1 < y < 1:
                     llegada[hiker] = 1
                     hiker.stay_still()
-            no_llegaron = False
+            no_llegaron = False          #! Raro, creo q va adentro del if
             for x in llegada.values():
                 if x == 0:
                     no_llegaron = True
+        #! Habria q poner un go_to por cada iteracion, o cambiar el margen de error,
+        #! sino se puede pasar y seguir de largo
         print("En el centro")

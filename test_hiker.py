@@ -103,7 +103,9 @@ class Grafico_2d_equipo:
     def __init__(self, hikers: list[Hiker]):
         self.hikers = hikers
         self.fig, self.ax = plt.subplots()
+        #!self.fig, self.ax = plt.subplots(figsize=plt.figaspect(1/1))
         self.labels = []
+        self.last_index = 0
         nombres = [hiker.nombre for hiker in hikers]
 
         for i in range(len(hikers)):
@@ -138,35 +140,56 @@ class Grafico_2d_equipo:
 
 
     def coordenadas2(self, data: dict[str, dict[str, list[float]]]):
-        '''grafico que toma listas de coordenadas y las muestra
-        argumento: data={'nombre1': {'x': [], 'y': [], 'z': []}}'''
+        '''
+        Grafico que toma listas de coordenadas y las muestra.
+        Arguments:
+        data: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}'''
+
+        #plt.ion()
 
         self.ax.cla()
+
         colors = 'r', 'c', 'g', 'magenta', 'grey'
 
         x_max = float('-inf')
         y_max = float('-inf')
 
+        #* Borra los nombres anteriores
+        #*for text in self.ax.texts:
+        #*    text.set_text('')
+
         for name, coords, colr in zip(data, data.values(), colors):
             x = np.array(coords['x'])
             y = np.array(coords['y'])
-
-            # Achica el tamaño de los puntos a medida que hay mas
-            num_points = len(x)
-            marker_size = 10 / np.sqrt(num_points)
 
             # Encuentra los maximos en estos puntos
             x_max = max(x_max, np.max(np.abs(x)))
             y_max = max(y_max, np.max(np.abs(y)))
 
+            # Achica el tamaño de los puntos a medida que hay mas
+            num_points = len(x)
+            marker_size = 10 / np.sqrt(num_points)
+
+            #* Lista con los nuevos valores a graficar
+            #*new_x = x[self.last_index:]
+            #*new_y = y[self.last_index:]
+
+            #* Grafica los nuevos puntos
+            #*self.ax.scatter(new_x, new_y, s=marker_size, color=colr)
+    
             self.ax.scatter(x, y, s=marker_size, color=colr)
+
+            # Actualiza el indice del ultimo valor graficado
+            self.last_index = len(x) - 1
 
             # Pone el nombre del escalador en el ultimo punto que estuvo
             last_coord = (coords['x'][-1], coords['y'][-1])
             self.ax.text(last_coord[0], last_coord[1], name, fontsize=9)
 
-        # Ajusta la escala a medida que crece el rango, medio bugeado
+        # Encuentra el maximo de todos los valores
         limit = max(x_max, y_max)
+
+        # Ajusta la escala a medida que crece el rango
         limit += limit/10
         self.ax.set_xlim(-limit, limit) 
         self.ax.set_ylim(-limit, limit)
@@ -178,6 +201,9 @@ class Grafico_2d_equipo:
         self.ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
 
         # Actualiza el grafico, por performance
-        self.fig.canvas.draw_idle()
+        #!self.fig.canvas.draw_idle()
+        #!plt.show(block=False)
 
-        plt.pause(0.005)
+        #* plt.savefig('graph.png')
+
+        plt.pause(0.001)

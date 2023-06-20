@@ -26,37 +26,41 @@ def spiral():
     # Angulos iniciales para que queden separados uniformemente
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
 
-    directives = {}
-    separation = 100 * len(names)
-    b = separation / (2 * math.pi)
+    # Theta de cada escalador, va creciendo a medida que pasa el tiempo
     hikers_thetas = {hiker.nombre: offset for hiker, offset in zip(hikers, offsets)}
+
+    directives = {}
+    separation = (2 * 50) * len(names)
+    b = separation / (2 * math.pi)
     found_summit = False
+
+    iteration_time = []
 
     i = 0
     # Comienza el proceso de ir en espiral
     while not found_summit:
+        s = time.time()
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 30 == 0 and i >= 0:
+        if i % 1 == 0 and i >= 0:
             start = time.time()
             graf.coordenadas2(coords)
-            print(f'graf: {time.time() - start}')
+            print(f'graf: {time.time() - start} -------------------------------------------')
 
-        start = time.time()
+        previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
-        for hiker, offset in zip(hikers, offsets):
-            x, y = hiker.actual_pos()[0], hiker.actual_pos()[1]
-            current_loc = (x, y)
-            current_theta = hikers_thetas[hiker.nombre]
 
+        #TODO convertir este for en una funcion, ademas poner si uno llego al borde
+        for hiker, offset in zip(hikers, offsets):
             # If it is in the summit, all hikers go to the coord of the hiker in the summit
             if hiker.in_summit():
                 print(f'{hiker.nombre}: Estoy en cima')
-                summit_loc, found_summit = current_loc, True
+                x, y, z = hiker.actual_pos()
+                summit_loc, found_summit = (x, y), True
                 break
 
-            '''next_theta = estimate_theta2(current_theta, b, 49.5)
-            hikers_thetas[hiker.nombre] = next_theta'''
+            current_theta = previous_hikers_thetas[hiker.nombre]
+
             next_theta = hikers_thetas[hiker.nombre]
             next_radius = b * (next_theta - offset)
             next_loc = get_point(next_radius, next_theta)
@@ -65,24 +69,49 @@ def spiral():
 
             directives[hiker.nombre] = hiker.ordenes
 
-            print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
-        calculation_time = time.time() - start
-        print(f'calculations: {calculation_time}')
+            #print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+            print(f'{hiker.nombre:6s}: θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+
         if found_summit:
             all_go_to_point(hikers, c, summit_loc, graf, coords)
 
         i += 1
         c.next_iteration('Los cracks', directives)
-        time.sleep(0.05)
+        time.sleep(0.1)
 
         update_coords(coords, hikers)
-        
-        #TODO: fijarse si es posible conocer los minutos
+
+        #TODO: fijarse si es posible conocer los minutos, sino hacer q se fije si despues 
+        #TODO: de la iteracion todas las posiciones son iguales
         if c.is_over():
             break
 
+        iteration_time += [time.time() - s]
+        print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
+
     print('Todos estamos en la cima :)')
+
+'''
+Optimizacion
+
+con el grafico corriendo:
+    grafico: 0.135s
+        check_summit: 0.002 s, por cada escalador (0.008)
+        go_to original: 0.003 s, por escalador (0.012)
+        go_to mejorado: 0.0015 s, por cada escalador (0.006)
+        total calculo para 1: 0.005s
+    iteracion entera: ~0.18 (0.28 menos el time.sleep(0.1), ademas empeora con el tiempo)
+
+sin el grafico corriendo:
+        check_summit: 0.0013 s, por cada escalador (0.0052)
+        go_to mejorado: 0.0013 s, por cada escalador (0.0052)
+    for entero: 0.0036
+    iteracion entera: 0.032 (0.132 menos el time.sleep(0.1))
+
+conclusion: mejorar performace grafico y conocer minutos para eliminar time.sleep
+'''
+
 
 def register(names: list[str]) -> MountainClient:
     print('Conectando a servidor...')
@@ -99,32 +128,27 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
     # Makes a dictionary that tells if hiker is near the point or not
     for hiker in hikers:
         distance_to_point = distance_between(hiker.actual_pos(), point)
-        close_to_point[hiker.nombre] = distance_to_point < 5 or hiker.in_summit()
+        close_to_point[hiker.nombre] = distance_to_point == 0 or hiker.in_summit()
     i = 0
 
     # Runs until all hikers are near the point
     while False in close_to_point.values():
-        if i % 1 == 0 and i >= 100000:
+        if i % 1 == 0 and i >= 0:
             graf.coordenadas2(coords)
 
         for hiker in hikers:
-            
-            
-
             if close_to_point[hiker.nombre]:
                 hiker.change_direction(0)
                 hiker.change_speed(0)
                 directives[hiker.nombre] = hiker.ordenes
                 continue
 
-            distance = distance_between(hiker.actual_pos(), point)
-            '''hiker.change_direction(hiker.go_to(point))
-            hiker.change_speed(hiker.step_to_point(point))'''
+            distance_to_point = distance_between(hiker.actual_pos(), point)
 
-            hiker.go_to(point) #y sacar .change_direction y .change_speed
+            hiker.go_to(point)
 
             directives[hiker.nombre] = hiker.ordenes
-            close_to_point[hiker.nombre] = distance < 5 or hiker.in_summit()
+            close_to_point[hiker.nombre] = distance_to_point == 0 or hiker.in_summit()
 
             print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}, dir:{directives[hiker.nombre]["direction"]}')
 
@@ -149,7 +173,7 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
     la distancia entre theta1 y theta2 ronde la distancia dada'''
     theta2 = theta1
     change = 0.1
-    lower, higher = distance - 0.2, distance + 0.2
+    lower, higher = distance - 0.05, distance + 0.05
     integral1 = integral(theta1, b)
     distance1 = 0
 
@@ -169,15 +193,28 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
     return theta2
 
 def update_coords(coords: dict[str, dict[str, list[float]]], hikers: list[Hiker]) -> None:
+    '''Actualiza la historia de coordenadas de todos los escaladores de un equipo'''
     for hiker in hikers:
         x, y, z = hiker.actual_pos()
         coords[hiker.nombre]['x'] += [x]
         coords[hiker.nombre]['y'] += [y]
         coords[hiker.nombre]['z'] += [z]
 
+def update_coords2(coords: dict[str, dict[str, list[float]]], c: MountainClient) -> None:
+    '''Actualiza la historia de coordenadas de todos los escaladores de un
+    equipo, pero usa un get_data en vez de la cantidad de escaladores'''
+    team_name = 'Los cracks'
+    hikers_locs = all_hiker_coords(c, team_name)
+
+    for name in hikers_locs:
+        x, y, z = hikers_locs[name]
+        coords[name]['x'] += [x]
+        coords[name]['y'] += [y]
+        coords[name]['z'] += [z]
+
 def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
 
-    distance = 49.5
+    distance = 49.8
 
     # El escalador con menor theta es el del espiral sin offset.
     theta1 = min(hikers_thetas.values())
@@ -190,6 +227,17 @@ def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
 
 def spiral_move_all():
     pass
+
+def all_hiker_coords(c: MountainClient, team_name: str):
+    '''Devuelve diccionario con la posicion de todos los escaladores, un get_data'''
+    team_info = c.get_data()[team_name]
+    hiker_coords = {}
+    for name in team_info:
+        x = team_info[name]['x']
+        y = team_info[name]['y']
+        z = team_info[name]['z']
+        hiker_coords[name] = (x, y, z)
+    return hiker_coords
 
 def test_gets():
     def test_get_point():

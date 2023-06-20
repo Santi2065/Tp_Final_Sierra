@@ -17,9 +17,7 @@ def distance_between(p1: tuple[float, float], p2: tuple[float,float]) -> float:
     v = difference(p1, p2)
     return magnitude(v)
 
-def direction(hiker_coord: list[float, float], objective: list[float, float]) -> float:
-    '''returns the angle in radians for hiker to go in direction to objetive'''
+def direction(hiker_coord: list|tuple[float, float], objective: list|tuple[float, float]) -> float:
+    '''returns the angle in radians (-pi, pi] for hiker to go in direction to objetive'''
     dx, dy = difference(objective, hiker_coord)
-    #dx = objective[0] - hiker_coord[0]
-    #dy = objective[1] - hiker_coord[1]
     return math.atan2(dy, dx)

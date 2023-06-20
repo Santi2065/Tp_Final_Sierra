@@ -63,10 +63,20 @@ class Hiker:
         self.ordenes['speed'] = new_speed
 
     def go_to(self, objective: list[float, float]) -> None:
-        info = self.actual_pos()
-        hiker_coords = [info[0], info[1]]
-        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point(objective)}
+        '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
+        dentro del rango entonces cambia la velociadad para que quede en el objetivo'''
+        x, y, z = self.actual_pos()
+        hiker_coords = (x, y)
+        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point2(hiker_coords, objective)}
+        #!self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point(objective)}
         # return self.ordenes     <- podria agregar esto
+    
+    def go_to2(self, objective: list[float, float], loc: tuple[float, float, float]) -> None:
+        '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
+        dentro del rango entonces cambia la velociadad para que quede en el objetivo, no usa actual_pos'''
+        x, y, z = loc
+        hiker_coords = (x, y)
+        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point2(hiker_coords, objective)}
 
     def random(self):
         # El hiker entra en un estado de aleatoriedad y rebota por todo el mapa.
@@ -90,6 +100,14 @@ class Hiker:
         '''Devuelve la distancia del paso que tiene que hacer hiker
         para llegar al punto'''
         distance = distance_between(self.actual_pos(), objective)
+        if distance < 50:
+            return distance
+        return 50
+    
+    def step_to_point2(self, pos: tuple|float, objective: tuple|float) -> float|int:
+        '''Devuelve la distancia del paso que tiene que hacer hiker
+        para llegar al punto, version para no hacer otro actual_pos'''
+        distance = distance_between(pos, objective)
         if distance < 50:
             return distance
         return 50
