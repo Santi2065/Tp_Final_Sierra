@@ -7,7 +7,9 @@ class leader_board:
 
     def __init__(self) :
         self.contador_racha = 0
+        self.contador_racha_malo = 0
         self.anterior_top1 = None
+        self.anterior_ultimo = None
  
     def graficar(self):
 
@@ -27,6 +29,7 @@ class leader_board:
         ordenar_lista = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
         
         top_1 = ordenar_lista[0][0]
+        top_ultimo = ordenar_lista[len(lista)-1][0] # ojo que si la lista tiene cero elemento puede llegar a tirar error?
     
 
         if self.anterior_top1 == None or self.anterior_top1 == top_1:
@@ -34,13 +37,23 @@ class leader_board:
         else:
             self.contador_racha = 0
 
-        self.anterior_top1 = top_1 # Chequear si lo puedo hacer mas corto el metodo de antes.
+        if self.anterior_ultimo == None or self.anterior_ultimo == top_ultimo:
+            self.contador_racha_malo += 1
+        else:
+            self.contador_racha_malo = 0
+        
 
+        self.anterior_top1 = top_1 # Chequear si lo puedo hacer mas corto el metodo de antes.
+        
+
+            # Me queda una boludez del formato nada mas
         for i in range(len(ordenar_lista)):
-            if self.contador_racha > 4 and i == 0:
-                print(f"🔥{i+1} -> {ordenar_lista[i][2]} | {ordenar_lista[i][0]} | {round(ordenar_lista[i][1],3)}")
+            if self.contador_racha > 6 and i == 0:
+                print(f"Top {'{:<5}'.format(i+1)}🔥|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)} ")
+            elif self.contador_racha_malo > 12 and ordenar_lista[i][0] == top_ultimo:
+                print(f"Top {'{:<5}'.format(i+1)}🐢|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
             else:
-                print(f"{i+1} -> {ordenar_lista[i][2]} | {ordenar_lista[i][0]} | {round(ordenar_lista[i][1],3)}")
+                print(f"Top {'{:<5}'.format(i+1)} ''|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
 
         lista.clear() # limpia listas para no interferir con las nuevas listas
 
