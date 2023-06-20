@@ -1,7 +1,7 @@
 from teams import Team
 from HIKERS import Hiker
 import math
-from graph import Grafico_2d_equipo
+#from graph import Grafico_2d_equipo
 
 def empinado(team:Team):
     hikers_buscando = team.hikers
@@ -10,7 +10,7 @@ def empinado(team:Team):
     for i in range(5):
         team.move_all()
     searching = True
-    grafico = Grafico_2d_equipo(team.hikers)
+    #grafico = Grafico_2d_equipo(team.hikers)
     info = team.comms.get_data()
     for hiker in team.hikers:
         x = info[team.nombre][hiker.nombre]['x']
@@ -22,7 +22,7 @@ def empinado(team:Team):
         hiker.cambio_estado('subiendo')
     while searching:
         info = team.comms.get_data()
-        grafico.coordenadas(team.hikers,info)
+        #grafico.coordenadas(team.hikers,info)
         for hiker in team.hikers:
             x = info[team.nombre][hiker.nombre]['x']
             y = info[team.nombre][hiker.nombre]['y']

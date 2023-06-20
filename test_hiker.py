@@ -100,17 +100,18 @@ class Hiker:
 
 
 class Grafico_2d_equipo:
-    def __init__(self, hikers: list[Hiker]):
-        self.hikers = hikers
+    #def __init__(self, hikers: list[Hiker]):
+    def __init__(self):
+        #self.hikers = hikers
         self.fig, self.ax = plt.subplots()
         #!self.fig, self.ax = plt.subplots(figsize=plt.figaspect(1/1))
         self.labels = []
         self.last_index = 0
-        nombres = [hiker.nombre for hiker in hikers]
+        '''nombres = [hiker.nombre for hiker in hikers]
 
         for i in range(len(hikers)):
             label = self.ax.text(0, 0, nombres[i], ha='center', va='bottom')
-            self.labels.append(label)
+            self.labels.append(label)'''
 
         self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico 
 

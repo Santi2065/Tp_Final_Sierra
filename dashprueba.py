@@ -5,7 +5,11 @@ import time
 import os
 import threading
 import pyfiglet
+import matplotlib
 from PIL import Image
+from test_hiker import Grafico_2d_equipo
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from communication.client.client import MountainClient
 #from LEADERBOARD import leader_board
 
 # Esto lo que hace es darnos la herramienta para poder pasar de light a dark.
@@ -17,8 +21,18 @@ customtkinter.set_default_color_theme("blue")
 
 class Dashboard(customtkinter.CTk):
     # Uso el constructor como se me da en la info que tengo.
-    def __init__(self):
-        super().__init__() 
+    def __init__(self, client: MountainClient):
+        super().__init__()
+        self.time_step = 50 # ms
+        self.client = client
+        self.data = client.get_data()
+        self.team = list(self.data.keys())
+        self.hikers = list(self.data[self.team[0]].keys())
+        self.graph = Grafico_2d_equipo()
+        self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
+        self.update_coords()
+        
+
 
         # Una vez tenido eso, arranco con la configuracion de la ventana.
         # Defino el titulo.
@@ -41,22 +55,22 @@ class Dashboard(customtkinter.CTk):
         self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#64B5F6")
         self.marco_sup_izquierdo.place(x = 10, y = 11)
 
-        self.titulo_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = "FELIPE", text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.titulo_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = self.hikers[0], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_sup_izquierdo.place(relx = 0.5, rely = 0.1, anchor = "center")
 
-        self.posicion_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = "Posicion: ", font = ("Verdana", 14, "bold"),   text_color = "#000000")
-        self.posicion_sup_izquierdo.place(relx = 0.1, rely = 0.35, anchor = "w")
+        self.posicion_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Posicion: x: {self.coords[self.hikers[0]]['x'][-1]:8.1f}\n         y: {self.coords[self.hikers[0]]['y'][-1]:8.1f}", font = ("Verdana", 12, "bold"),   text_color = "#000000")
+        self.posicion_sup_izquierdo.place(relx = 0.05, rely = 0.35, anchor = "w")
 
-        self.altura_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = "Altura: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
-        self.altura_sup_izquierdo.place(relx = 0.1, rely = 0.55, anchor = "w")
+        self.altura_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Altura: {self.coords[self.hikers[0]]['z'][-1]:8.1f}", font = ("Verdana", 12, "bold"), text_color = "#000000")
+        self.altura_sup_izquierdo.place(relx = 0.05, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
-        self.velocidad_sup_izquierdo.place(relx = 0.1, rely = 0.75, anchor = "w")
+        self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Velocidad: ", font = ("Verdana", 12, "bold"), text_color = "#000000")
+        self.velocidad_sup_izquierdo.place(relx = 0.05, rely = 0.75, anchor = "w")
         #----------------------------------------------------------------------------------------------------------------------------------------------- 
         self.marco_sup_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#FF8A80")
         self.marco_sup_derecho.place(x = 609, y = 11)
 
-        self.titulo_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = "GIANLUCA", text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.titulo_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = self.hikers[1], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_sup_derecho.place(relx = 0.5, rely = 0.1, anchor = "center")
 
         self.posicion_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = "Posicion: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
@@ -71,7 +85,7 @@ class Dashboard(customtkinter.CTk):
         self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#FFF176")
         self.marco_inf_izquierdo.place(x = 10, y = 409)
 
-        self.titulo_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = "JOACO", text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.titulo_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = self.hikers[2], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_inf_izquierdo.place(relx = 0.5, rely = 0.1, anchor = "center")
 
         self.posicion_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = "Posicion: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
@@ -86,7 +100,7 @@ class Dashboard(customtkinter.CTk):
         self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#A5D6A7")
         self.marco_inf_derecho.place(x = 609, y = 409)
 
-        self.titulo_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = "SANTI", text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.titulo_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = self.hikers[3], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_inf_derecho.place(relx = 0.5, rely = 0.1, anchor = "center")
 
         self.posicion_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = "Posicion: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
@@ -103,18 +117,13 @@ class Dashboard(customtkinter.CTk):
         #self.rectangulo_fondo = customtkinter.CTkLabel(self, width = 400, height = 300, bg_color = "#111111")
         #self.rectangulo_fondo.place(x = 200, y = 150)
 
-        self.rectangulo = customtkinter.CTkFrame(self, width = 370, height = 300)
-        self.rectangulo.place(x = 215, y = 150)
+        self.graph.coordenadas2(self.coords)
+        self.graph.fig.set_size_inches(4.05,3)
+        
+        self.mountain_image = FigureCanvasTkAgg(self.graph.fig,master = self)
+        #self.mountain_image_label = customtkinter.CTkLabel(self.rectangulo, image = self.mountain_image, text = "")
+        #self.mountain_image_label.place(relx = 0.5, rely = 0.5, anchor = "center")
 
-        self.imagen_ancho = 370
-        self.imagen_largo = 300
-        self.image_path = "C://Users//Felipe//Documents//Proyectos//Dashboard//Mountain.PNG"
-        self.mountain_image = customtkinter.CTkImage(light_image = Image.open(os.path.join(self.image_path)), size = (self.imagen_ancho, self.imagen_largo))
-        self.mountain_image_label = customtkinter.CTkLabel(self.rectangulo, image = self.mountain_image, text = "")
-        self.mountain_image_label.place(relx = 0.5, rely = 0.5, anchor = "center")
-
-        self.titulo_rect = customtkinter.CTkLabel(self.rectangulo, text = "Graficos", anchor = "center", font = ("Verdana", 16, "bold"), text_color = "#000000", bg_color = "#FFFFFF")
-        self.titulo_rect.place(relx = 0.2, rely = 0.1, anchor = "center")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo un timer que se va a ubicar en la parte superior del rectangulo.
 
@@ -171,7 +180,7 @@ class Dashboard(customtkinter.CTk):
         horas = tiempo_transcurrido // 3600
         minutos = (tiempo_transcurrido % 3600) // 60
         segundos = tiempo_transcurrido % 60
-        string_tiempo = f"{horas :02d} : {minutos :02d} : {segundos : 02d}"
+        string_tiempo = f"{horas:02d} : {minutos:02d} : {segundos:02d}"
         self.timer.configure(text = f"TIMER = {string_tiempo}")
         self.timer.after(1000, self.update_timer)
 
@@ -209,8 +218,36 @@ class Dashboard(customtkinter.CTk):
         self.leaderboard.configure(text = leader)
         pass
 
+    def update_coords(self) -> None:
+        #coords = {nombre1: {'x': [], 'y': [], 'z': []}}
+        
+        for hiker in self.hikers:
+            self.coords[hiker]['x'] += [self.data[self.team[0]][hiker]['x']]
+            self.coords[hiker]['y'] += [self.data[self.team[0]][hiker]['y']]
+            self.coords[hiker]['z'] += [self.data[self.team[0]][hiker]['z']]
+        
+    def start(self):
+        # No modificar
+        t = threading.Thread(target=self.update_data)
+        t.start()
+        self.mainloop()  
+
+    def update_data(self):
+        # No modificar
+        while not self.client.is_over():
+            self.data = self.client.get_data()
+            time.sleep(self.time_step/1000)
+            self.graph = Grafico_2d_equipo()
+            matplotlib.pyplot.close()
+            self.mountain_image.draw()
+            self.update_coords()
+            self.mountain_image.get_tk_widget().place(x=201, y=150)
+            self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.hikers[0]]['x'][-1]:8.1f}\n             y: {self.coords[self.hikers[0]]['y'][-1]:8.1f}")
+            self.altura_sup_izquierdo.configure(text = f"Altura: {self.coords[self.hikers[0]]['z'][-1]:8.1f}")
+
 if __name__ == "__main__":
-    mountain_dash = Dashboard()
+    client = MountainClient()
+    mountain_dash = Dashboard(client)
     mountain_dash.comienzo_animacion()
-    mountain_dash.mainloop()
+    mountain_dash.start()
     #mountain_dash.leader_leader()
