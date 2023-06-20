@@ -16,7 +16,7 @@ def spiral():
 
     coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
     update_coords(coords, hikers)
-    graf = Grafico_2d_equipo(hikers)
+    graf = Grafico_2d_equipo()
 
     # Se dirige al origen
     all_go_to_point(hikers, c, (0, 0), graf, coords)
@@ -32,17 +32,17 @@ def spiral():
     directives = {}
     separation = (2 * 50) * len(names)
     b = separation / (2 * math.pi)
-    found_summit = False
+    all_in_summit = False
 
     iteration_time = []
 
     i = 0
     # Comienza el proceso de ir en espiral
-    while not found_summit:
+    while not all_in_summit:
         s = time.time()
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 1 == 0 and i >= 0:
+        if i % 1 == 0 and i >= 10000000:
             start = time.time()
             graf.coordenadas2(coords)
             print(f'graf: {time.time() - start}-------------------------------------------------------')
@@ -50,15 +50,8 @@ def spiral():
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
 
-        #TODO convertir este for en una funcion, ademas poner si uno llego al borde
+        #TODO: convertir este for en una funcion, ademas poner si uno llego al borde
         for hiker, offset in zip(hikers, offsets):
-            # If it is in the summit, all hikers go to the coord of the hiker in the summit
-            if hiker.in_summit():
-                print(f'{hiker.nombre}: Estoy en cima')
-                x, y, z = hiker.actual_pos()
-                summit_loc, found_summit = (x, y), True
-                break
-
             current_theta = previous_hikers_thetas[hiker.nombre]
 
             next_theta = hikers_thetas[hiker.nombre]
@@ -71,24 +64,34 @@ def spiral():
 
 
             #print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
-            print(f'{hiker.nombre:6s}: θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+            print(f'{hiker.nombre:6s}: θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
-        if found_summit:
-            all_go_to_point(hikers, c, summit_loc, graf, coords)
 
-        i += 1
+        previous_coords = all_hiker_coords(c, 'Los cracks')
+
         c.next_iteration('Los cracks', directives)
-        time.sleep(0.1)
+
+        # Espera hasta que el servidor haya actualizado las posiciones
+        while previous_coords == all_hiker_coords(c, 'Los cracks'):
+            continue
+
+
+        # Se fija si hay un escalador (de cualquier equipo) que llego a la cima
+        summit_loc = check_hiker_in_summit(c)
+        if summit_loc:
+            all_go_to_point(hikers, c, summit_loc, graf, coords)
+            all_in_summit = True
 
         update_coords(coords, hikers)
 
-        #TODO: fijarse si es posible conocer los minutos, sino hacer q se fije si despues 
-        #TODO: de la iteracion todas las posiciones son iguales
+
         if c.is_over():
             break
 
         iteration_time += [time.time() - s]
         print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
+
+        i += 1
 
     print('Todos estamos en la cima :)')
 
@@ -213,7 +216,8 @@ def update_coords2(coords: dict[str, dict[str, list[float]]], c: MountainClient)
         coords[name]['z'] += [z]
 
 def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
-
+    '''Calcula la diferencia de theta1 y theta2 para recorrer una
+    distancia por el espiral y se lo aplica a todos los escaladores'''
     distance = 49.8
 
     # El escalador con menor theta es el del espiral sin offset.
@@ -239,6 +243,17 @@ def all_hiker_coords(c: MountainClient, team_name: str):
         hiker_coords[name] = (x, y, z)
     return hiker_coords
 
+def check_hiker_in_summit(c: MountainClient) -> tuple|None:
+    '''Checks if any hiker of any team reached the summit, if there is it returns its location'''
+    info = c.get_data()
+    for team in info.values():
+        for hiker_data in team.values():
+            if hiker_data['cima']:
+                x = hiker_data['x']
+                y = hiker_data['y']
+                return (x, y)
+
+
 def test_gets():
     def test_get_point():
         print(f'get_point(10, pi/2):  {get_point(10, math.pi/2)}')
@@ -252,65 +267,5 @@ def test_gets():
     test_get_point()
 
 
-#test_gets()
 if __name__ == '__main__':
     spiral()
-'''
-
-hikers = []
-hikers.append(Hiker(directives['Gian'],'Gian'))
-hikers.append(Hiker(directives['Gian2'],'Gian2'))
-hikers.append(Hiker(directives['Gian3'],'Gian3'))
-hikers.append(Hiker(directives['Gian4'],'Gian4'))
-
-while not c.is_over():
-
-    print(hikers[2].actual_pos())
-    c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
-    if hikers[0].almost_out() is True:
-        hikers[0].random()
-    if hikers[1].almost_out() is True:
-        hikers[1].random()
-    if hikers[2].almost_out() is True:
-        hikers[2].random()
-    if hikers[3].almost_out() is True:
-        hikers[3].random()
-
-directives = {
-        'Pipe':{'direction':10,'speed':20},
-        'Santi':{'direction':10,'speed':20},
-        'Joaco':{'direction':10,'speed':20},
-        'Gian':{'direction':10,'speed':20}
-        }
-c.next_iteration('Los cracks', directives)
-
-{'Los cracks': {
-    'Santi': {
-        'x': 3125.632983169462,
-        'y': 6949.486402873517,
-        'z': 4897.121164511321,
-        'inclinacion_x': -41.52367048233283,
-        'inclinacion_y': -44.173850342687714,
-        'cima': False},
-    'Pipe': {
-        'x': 3125.632983169462,
-        'y': 6949.486402873517,
-        'z': 4897.121164511321,
-        'inclinacion_x': -41.52367048233283,
-        'inclinacion_y': -44.173850342687714,
-        'cima': False},
-    'Gian': {
-        'x': 3125.632983169462,
-        'y': 6949.486402873517,
-        'z': 4897.121164511321,
-        'inclinacion_x': -41.52367048233283,
-        'inclinacion_y': -44.173850342687714,
-        'cima': False},
-    'Joaco': {
-        'x': 3125.632983169462,
-        'y': 6949.486402873517,
-        'z': 4897.121164511321,
-        'inclinacion_x': -41.52367048233283,
-        'inclinacion_y': -44.173850342687714,
-        'cima': False}}}
-'''

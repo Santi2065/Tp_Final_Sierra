@@ -105,8 +105,11 @@ class Grafico_2d_equipo:
         #self.hikers = hikers
         self.fig, self.ax = plt.subplots()
         #!self.fig, self.ax = plt.subplots(figsize=plt.figaspect(1/1))
-        self.labels = []
+
+        # Hace que sea un cuadrado la ventana
+        self.ax.set_aspect('equal')
         self.last_index = 0
+        self.labels = []
         '''nombres = [hiker.nombre for hiker in hikers]
 
         for i in range(len(hikers)):
@@ -140,11 +143,12 @@ class Grafico_2d_equipo:
         plt.pause(0.005)
 
 
-    def coordenadas2(self, data: dict[str, dict[str, list[float]]]):
+    def coordenadas2(self, data: dict[str, dict[str, list[float]]]) -> None:
         '''
         Grafico que toma listas de coordenadas y las muestra.
         Arguments:
-        data: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}'''
+        data: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}
+        '''
 
         #plt.ion()
 
@@ -187,6 +191,10 @@ class Grafico_2d_equipo:
             last_coord = (coords['x'][-1], coords['y'][-1])
             self.ax.text(last_coord[0], last_coord[1], name, fontsize=9)
 
+        #* Actualiza el indice del ultimo valor graficado
+        #*for coords in data.values():
+        #*    self.last_index = len(data.values()[0]['x'])
+
         # Encuentra el maximo de todos los valores
         limit = max(x_max, y_max)
 
@@ -194,9 +202,6 @@ class Grafico_2d_equipo:
         limit += limit/10
         self.ax.set_xlim(-limit, limit) 
         self.ax.set_ylim(-limit, limit)
-
-        # Hace que sea un cuadrado la ventana
-        self.ax.set_aspect('equal')
 
         # Pone la imagen en el fondo
         self.ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
@@ -208,3 +213,4 @@ class Grafico_2d_equipo:
         #* plt.savefig('graph.png')
 
         plt.pause(0.001)
+    
