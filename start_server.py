@@ -8,5 +8,5 @@ from communication.server.mountain.ackley_mountain import AckleyMountain
 from communication.server.mountain.easom_mountain import EasomMountain
 
 #s = MountainServer(EasyMountain(50, 23000), (-10000, 14000), 50)
-s = MountainServer(EasyMountain(50, 23000), (200, 200), 50)
+s = MountainServer(RastriginMountain(50, 23000), (200, 200), 50)
 s.start()

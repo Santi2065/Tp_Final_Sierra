@@ -39,13 +39,13 @@ def spiral():
     i = 0
     # Comienza el proceso de ir en espiral
     while not all_in_summit:
-        s = time.time()
+        #*s = time.time()
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 1 == 0 and i >= 10000000:
-            start = time.time()
+        if i % 1 == 0 and i >= 0:
+            #*start = time.time()
             graf.coordenadas2(coords)
-            print(f'graf: {time.time() - start}-------------------------------------------------------')
+            #*print(f'graf: {time.time() - start}-------------------------------------------------------')
 
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
@@ -88,8 +88,8 @@ def spiral():
         if c.is_over():
             break
 
-        iteration_time += [time.time() - s]
-        print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
+        #*iteration_time += [time.time() - s]
+        #*print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
 
         i += 1
 
