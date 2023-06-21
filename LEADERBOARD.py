@@ -48,9 +48,9 @@ class leader_board:
 
             # Me queda una boludez del formato nada mas
         for i in range(len(ordenar_lista)):
-            if self.contador_racha > 6 and i == 0:
+            if self.contador_racha > 10 and i == 0:
                 print(f"Top {'{:<5}'.format(i+1)}🔥|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)} ")
-            elif self.contador_racha_malo > 12 and ordenar_lista[i][0] == top_ultimo:
+            elif self.contador_racha_malo > 10 and ordenar_lista[i][0] == top_ultimo and i!=0 :
                 print(f"Top {'{:<5}'.format(i+1)}🐢|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
             else:
                 print(f"Top {'{:<5}'.format(i+1)} ''|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
