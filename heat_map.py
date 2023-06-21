@@ -10,7 +10,7 @@ ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_aspect('equal')
 
-data = samples(2)
+data = samples(11)
 
 z_max = float('-inf')
 z_min = float('inf')
@@ -28,8 +28,8 @@ for name in data:
 
 df= pd.DataFrame(np.array(points), columns=list('XYZ'))
 
-#tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='flat', clim=[z_min, z_max])
-tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='gouraud', cmap='viridis', clim=[z_min, z_max])
+#tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='flat', cmap='hot', clim=[z_min, z_max])
+tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='gouraud', cmap='hot', clim=[z_min, z_max])
 colorbar = fig.colorbar(tpc)
 colorbar.ax.set_ylim(z_min, z_max)
 colorbar.ax.set_title('height', fontsize=9)

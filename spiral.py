@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import time
 import math
 
+#TODO Hacer q no pase esto: 
+#TODO WARNING: 2023-06-21 16:21:33,173 - The competition is not in the waiting_for_directions state. Current state: moving
 
 def spiral():
     # Define y registra en el servidor el equipo
@@ -38,7 +40,7 @@ def spiral():
 
     i = 0
     # Comienza el proceso de ir en espiral
-    while not all_in_summit:
+    while not all_in_summit or not c.is_over():
         #*s = time.time()
         #  cada cuanto    desde cual iteracion
         #      v               v
@@ -62,10 +64,13 @@ def spiral():
 
             directives[hiker.nombre] = hiker.ordenes
 
+            #print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+            print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
-            #print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
-            print(f'{hiker.nombre:6s}: θ1={current_theta:.3f} θ2={next_theta:.3f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
+        
+        #*iteration_time += [time.time() - s]
+        #*print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
 
         previous_coords = all_hiker_coords(c, 'Los cracks')
 
@@ -85,35 +90,11 @@ def spiral():
         update_coords(coords, hikers)
 
 
-        if c.is_over():
-            break
-
-        #*iteration_time += [time.time() - s]
-        #*print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
-
         i += 1
 
     print('Todos estamos en la cima :)')
+    print(coords)
 
-'''
-Optimizacion
-
-con el grafico corriendo:
-    grafico: 0.135s
-        check_summit: 0.002 s, por cada escalador (0.008)
-        go_to original: 0.003 s, por escalador (0.012)
-        go_to mejorado: 0.0015 s, por cada escalador (0.006)
-        total calculo para 1: 0.005s
-    iteracion entera: ~0.18 (0.28 menos el time.sleep(0.1), ademas empeora con el tiempo)
-
-sin el grafico corriendo:
-        check_summit: 0.0013 s, por cada escalador (0.0052)
-        go_to mejorado: 0.0013 s, por cada escalador (0.0052)
-    for entero: 0.0036
-    iteracion entera: 0.032 (0.132 menos el time.sleep(0.1))
-
-conclusion: mejorar performace grafico y conocer minutos para eliminar time.sleep
-'''
 
 
 def register(names: list[str]) -> MountainClient:
@@ -122,6 +103,8 @@ def register(names: list[str]) -> MountainClient:
     c = MountainClient()
     c.add_team('Los cracks', names)
     c.finish_registration()
+    while c.is_registering_teams():
+        continue
     return c
 
 def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:

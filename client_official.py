@@ -18,6 +18,8 @@ def main():
     
     c.add_team(team.nombre, hikers_names)
     c.finish_registration()
+    while c.is_registering_teams():
+        continue
 
     estrategia(team)
 
