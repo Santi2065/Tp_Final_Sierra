@@ -219,7 +219,7 @@ class Grafico_2d_equipo:
         #* plt.savefig('graph.png')
 
         plt.pause(0.001)
-    
+
     def heat_map(self) -> None:
         data = deepcopy(self.data)
         fig, ax = self.fig2, self.ax2
@@ -238,7 +238,7 @@ class Grafico_2d_equipo:
                 z_min = z if z < z_min else z_min
 
 
-        df= pd.DataFrame(np.array(points), columns=list('XYZ'))
+        df= pd.DataFrame(points, columns=list('XYZ'))
 
         #tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='flat', cmap='hot', clim=[z_min, z_max])
         tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='gouraud', cmap='hot', clim=[z_min, z_max])
