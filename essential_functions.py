@@ -1,8 +1,5 @@
 import math
-contador_racha = 0
-contador_racha_malo = 0
-anterior_top1 = None
-anterior_ultimo = None
+
 
 
 
@@ -31,46 +28,23 @@ def direction(hiker_coord: list|tuple[float, float], objective: list|tuple[float
     return math.atan2(dy, dx)
 
 def leaderboard(diccionario:dict): # El original anda (Leaderboard.py)
-    ''' prints a sorted table with the highest player per team '''
+
+    ''' returns a sorted list with the highest player (z) per team '''
+
     jugador_max = None # Chequear si cambian de algo
     altura_max = None
     lista= []
-    aux_racha = []
-    top_1 = None
-    corto_racha = False
-
 
     for equipo, jugadores in diccionario.items():
         jugador_max,altura_max= max(jugadores.items(),key=lambda item:item[1]['z'])
         lista.append([jugador_max,altura_max['z'],equipo]) # [nombre,z,equipo]
 
-    ordenar_lista = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
+    lista_ordenada = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
     
-    top_1 = ordenar_lista[0][0]
-    top_ultimo = ordenar_lista[len(lista)-1][0] # ojo que si la lista tiene cero elemento puede llegar a tirar error?
-
-
-    if anterior_top1 == None or anterior_top1 == top_1:
-        contador_racha += 1
-    else:
-        contador_racha = 0
-
-    if anterior_ultimo == None or anterior_ultimo == top_ultimo:
-        contador_racha_malo += 1
-    else:
-        contador_racha_malo = 0
-    
-    anterior_top1 = top_1 
-
-    for i in range(len(ordenar_lista)):
-        if contador_racha > 10 and i == 0:
-            print(f"Top {'{:<5}'.format(i+1)}🔥|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)} ")
-        elif contador_racha_malo > 10 and ordenar_lista[i][0] == top_ultimo and i!=0 :
-            print(f"Top {'{:<5}'.format(i+1)}🐢|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
-        else:
-            print(f"Top {'{:<5}'.format(i+1)}{chr(32)} |{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
-
     lista.clear() # limpia listas para no interferir con las nuevas listas
+
+    return (lista_ordenada) # [nombre,z,equipo]
+
 
 def altura_maxima(equipo:list, diccionario:dict): 
     """ Prints the highest z reached by the inserted team. """

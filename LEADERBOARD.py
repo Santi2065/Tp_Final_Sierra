@@ -41,8 +41,6 @@ class leader_board:
             self.contador_racha_malo += 1
         else:
             self.contador_racha_malo = 0
-        
-
         self.anterior_top1 = top_1 
         
 
