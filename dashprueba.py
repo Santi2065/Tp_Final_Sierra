@@ -116,7 +116,6 @@ class Dashboard(customtkinter.CTk):
 
         #self.rectangulo_fondo = customtkinter.CTkLabel(self, width = 400, height = 300, bg_color = "#111111")
         #self.rectangulo_fondo.place(x = 200, y = 150)
-
         self.graph.coordenadas2()
         self.graph.fig.set_size_inches(4.05,3)
         
@@ -322,8 +321,8 @@ class Dashboard(customtkinter.CTk):
         while not self.client.is_over():
             self.data = self.client.get_data()
             time.sleep(self.time_step/1000)
-            self.graph.close_figs()
-            self.graph = Grafico_2d_equipo(self.coords)
+            #self.graph.ax.cla()
+            self.graph.coordenadas2()
             #matplotlib.pyplot.close()
             self.mountain_image.draw()
             self.update_coords()

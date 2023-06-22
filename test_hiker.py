@@ -2,6 +2,7 @@ from communication.client.client import MountainClient
 import random, math, time
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import matplotlib
 import numpy as np
 import pandas as pd
 from copy import deepcopy
@@ -104,6 +105,7 @@ class Grafico_2d_equipo:
     \ndata: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}'''
     #def __init__(self, hikers: list[Hiker]):
     def __init__(self, data: dict[str, dict[str, list[float]]]):
+        matplotlib.use('agg')
         #self.hikers = hikers
         self.data = data
         self.fig, self.ax = plt.subplots()
@@ -190,7 +192,6 @@ class Grafico_2d_equipo:
 
             #* Grafica los nuevos puntos
             #*self.ax.scatter(new_x, new_y, s=marker_size, color=colr)
-    
             self.ax.scatter(x, y, s=marker_size, color=colr)
 
             # Actualiza el indice del ultimo valor graficado
@@ -221,7 +222,7 @@ class Grafico_2d_equipo:
 
         #* plt.savefig('graph.png')
 
-        plt.pause(0.001)
+        #plt.pause(0.00001)
 
     def heat_map(self) -> None:
         data = deepcopy(self.data)
@@ -235,10 +236,15 @@ class Grafico_2d_equipo:
                 x = data[name]['x'][i]
                 y = data[name]['y'][i]
                 z = data[name]['z'][i]
-                points += [[x, y, z]]
+                points += [(x, y, z)]
                 
                 z_max = z if z > z_max else z_max
                 z_min = z if z < z_min else z_min
+
+                
+        if len(set(points)) < 3:
+            return
+
 
 
         df= pd.DataFrame(points, columns=list('XYZ'))
