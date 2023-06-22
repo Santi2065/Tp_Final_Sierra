@@ -171,6 +171,33 @@ class Dashboard(customtkinter.CTk):
         self.brillo_slider = customtkinter.CTkSlider(self, from_ = 0, to = 255, orientation = "vertical", button_length = 20, button_color = "#FFFFFF", button_corner_radius = 1)
         self.brillo_slider.place(x = 780, y = 200)
         self.brillo_slider.set(50)
+
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+        # Hago los bordes modernos
+
+        self.borde_inferior = customtkinter.CTkProgressBar(self, width = 800)
+        self.borde_inferior.place(x = 0, y = 593)
+
+        self.borde_inferior.configure(mode = "indeterminnate")
+        self.borde_inferior.start()
+
+        self.borde_superior = customtkinter.CTkProgressBar(self, width = 800)
+        self.borde_superior.place(x = 0, y = 3)
+
+        self.borde_superior.configure(mode = "indeterminnate")
+        self.borde_superior.start()
+
+        self.borde_izquierdo = customtkinter.CTkProgressBar(self, height = 800, orientation = "vertical")
+        self.borde_izquierdo.place(x = 0, y = 3)
+
+        self.borde_izquierdo.configure(mode = "indeterminnate")
+        self.borde_izquierdo.start()
+
+        self.borde_derecho = customtkinter.CTkProgressBar(self, height = 800, orientation = "vertical")
+        self.borde_derecho.place(x = 793, y = 3)
+
+        self.borde_derecho.configure(mode = "indeterminnate")
+        self.borde_derecho.start()
         
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
