@@ -214,8 +214,14 @@ def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
     for hiker_name in hikers_thetas:
         hikers_thetas[hiker_name] += delta_theta
 
-def spiral_move_all():
-    pass
+def spiral_move_all(c: MountainClient, directives: dict[str, float]):
+    '''Mueve todos los escaladores'''
+    previous_coords = all_hiker_coords(c, 'Los cracks')
+    c.next_iteration('Los cracks', directives)
+
+    # Espera hasta que el servidor haya actualizado las posiciones
+    while previous_coords == all_hiker_coords(c, 'Los cracks'):
+        continue
 
 def all_hiker_coords(c: MountainClient, team_name: str):
     '''Devuelve diccionario con la posicion de todos los escaladores, un get_data'''
