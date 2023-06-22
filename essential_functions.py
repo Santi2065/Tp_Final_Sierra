@@ -41,7 +41,7 @@ def leaderboard(diccionario:dict): # El original anda (Leaderboard.py)
 
     lista_ordenada = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
     
-    lista.clear() # limpia listas para no interferir con las nuevas listas
+    lista.clear() # limpia listas para no interferir con las nuevas listas, no se si sirve de algo
 
     return (lista_ordenada) # [nombre,z,equipo]
 
@@ -57,6 +57,8 @@ def altura_maxima(equipo:list, diccionario:dict):
     maximo = max(lista_aux)
     lista_max.append(maximo)
 
-    lista_aux.clear()
+    
     return (max(lista_max)) # santi no llores
+
+def altura_promedio()
     
