@@ -199,6 +199,24 @@ class Dashboard(customtkinter.CTk):
         self.borde_derecho.configure(mode = "indeterminnate")
         self.borde_derecho.start()
         
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+
+        self.teams = customtkinter.CTkComboBox(self, values=["pipe1", "pipe2",])
+        self.teams.place(x = 350, y = 14)
+
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+
+        self.boton_colores1 = customtkinter.CTkButton(self.marco_sup_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores1.place(x = 160, y = 160)
+
+        self.boton_colores2 = customtkinter.CTkButton(self.marco_sup_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores2.place(x = 160, y = 160)
+
+        self.boton_colores3 = customtkinter.CTkButton(self.marco_inf_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores3.place(x = 160, y = 160)
+
+        self.boton_colores4 = customtkinter.CTkButton(self.marco_inf_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores4.place(x = 160, y = 160)
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
@@ -211,6 +229,8 @@ class Dashboard(customtkinter.CTk):
         self.timer.configure(text = f"TIMER = {string_tiempo}")
         self.timer.after(1000, self.update_timer)
 
+
+    
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite hacer una animacion ascii en el costado izquierdo.
     # Import el modulo threading y art, ademas de tambien utilizar el modulo time.
