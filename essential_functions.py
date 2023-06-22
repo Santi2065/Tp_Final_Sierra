@@ -1,6 +1,7 @@
 import math
 
 
+
 def difference(p1: tuple|list, p2: tuple|list) -> tuple:
     '''returns the x y coords of the vector going from p2 to p1, ignores z value'''
     return (p1[0] - p2[0], p1[1] - p2[1])
@@ -42,10 +43,12 @@ def leaderboard(diccionario:dict) -> list: # El original anda (Leaderboard.py)
     return (lista_ordenada) # [nombre,z,equipo]
 
 
-def altura_maxima(equipo:list, diccionario:dict) -> float: 
+
+
+def altura_maxima(equipo:str, diccionario:dict,lista_max:list) -> float: 
     """ Returns the highest z reached by the inserted team. """
     lista_aux = [] # va a guardar las alturas por iteracion de cada integrante del equipo
-    lista_max = [] # Va guardando todos los picos maximos por iteracion
+
 
     for i in diccionario[equipo]:
         lista_aux.append(diccionario[equipo][i]['z'])
