@@ -1,10 +1,10 @@
 from communication.client.client import MountainClient
-import random
-import math
-import time
+import random, math, time
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
+import pandas as pd
+from copy import deepcopy
 from essential_functions import difference, magnitude
 
 #c = MountainClient("10.42.0.1", 8888)
@@ -100,10 +100,14 @@ class Hiker:
 
 
 class Grafico_2d_equipo:
+    '''Objeto que hace graficas de posicion y altura
+    \ndata: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}'''
     #def __init__(self, hikers: list[Hiker]):
-    def __init__(self):
+    def __init__(self, data: dict[str, dict[str, list[float]]]):
         #self.hikers = hikers
+        self.data = data
         self.fig, self.ax = plt.subplots()
+        self.fig2, self.ax2 = plt.subplots()
         #!self.fig, self.ax = plt.subplots(figsize=plt.figaspect(1/1))
 
         # Hace que sea un cuadrado la ventana
@@ -143,14 +147,16 @@ class Grafico_2d_equipo:
         plt.pause(0.005)
 
 
-    def coordenadas2(self, data: dict[str, dict[str, list[float]]]) -> None:
+    #def coordenadas2(self, data: dict[str, dict[str, list[float]]]) -> None:
+    def coordenadas2(self) -> None:
         '''
-        Grafico que toma listas de coordenadas y las muestra.
-        Arguments:
+        Grafico que toma listas de coordenadas y las muestra.\n
         data: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}
         '''
 
         #plt.ion()
+
+        data = self.data
 
         self.ax.cla()
 
@@ -214,3 +220,35 @@ class Grafico_2d_equipo:
 
         plt.pause(0.001)
     
+    def heat_map(self) -> None:
+        data = deepcopy(self.data)
+        fig, ax = self.fig2, self.ax2
+
+        z_max = float('-inf')
+        z_min = float('inf')
+        points = []
+        for name in data:
+            for i in range(len(data[name]['x'])):
+                x = data[name]['x'][i]
+                y = data[name]['y'][i]
+                z = data[name]['z'][i]
+                points += [[x, y, z]]
+                
+                z_max = z if z > z_max else z_max
+                z_min = z if z < z_min else z_min
+
+
+        df= pd.DataFrame(np.array(points), columns=list('XYZ'))
+
+        #tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='flat', cmap='hot', clim=[z_min, z_max])
+        tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='gouraud', cmap='hot', clim=[z_min, z_max])
+        colorbar = self.fig2.colorbar(tpc)
+        colorbar.ax.set_ylim(z_min, z_max)
+        colorbar.ax.set_title('height', fontsize=9)
+
+        ax.set_title("Map shape")
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_aspect('equal')
+        fig.show()
+        plt.pause(1)

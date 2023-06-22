@@ -28,9 +28,9 @@ class Dashboard(customtkinter.CTk):
         self.data = client.get_data()
         self.team = list(self.data.keys())
         self.hikers = list(self.data[self.team[0]].keys())
-        self.graph = Grafico_2d_equipo()
         self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
         self.update_coords()
+        self.graph = Grafico_2d_equipo(self.coords)
         
 
 
@@ -117,7 +117,7 @@ class Dashboard(customtkinter.CTk):
         #self.rectangulo_fondo = customtkinter.CTkLabel(self, width = 400, height = 300, bg_color = "#111111")
         #self.rectangulo_fondo.place(x = 200, y = 150)
 
-        self.graph.coordenadas2(self.coords)
+        self.graph.coordenadas2()
         self.graph.fig.set_size_inches(4.05,3)
         
         self.mountain_image = FigureCanvasTkAgg(self.graph.fig,master = self)
@@ -213,10 +213,10 @@ class Dashboard(customtkinter.CTk):
 
     #-----------------------------------------------------------------------------------------------------------------------------------------------
 
-    def generar_leader(self):
+    '''def generar_leader(self):
         leader = leader_board().graficar()
         self.leaderboard.configure(text = leader)
-        pass
+        pass'''
 
     def update_coords(self) -> None:
         #coords = {nombre1: {'x': [], 'y': [], 'z': []}}
@@ -237,7 +237,7 @@ class Dashboard(customtkinter.CTk):
         while not self.client.is_over():
             self.data = self.client.get_data()
             time.sleep(self.time_step/1000)
-            self.graph = Grafico_2d_equipo()
+            self.graph = Grafico_2d_equipo(self.coords)
             matplotlib.pyplot.close()
             self.mountain_image.draw()
             self.update_coords()

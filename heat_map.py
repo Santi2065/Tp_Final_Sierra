@@ -10,7 +10,7 @@ ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_aspect('equal')
 
-data = samples(11)
+data = samples(7)
 
 z_max = float('-inf')
 z_min = float('inf')

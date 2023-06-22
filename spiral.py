@@ -18,7 +18,7 @@ def spiral():
 
     coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
     update_coords(coords, hikers)
-    graf = Grafico_2d_equipo()
+    graf = Grafico_2d_equipo(coords)
 
     # Se dirige al origen
     all_go_to_point(hikers, c, (0, 0), graf, coords)
@@ -40,14 +40,17 @@ def spiral():
 
     i = 0
     # Comienza el proceso de ir en espiral
-    while not all_in_summit or not c.is_over():
+    while not all_in_summit and not c.is_over():
         #*s = time.time()
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 1 == 0 and i >= 0:
+        if i % 1 == 0 and i >= 100000000:
             #*start = time.time()
-            graf.coordenadas2(coords)
+            graf.coordenadas2()
             #*print(f'graf: {time.time() - start}-------------------------------------------------------')
+
+        if i % 400 == 0 and i >= 1:
+            graf.heat_map()
 
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
@@ -120,7 +123,7 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
     # Runs until all hikers are near the point
     while False in close_to_point.values():
         if i % 1 == 0 and i >= 0:
-            graf.coordenadas2(coords)
+            graf.coordenadas2()
 
         for hiker in hikers:
             if close_to_point[hiker.nombre]:
