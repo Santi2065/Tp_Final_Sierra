@@ -160,12 +160,20 @@ class Grafico_2d_equipo:
         '''
 
         #plt.ion()
+        #e53a3a
+        colors1 = ('#ff5454', '#fdbd2e', '#a1d832', '#87be19') # red-yel-gre
+        colors2 = ('#ff2500', '#ffa500', '#2986cc', '#b1ea78', '#7ddc1f') # red-blu-gre
+        colors3 = ('#4deeea', '#74ee15', '#ffe700', '#f000ff', '#001eff') # neon
+        colors4 = ('#ff0000', '#bf0000', '#800000', '#400000', '#000000') # red -> black
+        colors5 = ('#d11141', '#00b159', '#00aedb', '#f37735', '#ffc425') # red-green-cyan-oran-yel
+
 
         data = deepcopy(self.data)
 
         self.ax.cla()
 
-        colors = 'r', 'c', 'g', 'magenta', 'grey'
+        #colors = 'r', 'c', 'g', 'magenta', 'grey'
+        colors = colors5
 
         x_max = float('-inf')
         y_max = float('-inf')
