@@ -1,10 +1,6 @@
 import math
 
 
-
-
-
-
 def difference(p1: tuple|list, p2: tuple|list) -> tuple:
     '''returns the x y coords of the vector going from p2 to p1, ignores z value'''
     return (p1[0] - p2[0], p1[1] - p2[1])
@@ -27,9 +23,9 @@ def direction(hiker_coord: list|tuple[float, float], objective: list|tuple[float
     dx, dy = difference(objective, hiker_coord)
     return math.atan2(dy, dx)
 
-def leaderboard(diccionario:dict): # El original anda (Leaderboard.py)
+def leaderboard(diccionario:dict) -> list: # El original anda (Leaderboard.py)
 
-    ''' returns a sorted list with the highest player (z) per team '''
+    ''' returns a sorted list with the highest player per team '''
 
     jugador_max = None # Chequear si cambian de algo
     altura_max = None
@@ -46,8 +42,8 @@ def leaderboard(diccionario:dict): # El original anda (Leaderboard.py)
     return (lista_ordenada) # [nombre,z,equipo]
 
 
-def altura_maxima(equipo:list, diccionario:dict): 
-    """ Prints the highest z reached by the inserted team. """
+def altura_maxima(equipo:list, diccionario:dict) -> float: 
+    """ Returns the highest z reached by the inserted team. """
     lista_aux = [] # va a guardar las alturas por iteracion de cada integrante del equipo
     lista_max = [] # Va guardando todos los picos maximos por iteracion
 
@@ -60,5 +56,17 @@ def altura_maxima(equipo:list, diccionario:dict):
     
     return (max(lista_max)) # santi no llores
 
-def altura_promedio()
+def altura_promedio(diccionario:dict) -> float:
+ 
+    """ Retruns the average height of all the players (per iteration) """
+
+    lista_altura = [] 
+    for i in diccionario:
+        for x in diccionario[i]:
+            lista_altura.append(diccionario[i][x]['z'])
+
+    promedio = sum(lista_altura) / len(lista_altura) # Calcula el promedio
+
+    return round(promedio,2) 
+   
     
