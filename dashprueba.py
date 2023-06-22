@@ -242,8 +242,19 @@ class Dashboard(customtkinter.CTk):
             self.mountain_image.draw()
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
-            self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.hikers[0]]['x'][-1]:8.1f}\n             y: {self.coords[self.hikers[0]]['y'][-1]:8.1f}")
+            
+            self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[0]]['y'][-1]:8.1f}")
             self.altura_sup_izquierdo.configure(text = f"Altura: {self.coords[self.hikers[0]]['z'][-1]:8.1f}")
+
+            self.posicion_sup_derecho.configure(text = f"Posicion: x: {self.coords[self.hikers[1]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[1]]['y'][-1]:8.1f}")
+            self.altura_sup_derecho.configure(text = f"Altura: {self.coords[self.hikers[1]]['z'][-1]:8.1f}")
+            
+            self.posicion_inf_izquierdo.configure(text = f"Posicion: x: {self.coords[self.hikers[2]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[2]]['y'][-1]:8.1f}")
+            self.altura_inf_izquierdo.configure(text = f"Altura: {self.coords[self.hikers[2]]['z'][-1]:8.1f}")
+
+            self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[3]]['y'][-1]:8.1f}")
+            self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.hikers[3]]['z'][-1]:8.1f}")
+
 
 if __name__ == "__main__":
     client = MountainClient()
