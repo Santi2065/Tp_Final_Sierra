@@ -16,7 +16,7 @@ class AlturaMaxima: # Calculo el pico maximo alcanzado por el equipo ingresado
         lista_max = [] # Va guardando todos los picos maximos por iteracion
 
         for i in dic[self.equipo]:
-            lista_aux.append(dic[i]['z'])
+            lista_aux.append(dic[self.equipo][i]['z'])
 
         maximo = max(lista_aux) # ESTO SE PUEDE HACER DE UNA, PERO QUEDA MAS PROLIJO ASI.
         lista_max.append(maximo) # Imprime el maximo de todos los maximos (lo que busco)
