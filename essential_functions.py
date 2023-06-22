@@ -71,3 +71,17 @@ def leaderboard(diccionario:dict): # El original anda (Leaderboard.py), este fal
             print(f"Top {'{:<5}'.format(i+1)}{chr(32)} |{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
 
     lista.clear() # limpia listas para no interferir con las nuevas listas
+
+def altura_maxima(equipo:list, diccionario:dict): # El original anda (picomax.py), este habria que probarlo.
+    """ Prints the highest z reached by the inserted team. """
+    lista_aux = [] # va a guardar las alturas por iteracion de cada integrante del equipo
+    lista_max = [] # Va guardando todos los picos maximos por iteracion
+
+    for i in diccionario[equipo]:
+        lista_aux.append(diccionario[i]['z'])
+
+    maximo = max(lista_aux)
+    lista_max.append(maximo)
+
+    print(max(lista_max))
+    lista_aux.clear()
