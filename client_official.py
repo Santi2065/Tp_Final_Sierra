@@ -1,7 +1,7 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
 from teams import Team
-from empinado import empinado as estrategia
+from estrategia.empinado import empinado as estrategia
 
 def main():
 
