@@ -156,7 +156,7 @@ class Grafico_2d_equipo:
 
         #plt.ion()
 
-        data = self.data
+        data = deepcopy(self.data)
 
         self.ax.cla()
 
@@ -251,4 +251,4 @@ class Grafico_2d_equipo:
         ax.set_ylabel('Y')
         ax.set_aspect('equal')
         fig.show()
-        plt.pause(1)
+        plt.pause(0.001)
