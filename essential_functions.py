@@ -71,5 +71,5 @@ def altura_promedio(diccionario:dict) -> float:
     promedio = sum(lista_altura) / len(lista_altura) # Calcula el promedio
 
     return round(promedio,2) 
-   
-    
+
+
