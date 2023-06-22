@@ -6,21 +6,19 @@ c = MountainClient()
 
 
 
-class AlturaPromedio: # Esta clase devuelve la altura promedio por iteracion de todos los jugadores
-    def __init__(self) -> None:
-        pass 
-    def agarrar_datos(self):
-        dic = c.get_data()
-        altura = [] # Aca se almacenara momentanteamente todos los z
+def altura_promedio():
+    # Imprime la altura promedio por iteracion de todos los jugadores 
+    dic = c.get_data()
+    altura = [] # Aca se almacenara momentanteamente todos los z
 
-        for i in dic:
-            for x in dic[i]:
-                altura.append(dic[i][x]['z'])
+    for i in dic:
+        for x in dic[i]:
+            altura.append(dic[i][x]['z'])
 
-        promedio = sum(altura) / len(altura) # Calcula el promedio
+    promedio = sum(altura) / len(altura) # Calcula el promedio
 
-        print(round(promedio,2)) # Redondeo, si no queda un choclo
-        altura.clear()
+    print(round(promedio,2)) # Redondeo, si no queda un choclo
+    altura.clear()
 
 
 
@@ -54,13 +52,13 @@ escala.append(Hiker(ord['esc2'],'esc2'))
 escala.append(Hiker(ord['esc3'],'esc3'))
 escala.append(Hiker(ord['esc4'],'esc4'))
 
-altura = AlturaPromedio()
+
 
 while not c.is_over():
 
     print(c.get_data())
 
-    altura.agarrar_datos()
+    altura_promedio()
 
     c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
     c.next_iteration('puto',{i.nombre: i.ordenes for i in escala})
