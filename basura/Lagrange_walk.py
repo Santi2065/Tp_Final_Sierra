@@ -1,5 +1,5 @@
 import math
-import Lagrange
+import basura.Lagrange as Lagrange
 CANTIDAD_DE_PUNTOS = 15
 
 def lagrange_walk(team:str,hiker:str,d_inicial:float,ray_number:int):

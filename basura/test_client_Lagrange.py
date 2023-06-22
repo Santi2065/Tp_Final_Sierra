@@ -1,6 +1,6 @@
 from communication.client.client import MountainClient
 import math
-import Lagrange
+import basura.Lagrange as Lagrange
 CANTIDAD_DE_PUNTOS = 50
 MAX_SPEED = 50
 
