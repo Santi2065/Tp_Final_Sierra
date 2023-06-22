@@ -43,7 +43,7 @@ class leader_board:
             self.contador_racha_malo = 0
         
 
-        self.anterior_top1 = top_1 # Chequear si lo puedo hacer mas corto el metodo de antes.
+        self.anterior_top1 = top_1 
         
 
             # Me queda una boludez del formato nada mas
@@ -53,7 +53,7 @@ class leader_board:
             elif self.contador_racha_malo > 10 and ordenar_lista[i][0] == top_ultimo and i!=0 :
                 print(f"Top {'{:<5}'.format(i+1)}🐢|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
             else:
-                print(f"Top {'{:<5}'.format(i+1)} ''|{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
+                print(f"Top {'{:<5}'.format(i+1)}{chr(32)} |{'{:20}'.format(ordenar_lista[i][2])}|{'{:20}'.format(ordenar_lista[i][0])}|{round(ordenar_lista[i][1],3)}")
 
         lista.clear() # limpia listas para no interferir con las nuevas listas
 
