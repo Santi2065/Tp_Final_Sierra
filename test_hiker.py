@@ -121,6 +121,9 @@ class Grafico_2d_equipo:
             self.labels.append(label)'''
 
         self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico 
+    
+    def close_figs():
+        plt.close('all')
 
     def coordenadas(self):
         coords = [hiker.actual_pos() for hiker in self.hikers]
