@@ -44,7 +44,7 @@ def spiral():
         #*s = time.time()
         #  cada cuanto    desde cual iteracion
         #      v               v
-        if i % 1 == 0 and i >= 100000000:
+        if i % 20 == 0 and i >= 0:
             #*start = time.time()
             graf.coordenadas2()
             #*print(f'graf: {time.time() - start}-------------------------------------------------------')
@@ -96,7 +96,6 @@ def spiral():
         i += 1
 
     print('Todos estamos en la cima :)')
-    print(coords)
 
 
 
