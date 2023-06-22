@@ -237,8 +237,9 @@ class Dashboard(customtkinter.CTk):
         while not self.client.is_over():
             self.data = self.client.get_data()
             time.sleep(self.time_step/1000)
+            self.graph.close_figs()
             self.graph = Grafico_2d_equipo(self.coords)
-            matplotlib.pyplot.close()
+            #matplotlib.pyplot.close()
             self.mountain_image.draw()
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
