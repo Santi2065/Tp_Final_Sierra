@@ -47,12 +47,16 @@ class Dashboard(customtkinter.CTk):
         # Establezco el color de fondo de la ventana
         
         self.configure(bg_color = "#000000")
+        # Defino la lista de colores que se pueden cambiar para cada jugador
 
+        self.COLORES = ["#FF0000", "#0000FF", "#FFFF00", "#00FF00", "#FFA500", "#FFC0CB", "#800080", "#00FFFF"]
+        self.numero_inicial = 0
+        
         # Creo marcos para las ventanas cuadradas pequeñas de las esquinas. 
         # Configuro cada una de ellas con su respectivo color y ademas les agrego su titulo.
         # Les agrego a cada uno de ellos su respectiva posicion, altura y velocidad en tiempo real
         #-----------------------------------------------------------------------------------------------------------------------------------------------      
-        self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#64B5F6")
+        self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colores[self.numero_inicial])
         self.marco_sup_izquierdo.place(x = 10, y = 11)
 
         self.titulo_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = self.hikers[0], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -67,7 +71,7 @@ class Dashboard(customtkinter.CTk):
         self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Cima: ", font = ("Verdana", 12, "bold"), text_color = "#000000")
         self.velocidad_sup_izquierdo.place(relx = 0.05, rely = 0.75, anchor = "w")
         #----------------------------------------------------------------------------------------------------------------------------------------------- 
-        self.marco_sup_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#FF8A80")
+        self.marco_sup_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colores[self.numero_inicial])
         self.marco_sup_derecho.place(x = 609, y = 11)
 
         self.titulo_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = self.hikers[1], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -82,7 +86,7 @@ class Dashboard(customtkinter.CTk):
         self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_sup_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#FFF176")
+        self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colores[self.numero_inicial])
         self.marco_inf_izquierdo.place(x = 10, y = 409)
 
         self.titulo_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = self.hikers[2], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -97,7 +101,7 @@ class Dashboard(customtkinter.CTk):
         self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_inf_izquierdo.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#A5D6A7")
+        self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colores[self.numero_inicial])
         self.marco_inf_derecho.place(x = 609, y = 409)
 
         self.titulo_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = self.hikers[3], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -198,6 +202,24 @@ class Dashboard(customtkinter.CTk):
         self.borde_derecho.configure(mode = "indeterminnate")
         self.borde_derecho.start()
         
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+
+        self.teams = customtkinter.CTkComboBox(self, values=["pipe1", "pipe2",])
+        self.teams.place(x = 350, y = 14)
+
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+
+        self.boton_colores1 = customtkinter.CTkButton(self.marco_sup_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores1.place(x = 160, y = 160)
+
+        self.boton_colores2 = customtkinter.CTkButton(self.marco_sup_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores2.place(x = 160, y = 160)
+
+        self.boton_colores3 = customtkinter.CTkButton(self.marco_inf_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores3.place(x = 160, y = 160)
+
+        self.boton_colores4 = customtkinter.CTkButton(self.marco_inf_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores4.place(x = 160, y = 160)
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
@@ -209,75 +231,30 @@ class Dashboard(customtkinter.CTk):
         string_tiempo = f"{horas:02d} : {minutos:02d} : {segundos:02d}"
         self.timer.configure(text = f"TIMER = {string_tiempo}")
         self.timer.after(1000, self.update_timer)
-
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    def colores(numero: int):
+        """Starts returning 1, increases it value 1 by 1 in range 0 to 7."""
+        numero += 1
+        numero = numero % 8
+        return numero
+    
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite hacer una animacion ascii en el costado izquierdo.
     # Import el modulo threading y art, ademas de tambien utilizar el modulo time.
     def generar_ascii(self):
-        animacion = [''' __
- ║║▄▄▄███▄▄▄   ▄▄▄███
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║▀▀▀   ▀▀▀███▀▀▀
- ║║
- ║║
- ║║
- ║║
- ║║
-####
-''',
-''' __
- ║║   ▄▄▄███▄▄▄   ▄▄▄
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║███▀▀▀   ▀▀▀███▀▀▀
- ║║
- ║║
- ║║
- ║║
- ║║
-####
-''',
-''' __
- ║║▄▄▄   ▄▄▄███▄▄▄   
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║▀▀▀███▀▀▀   ▀▀▀███
- ║║
- ║║
- ║║
- ║║
- ║║
-####
-''',
-''' __
- ║║███▄▄▄   ▄▄▄███▄▄▄
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║██████████████████
- ║║   ▀▀▀███▀▀▀   ▀▀▀
- ║║
- ║║
- ║║
- ║║
- ║║
-####
-'''
-
-        ]
         '''animacion = [
+' __\n ║║▄▄▄███▄▄▄   ▄▄▄███\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║▀▀▀   ▀▀▀███▀▀▀\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
+' __\n ║║   ▄▄▄███▄▄▄   ▄▄▄\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║███▀▀▀   ▀▀▀███▀▀▀\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
+' __\n ║║▄▄▄   ▄▄▄███▄▄▄   \n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║▀▀▀███▀▀▀   ▀▀▀███\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
+' __\n ║║███▄▄▄   ▄▄▄███▄▄▄\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║   ▀▀▀███▀▀▀   ▀▀▀\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n'
+]'''
+
+        animacion = [
             "    O\n   /|\\\n    |\n   / \\",
             "   \\O/\n    |\n   /|\\\n   / \\",
             "    |\\\n   \\O/\n   /|\\\n   / \\",
             "   / \\\n    |\\\n   \\O/\n   /|\\",
-        ]'''
+        ]
         animacion_generada = [pyfiglet.figlet_format(frame, font = "small") for frame in animacion]
         return animacion_generada
     #-----------------------------------------------------------------------------------------------------------------------------------------------
