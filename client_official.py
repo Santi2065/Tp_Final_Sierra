@@ -8,10 +8,10 @@ def main():
     c = MountainClient()
 
     team_name = 'Los cracks'
-    jugador_1 = Hiker('Gian',c)
-    jugador_2 = Hiker('Pipe',c)
-    jugador_3 = Hiker('Santi',c)
-    jugador_4 = Hiker('Joaco',c)
+    jugador_1 = Hiker('Gian', c)
+    jugador_2 = Hiker('Pipe', c)
+    jugador_3 = Hiker('Santi', c)
+    jugador_4 = Hiker('Joaco', c)
     hikers = [jugador_1,jugador_2,jugador_3,jugador_4]
     hikers_names = [jugador_1.nombre,jugador_2.nombre,jugador_3.nombre,jugador_4.nombre]
     team = Team(team_name,hikers,c)
