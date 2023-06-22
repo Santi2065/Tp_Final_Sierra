@@ -122,7 +122,7 @@ class Grafico_2d_equipo:
 
         self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico 
     
-    def close_figs():
+    def close_figs(self):
         plt.close('all')
 
     def coordenadas(self):
