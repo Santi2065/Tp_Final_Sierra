@@ -6,7 +6,7 @@ class Timer:
         self.minutos = 0
         self.segundos = 0
 
-    def iteracion(self): # 0.05s ficticios -> 1 segundo real
+    def iteracion(self): # 0.05s ficticios -> 1 segundo 
 
         self.segundos += 5
 
@@ -22,4 +22,4 @@ class Timer:
             self.dias += 1
             self.horas = 0
 
-            
+

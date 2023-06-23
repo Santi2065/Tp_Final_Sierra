@@ -351,7 +351,7 @@ class Dashboard(customtkinter.CTk):
             self.mountain_image.get_tk_widget().place(x=201, y=150)
 
             self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
-            self.altura_promedio = ef.altura_promedio(diccionario)
+            self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
             self.leaderboard = ef.leaderboard(diccionario)
             
             self.titulo_sup_izquierdo.configure(text = self.hikers[0])
