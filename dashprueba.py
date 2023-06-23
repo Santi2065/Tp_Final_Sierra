@@ -23,16 +23,23 @@ class Dashboard(customtkinter.CTk):
     # Uso el constructor como se me da en la info que tengo.
     def __init__(self, client: MountainClient):
         super().__init__()
-        self.time_step = 50 # ms
-        self.client = client
         self.data = client.get_data()
+        self.time_step = 10 # ms
+        self.client = client
         self.team = list(self.data.keys())
-        self.hikers = list(self.data[self.team[0]].keys())
+        self.actual_team = self.team[0]
+        self.hikers = list(self.data[self.actual_team].keys())
         self.hikers_cima = [False for i in self.hikers]
-        self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
+        
+        self.coords = {}
+        for team_name in self.data:
+            self.coords[team_name] = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.data[team_name]}
+
+        #self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
         self.update_coords()
         self.graph = Grafico_2d_equipo(self.coords)
         self.cima = False
+        self.status = "Buscando"
         
 
 
@@ -51,12 +58,18 @@ class Dashboard(customtkinter.CTk):
         self.configure(bg_color = "#000000")
         # Defino la lista de colores que se pueden cambiar para cada jugador
 
-        self.colors = ["#FFB6C1", "#FFA500", "#00FFFF", "#FF69B4", "#FFFF00", "#00FF00", "#9400D3", "#FF1493"]
+        self.colors = [
+            "#FF8080", "#FFA080", "#FFC080", "#FFDC80", "#FFFF80",
+            "#D0FF80", "#A0FF80", "#80FF80", "#80FFA0", "#80FFC0",
+            "#80FFDC", "#80FFFF", "#80D0FF", "#80A0FF", "#8080FF",
+            "#A080FF", "#C080FF", "#DC80FF", "#FF80FF", "#FF80DC",
+            "#FF80C0", "#FF80A0", "#FF8080", "#FFA080", "#FFC080"
+        ]
         self.colores_id = [0, 1, 2, 3]
         
         # Creo marcos para las ventanas cuadradas pequeñas de las esquinas. 
         # Configuro cada una de ellas con su respectivo color y ademas les agrego su titulo.
-        # Les agrego a cada uno de ellos su respectiva posicion, altura y velocidad en tiempo real
+        # Les agrego a cada uno de ellos su respectiva posicion, altura y cima en tiempo real
         #-----------------------------------------------------------------------------------------------------------------------------------------------      
         self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[0]])
         self.marco_sup_izquierdo.place(x = 10, y = 11)
@@ -64,14 +77,14 @@ class Dashboard(customtkinter.CTk):
         self.titulo_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = self.hikers[0], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_sup_izquierdo.place(relx = 0.5, rely = 0.1, anchor = "center")
 
-        self.posicion_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Posicion: x: {self.coords[self.hikers[0]]['x'][-1]:8.1f}\n         y: {self.coords[self.hikers[0]]['y'][-1]:8.1f}", font = ("Verdana", 12, "bold"),   text_color = "#000000")
+        self.posicion_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[0]]['x'][-1]:8.1f}\n         y: {self.coords[self.actual_team][self.hikers[0]]['y'][-1]:8.1f}", font = ("Verdana", 12, "bold"),   text_color = "#000000")
         self.posicion_sup_izquierdo.place(relx = 0.05, rely = 0.35, anchor = "w")
 
-        self.altura_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Altura: {self.coords[self.hikers[0]]['z'][-1]:8.1f}", font = ("Verdana", 12, "bold"), text_color = "#000000")
+        self.altura_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Altura: {self.coords[self.actual_team][self.hikers[0]]['z'][-1]:8.1f}", font = ("Verdana", 12, "bold"), text_color = "#000000")
         self.altura_sup_izquierdo.place(relx = 0.05, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Cima: {self.hikers_cima[0]}", font = ("Verdana", 12, "bold"), text_color = "#000000")
-        self.velocidad_sup_izquierdo.place(relx = 0.05, rely = 0.75, anchor = "w")
+        self.cima_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Cima: {self.hikers_cima[0]}", font = ("Verdana", 12, "bold"), text_color = "#000000")
+        self.cima_sup_izquierdo.place(relx = 0.05, rely = 0.75, anchor = "w")
         #----------------------------------------------------------------------------------------------------------------------------------------------- 
         self.marco_sup_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[1]])
         self.marco_sup_derecho.place(x = 609, y = 11)
@@ -79,14 +92,14 @@ class Dashboard(customtkinter.CTk):
         self.titulo_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = self.hikers[1], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_sup_derecho.place(relx = 0.5, rely = 0.1, anchor = "center")
 
-        self.posicion_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Posicion: x: {self.coords[self.hikers[1]]['x'][-1]:8.1f}\n         y: {self.coords[self.hikers[1]]['y'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.posicion_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[1]]['x'][-1]:8.1f}\n         y: {self.coords[self.actual_team][self.hikers[1]]['y'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.posicion_sup_derecho.place(relx = 0.1, rely = 0.35, anchor = "w")
 
-        self.altura_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Altura: {self.coords[self.hikers[1]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.altura_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Altura: {self.coords[self.actual_team][self.hikers[1]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_sup_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Cima: {self.hikers_cima[1]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
-        self.velocidad_sup_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
+        self.cima_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Cima: {self.hikers_cima[1]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.cima_sup_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[2]])
         self.marco_inf_izquierdo.place(x = 10, y = 409)
@@ -94,14 +107,14 @@ class Dashboard(customtkinter.CTk):
         self.titulo_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = self.hikers[2], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_inf_izquierdo.place(relx = 0.5, rely = 0.1, anchor = "center")
 
-        self.posicion_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Posicion: x: {self.coords[self.hikers[2]]['x'][-1]:8.1f}\n         y: {self.coords[self.hikers[2]]['y'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.posicion_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[2]]['x'][-1]:8.1f}\n         y: {self.coords[self.actual_team][self.hikers[2]]['y'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.posicion_inf_izquierdo.place(relx = 0.1, rely = 0.35, anchor = "w")
 
-        self.altura_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Altura: {self.coords[self.hikers[2]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.altura_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Altura: {self.coords[self.actual_team][self.hikers[2]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_izquierdo.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Cima: {self.hikers_cima[2]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
-        self.velocidad_inf_izquierdo.place(relx = 0.1, rely = 0.75, anchor = "w")
+        self.cima_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Cima: {self.hikers_cima[2]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.cima_inf_izquierdo.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[3]])
         self.marco_inf_derecho.place(x = 609, y = 409)
@@ -109,20 +122,20 @@ class Dashboard(customtkinter.CTk):
         self.titulo_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = self.hikers[3], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
         self.titulo_inf_derecho.place(relx = 0.5, rely = 0.1, anchor = "center")
 
-        self.posicion_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Posicion: x: {self.coords[self.hikers[3]]['x'][-1]:8.1f}\n         y: {self.coords[self.hikers[3]]['y'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.posicion_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[3]]['x'][-1]:8.1f}\n         y: {self.coords[self.actual_team][self.hikers[3]]['y'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.posicion_inf_derecho.place(relx = 0.1, rely = 0.35, anchor = "w")
 
-        self.altura_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Altura: {self.coords[self.hikers[3]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.altura_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Altura: {self.coords[self.actual_team][self.hikers[3]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Cima: {self.hikers_cima[3]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
-        self.velocidad_inf_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
+        self.cima_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Cima: {self.hikers_cima[3]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.cima_inf_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo el rectangulo del medio donde iran los graficos
 
         #self.rectangulo_fondo = customtkinter.CTkLabel(self, width = 400, height = 300, bg_color = "#111111")
         #self.rectangulo_fondo.place(x = 200, y = 150)
-        self.graph.coordenadas2()
+        self.graph.coordenadas2(self.actual_team)
         self.graph.fig.set_size_inches(4.05,3)
         
         self.mountain_image = FigureCanvasTkAgg(self.graph.fig,master = self)
@@ -152,7 +165,7 @@ class Dashboard(customtkinter.CTk):
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Coloco un cartel del estado del server.
 
-        self.estado = customtkinter.CTkLabel(self, text = "STATUS: ", text_color = "#FFFFFF", font = ("Impact", 20, "bold"), anchor = "center")
+        self.estado = customtkinter.CTkLabel(self, text = f"STATUS: {self.status}", text_color = "#FFFFFF", font = ("Impact", 20, "bold"), anchor = "center")
         self.estado.place(x = 425, y = 123, anchor = "w")
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -206,7 +219,7 @@ class Dashboard(customtkinter.CTk):
         
         #-----------------------------------------------------------------------------------------------------------------------------------------------
 
-        self.teams = customtkinter.CTkComboBox(self, values=["pipe1", "pipe2",])
+        self.teams = customtkinter.CTkComboBox(self, values = self.team, command = self.change_team)
         self.teams.place(x = 350, y = 14)
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -227,6 +240,7 @@ class Dashboard(customtkinter.CTk):
     # Ademas import el modulo time para poder hacerlo.
     def update_timer(self):
         if self.cima is True:
+            self.status = "LLegamos!!!"
             return
         tiempo_transcurrido = int(time.time() - self.start_time)
         horas = tiempo_transcurrido // 3600
@@ -240,17 +254,20 @@ class Dashboard(customtkinter.CTk):
     def colores(self, numero:int):
         """Starts returning 1, increases it value 1 by 1 in range 0 to 7."""
         self.colores_id[numero] += 1
-        self.colores_id[numero] = self.colores_id[numero] % 8
+        self.colores_id[numero] = self.colores_id[numero] % len(self.colors)
         self.marco_sup_izquierdo.configure(fg_color = self.colors[self.colores_id[0]])
         self.marco_sup_derecho.configure(fg_color = self.colors[self.colores_id[1]])
         self.marco_inf_izquierdo.configure(fg_color = self.colors[self.colores_id[2]])
         self.marco_inf_derecho.configure(fg_color = self.colors[self.colores_id[3]])
-
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    def change_team(self, value:str):
+        self.actual_team = value
+        self.hikers = list(self.data[self.actual_team].keys())
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     def check_cima(self):
         all_cima = True
         for idx,hiker in enumerate(self.hikers):
-            self.hikers_cima[idx] = self.data[self.team[0]][hiker]['cima']
+            self.hikers_cima[idx] = self.data[self.actual_team][hiker]['cima']
             if not self.hikers_cima[idx]:
                 all_cima = False
         self.cima = all_cima
@@ -297,12 +314,17 @@ class Dashboard(customtkinter.CTk):
         pass'''
 
     def update_coords(self) -> None:
-        #coords = {nombre1: {'x': [], 'y': [], 'z': []}}
-        
-        for hiker in self.hikers:
-            self.coords[hiker]['x'] += [self.data[self.team[0]][hiker]['x']]
-            self.coords[hiker]['y'] += [self.data[self.team[0]][hiker]['y']]
-            self.coords[hiker]['z'] += [self.data[self.team[0]][hiker]['z']]
+        #coords = 
+        # {team1: 
+        #       {nombre1: {'x': [], 'y': [], 'z': []}}, ...},
+        #  team2:
+        #       ... 
+        print(self.coords)
+        for team_name in self.coords:
+            for hiker in self.coords[team_name]:
+                self.coords[team_name][hiker]['x'] += [self.data[team_name][hiker]['x']]
+                self.coords[team_name][hiker]['y'] += [self.data[team_name][hiker]['y']]
+                self.coords[team_name][hiker]['z'] += [self.data[team_name][hiker]['z']]
         
     def start(self):
         # No modificar
@@ -317,22 +339,40 @@ class Dashboard(customtkinter.CTk):
             self.check_cima()
             time.sleep(self.time_step/1000)
             #self.graph.ax.cla()
-            self.graph.coordenadas2()
+            self.graph.coordenadas2(self.actual_team)
             self.mountain_image.draw()
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
             
-            self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[0]]['y'][-1]:8.1f}")
-            self.altura_sup_izquierdo.configure(text = f"Altura: {self.coords[self.hikers[0]]['z'][-1]:8.1f}")
+            self.titulo_sup_izquierdo.configure(text = self.hikers[0])
+            self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[0]]['y'][-1]:8.1f}")
+            self.altura_sup_izquierdo.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[0]]['z'][-1]:8.1f}")
+            self.cima_sup_izquierdo.configure(text = f"Cima: {self.hikers_cima[0]}")
 
-            self.posicion_sup_derecho.configure(text = f"Posicion: x: {self.coords[self.hikers[1]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[1]]['y'][-1]:8.1f}")
-            self.altura_sup_derecho.configure(text = f"Altura: {self.coords[self.hikers[1]]['z'][-1]:8.1f}")
+            self.titulo_sup_derecho.configure(text = self.hikers[1])
+            self.posicion_sup_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[1]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[1]]['y'][-1]:8.1f}")
+            self.altura_sup_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[1]]['z'][-1]:8.1f}")
+            self.cima_sup_derecho.configure(text = f"Cima: {self.hikers_cima[1]}")
             
-            self.posicion_inf_izquierdo.configure(text = f"Posicion: x: {self.coords[self.hikers[2]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[2]]['y'][-1]:8.1f}")
-            self.altura_inf_izquierdo.configure(text = f"Altura: {self.coords[self.hikers[2]]['z'][-1]:8.1f}")
+            self.titulo_inf_izquierdo.configure(text = self.hikers[2])
+            self.posicion_inf_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[2]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[2]]['y'][-1]:8.1f}")
+            self.altura_inf_izquierdo.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[2]]['z'][-1]:8.1f}")
+            self.cima_inf_izquierdo.configure(text = f"Cima: {self.hikers_cima[2]}")
 
-            self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.hikers[3]]['y'][-1]:8.1f}")
-            self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.hikers[3]]['z'][-1]:8.1f}")
+            self.titulo_inf_derecho.configure(text = self.hikers[3])
+            self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[3]]['y'][-1]:8.1f}")
+            self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[3]]['z'][-1]:8.1f}")
+            self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")
+
+            '''
+            team_data = self.data[team_name] # {'nombre1': {x:[],y:[],z:[]}, ...}
+            for i, hiker,  in zip(range(team_data), team_data, [bot_left]):
+                self.titulo_inf_derecho.configure(text = self.hikers[3])
+                self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[3]]['y'][-1]:8.1f}")
+                self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[3]]['z'][-1]:8.1f}")
+                self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")
+
+            '''
 
 
 if __name__ == "__main__":
