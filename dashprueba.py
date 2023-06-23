@@ -6,6 +6,7 @@ import os
 import threading
 import pyfiglet
 import matplotlib
+from copy import deepcopy
 from PIL import Image
 from test_hiker import Grafico_2d_equipo
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -36,7 +37,6 @@ class Dashboard(customtkinter.CTk):
         for team_name in self.data:
             self.coords[team_name] = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.data[team_name]}
 
-        #self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
         self.update_coords()
         self.graph = Grafico_2d_equipo(self.coords)
         self.cima = False
@@ -261,6 +261,7 @@ class Dashboard(customtkinter.CTk):
         """Starts returning 1, increases it value 1 by 1 in range 0 to 7."""
         self.colores_id[numero] += 1
         self.colores_id[numero] = self.colores_id[numero] % len(self.colors)
+
         self.marco_sup_izquierdo.configure(fg_color = self.colors[self.colores_id[0]])
         self.marco_sup_derecho.configure(fg_color = self.colors[self.colores_id[1]])
         self.marco_inf_izquierdo.configure(fg_color = self.colors[self.colores_id[2]])
@@ -272,7 +273,7 @@ class Dashboard(customtkinter.CTk):
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     def check_cima(self):
         all_cima = True
-        for idx,hiker in enumerate(self.hikers):
+        for idx, hiker in enumerate(self.hikers):
             self.hikers_cima[idx] = self.data[self.actual_team][hiker]['cima']
             if not self.hikers_cima[idx]:
                 all_cima = False
@@ -296,6 +297,7 @@ class Dashboard(customtkinter.CTk):
             "   / \\\n    |\\\n   \\O/\n   /|\\",
         ]
         animacion_generada = [pyfiglet.figlet_format(frame, font = "small") for frame in animacion]
+        #animacion_generada = [pyfiglet.figlet_format(frame, width=2) for frame in animacion]
         return animacion_generada
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     def animacion_ascii(self):
@@ -325,7 +327,6 @@ class Dashboard(customtkinter.CTk):
         #       {nombre1: {'x': [], 'y': [], 'z': []}}, ...},
         #  team2:
         #       ... 
-        print(self.coords)
         for team_name in self.coords:
             for hiker in self.coords[team_name]:
                 self.coords[team_name][hiker]['x'] += [self.data[team_name][hiker]['x']]
@@ -350,11 +351,11 @@ class Dashboard(customtkinter.CTk):
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
 
-            self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
-            self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
-            self.leaderboard = ef.leaderboard(diccionario)
+            #self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
+            #self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
+            #self.leaderboard = ef.leaderboard(diccionario)
             
-            self.titulo_sup_izquierdo.configure(text = self.hikers[0])
+            '''self.titulo_sup_izquierdo.configure(text = self.hikers[0])
             self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[0]]['y'][-1]:8.1f}")
             self.altura_sup_izquierdo.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[0]]['z'][-1]:8.1f}")
             self.cima_sup_izquierdo.configure(text = f"Cima: {self.hikers_cima[0]}")
@@ -372,17 +373,28 @@ class Dashboard(customtkinter.CTk):
             self.titulo_inf_derecho.configure(text = self.hikers[3])
             self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[3]]['y'][-1]:8.1f}")
             self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[3]]['z'][-1]:8.1f}")
-            self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")
+            self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")'''
 
-            '''
-            team_data = self.data[team_name] # {'nombre1': {x:[],y:[],z:[]}, ...}
-            for i, hiker,  in zip(range(team_data), team_data, [bot_left]):
-                self.titulo_inf_derecho.configure(text = self.hikers[3])
-                self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[3]]['y'][-1]:8.1f}")
-                self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[3]]['z'][-1]:8.1f}")
-                self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")
 
-            '''
+            team_name = self.actual_team
+            team_data = deepcopy(self.data[team_name]) # {'nombre1': {x:[],y:[],z:[]}, ...}
+            
+            titulos = [self.titulo_inf_derecho, self.titulo_inf_izquierdo,
+                       self.titulo_sup_derecho, self.titulo_sup_izquierdo]
+            posiciones = [self.posicion_inf_derecho, self.posicion_inf_izquierdo,
+                          self.posicion_sup_derecho, self.posicion_sup_izquierdo]
+            alturas = [self.altura_inf_derecho, self.altura_inf_izquierdo,
+                       self.altura_sup_derecho, self.altura_sup_izquierdo]
+            cimas = [self.cima_inf_derecho, self.cima_inf_izquierdo,
+                     self.cima_sup_derecho, self.cima_sup_izquierdo]
+
+            for hiker, titulo, pos, altura, cima in zip(team_data, titulos, posiciones, alturas, cimas):
+                titulo.configure(text = hiker)
+                pos.configure(text = f"Posicion: x: {self.coords[team_name][hiker]['x'][-1]:8.1f}\n               y: {self.coords[team_name][hiker]['y'][-1]:8.1f}")
+                altura.configure(text = f"Altura: {self.coords[team_name][hiker]['z'][-1]:8.1f}")
+                cima.configure(text = f"Cima: {self.data[team_name][hiker]['cima']}")
+
+            
 
 
 if __name__ == "__main__":

@@ -10,7 +10,32 @@ class leader_board:
         self.contador_racha_malo = 0
         self.anterior_top1 = None
         self.anterior_ultimo = None
- 
+    
+    def leaderboard_general(d):
+        """Lista de jugadores ordenados desde su z, lo guardo con equipo, nombre, altura"""
+        jugadores_ordenados = []
+        for equipo, jugadores in d.items():
+            for jugador, variables in jugadores.items():
+                altura = variables.get("z", 0)
+                jugadores_ordenados.append((equipo, jugador, altura))
+
+        """Insertion sort"""
+        n = len(jugadores_ordenados)
+        for i in range(1, n):
+            actual = jugadores_ordenados[i]
+            j = i - 1
+            while j >= 0 and actual[2] > jugadores_ordenados[j][2]:
+                jugadores_ordenados[j + 1] = jugadores_ordenados[j]
+                j -= 1
+            jugadores_ordenados[j + 1] = actual
+
+        lista_ordenada = []
+        for idx, player in enumerate(jugadores_ordenados, 1):
+            lista_ordenada.append(f"{idx}- {player[1]} de {player[0]}")
+
+        return lista_ordenada
+    
+    
     def graficar(self):
 
         diccionario = c.get_data()

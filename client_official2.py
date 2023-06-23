@@ -9,7 +9,7 @@ def main():
 
     team_name = 'Los Pros'
     jugadores = ['Edgar', 'Roberto', 'Pepe', 'Pedro']
-    hikers = [Hiker(name,team_name, c) for name in jugadores]
+    hikers = [Hiker(name, team_name, c) for name in jugadores]
     
     team = Team(team_name, hikers, c)
     c.add_team(team.nombre, jugadores)
@@ -18,7 +18,8 @@ def main():
         continue
 
     estrategia(team)
-
+    while not c.is_over():
+        team.move_all()
 
 if __name__ == "__main__":
     main()
