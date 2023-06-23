@@ -365,9 +365,13 @@ class Dashboard(customtkinter.CTk):
             self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")
 
             '''
-            team_data = self.data[team_name] # {'nombre1': {x:[],y:[],z:[]}, ...}
-            for i, hiker,  in zip(range(team_data), team_data, [bot_left]):
-                self.titulo_inf_derecho.configure(text = self.hikers[3])
+            team_data = self.data[self.actual_team] # {'nombre1': {x:[],y:[],z:[]}, ...}
+            titulos = [self.titulo_inf_derecho, self.titulo_inf_izquierdo, self.titulo_sup_derecho, self.titulo_sup_izquierdo]
+            posiciones = [self.posicion_inf_derecho, self.posicion_inf_izquierdo, self.posicion_sup_derecho, self.posicion_sup_izquierdo]
+            alturas = [self.altura_inf_derecho, self.altura_inf_izquierdo, self.altura_sup_derecho, self.altura_sup_izquierdo]
+            cimas = [self.cima_inf_derecho, self.cima_inf_izquierdo, self.cima_sup_derecho, self.cima_sup_izquierdo]
+            for i, hiker, corner in zip(range(team_data), team_data, ):
+                self.titulo_inf_derecho.configure(text = hiker)
                 self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[3]]['y'][-1]:8.1f}")
                 self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[3]]['z'][-1]:8.1f}")
                 self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")
