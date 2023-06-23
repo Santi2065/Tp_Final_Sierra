@@ -1,7 +1,7 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
 from teams import Team
-from estrategias.spiral import spiral as estrategia
+from estrategias.empinado import empinado as estrategia
 
 def main():
 
@@ -21,7 +21,7 @@ def main():
     while c.is_registering_teams():
         continue
 
-    estrategia()
+    estrategia(team)
 
     
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ def empinado(team:Team):
     #team.go_center()
     team.face_out()
 
-    for i in range(100):
+    for i in range(10000):
         team.move_all()
 
     searching = True
