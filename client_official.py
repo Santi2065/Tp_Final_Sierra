@@ -2,7 +2,7 @@ from communication.client.client import MountainClient
 from HIKERS import Hiker
 from teams import Team
 import time
-from estrategias.empinado import empinado as estrategia
+from estrategias.spiral import spiral as estrategia
 
 def main():
 
