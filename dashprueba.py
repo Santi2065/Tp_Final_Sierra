@@ -28,9 +28,11 @@ class Dashboard(customtkinter.CTk):
         self.data = client.get_data()
         self.team = list(self.data.keys())
         self.hikers = list(self.data[self.team[0]].keys())
+        self.hikers_cima = [False for i in self.hikers]
         self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
         self.update_coords()
         self.graph = Grafico_2d_equipo(self.coords)
+        self.cima = False
         
 
 
@@ -68,7 +70,7 @@ class Dashboard(customtkinter.CTk):
         self.altura_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Altura: {self.coords[self.hikers[0]]['z'][-1]:8.1f}", font = ("Verdana", 12, "bold"), text_color = "#000000")
         self.altura_sup_izquierdo.place(relx = 0.05, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Cima: ", font = ("Verdana", 12, "bold"), text_color = "#000000")
+        self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Cima: {self.hikers_cima[0]}", font = ("Verdana", 12, "bold"), text_color = "#000000")
         self.velocidad_sup_izquierdo.place(relx = 0.05, rely = 0.75, anchor = "w")
         #----------------------------------------------------------------------------------------------------------------------------------------------- 
         self.marco_sup_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[1]])
@@ -83,7 +85,7 @@ class Dashboard(customtkinter.CTk):
         self.altura_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Altura: {self.coords[self.hikers[1]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_sup_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = "Cima: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Cima: {self.hikers_cima[1]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_sup_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[2]])
@@ -98,7 +100,7 @@ class Dashboard(customtkinter.CTk):
         self.altura_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Altura: {self.coords[self.hikers[2]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_izquierdo.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = "Cima: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Cima: {self.hikers_cima[2]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_inf_izquierdo.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[3]])
@@ -113,7 +115,7 @@ class Dashboard(customtkinter.CTk):
         self.altura_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Altura: {self.coords[self.hikers[3]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = "Cima: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Cima: {self.hikers_cima[3]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_inf_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo el rectangulo del medio donde iran los graficos
@@ -224,6 +226,8 @@ class Dashboard(customtkinter.CTk):
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
     def update_timer(self):
+        if self.cima is True:
+            return
         tiempo_transcurrido = int(time.time() - self.start_time)
         horas = tiempo_transcurrido // 3600
         minutos = (tiempo_transcurrido % 3600) // 60
@@ -231,6 +235,7 @@ class Dashboard(customtkinter.CTk):
         string_tiempo = f"{horas:02d} : {minutos:02d} : {segundos:02d}"
         self.timer.configure(text = f"TIMER = {string_tiempo}")
         self.timer.after(1000, self.update_timer)
+
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     def colores(self, numero:int):
         """Starts returning 1, increases it value 1 by 1 in range 0 to 7."""
@@ -240,6 +245,15 @@ class Dashboard(customtkinter.CTk):
         self.marco_sup_derecho.configure(fg_color = self.colors[self.colores_id[1]])
         self.marco_inf_izquierdo.configure(fg_color = self.colors[self.colores_id[2]])
         self.marco_inf_derecho.configure(fg_color = self.colors[self.colores_id[3]])
+
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    def check_cima(self):
+        all_cima = True
+        for idx,hiker in enumerate(self.hikers):
+            self.hikers_cima[idx] = self.data[self.team[0]][hiker]['cima']
+            if not self.hikers_cima[idx]:
+                all_cima = False
+        self.cima = all_cima
     
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite hacer una animacion ascii en el costado izquierdo.
@@ -300,6 +314,7 @@ class Dashboard(customtkinter.CTk):
         # No modificar
         while not self.client.is_over():
             self.data = self.client.get_data()
+            self.check_cima()
             time.sleep(self.time_step/1000)
             #self.graph.ax.cla()
             self.graph.coordenadas2()

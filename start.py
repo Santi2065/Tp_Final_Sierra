@@ -9,4 +9,4 @@ for file in files:
         os.system(f'start cmd /k python {file}')
         time.sleep(0.5)
     else:
-        os.system(f'gnome-terminal -- python3 {"Pito"}')
+        os.system(f'gnome-terminal -- python3 {file}')
