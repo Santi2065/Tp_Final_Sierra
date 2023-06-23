@@ -7,6 +7,39 @@ import essential_functions as ef
 
 c = MountainClient()
 
+import datetime
+
+class Timer:
+
+    def __init__(self) -> None:
+        self.dias = 0
+        self.hora = 0
+        self.minutos = 0
+        self.segundos = 0
+         
+
+    def timer(self):
+        """ Una iteracion (0.05s reales) -> un segundo dentro del juego."""
+        self.segundos += 0.05
+
+        if self.segundos == 60:
+            self.minutos += 1
+            self.segundos = 0
+
+        if self.minutos == 60:
+            self.hora += 1
+            self.minutos = 0
+
+        if self.hora == 24:
+            self.dias +=1
+            self.hora > 0
+
+        return f" Han pasado {self.dias} dias , {self.hora} horas. "
+        
+
+
+    
+
 c.add_team('Los cracks', ['Gian','Gian2','Gian3','Gian4'])
 c.add_team('puto', ['esc1','esc2','esc3','esc4'])
 c.finish_registration()
@@ -30,12 +63,12 @@ escala.append(Hiker(ord['esc4'],'esc4'))
 
 
 
-lista_max = []
+reloj = Timer()
 
 while not c.is_over():
-    diccionario = c.get_data()
 
-    print(ef.leaderboard(diccionario))
+
+    print(reloj.timer())
    
     c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
     c.next_iteration('puto',{i.nombre: i.ordenes for i in escala})
@@ -50,4 +83,4 @@ while not c.is_over():
         
 
 
-    time.sleep(0.5) # Para que no colapse el server
+    
