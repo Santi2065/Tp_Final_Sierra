@@ -10,7 +10,7 @@ import math
 #TODO Hacer q no pase esto: 
 #TODO WARNING: 2023-06-21 16:21:33,173 - The competition is not in the waiting_for_directions state. Current state: moving
 
-def spiral(team:Team):
+def spiral(team: Team):
     # Define y registra en el servidor el equipo
     names = ['Santi', 'Joaco', 'Gian', 'Pipe']
     c = register(names)
@@ -60,10 +60,10 @@ def spiral(team:Team):
         #    #*start = time.time()
         #    graf.coordenadas2()
         #    #*print(f'graf: {time.time() - start}-------------------------------------------------------')
-#
+
         #if i % 400 == 0 and i >= 10000000:
         #    graf.heat_map()
-#
+
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
 
@@ -113,7 +113,7 @@ def spiral(team:Team):
 
 
 def register(names: list[str], team_name) -> MountainClient:
-    ##print('Conectando a servidor...')
+    #*print('Conectando a servidor...')
     #c = MountainClient("10.42.0.1", 8888)
     c = MountainClient()
     c.add_team(team_name, names)
@@ -276,7 +276,8 @@ def test_gets():
 
 if __name__ == '__main__':
     names = ['Santi', 'Joaco', 'Gian', 'Pipe']
-    team_name = 'Los cracks'
-    #c = MountainClient()
-    c = register(names, team_name)
-    spiral(team_name, c)
+    c = MountainClient()
+    hikers = [Hiker(name, 'Los cracks', c) for name in names]
+    team = Team('Los cracks', hikers, c)
+    c = register(names, team.nombre)
+    spiral(team)
