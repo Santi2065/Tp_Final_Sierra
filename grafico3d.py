@@ -14,11 +14,11 @@ from test_hiker import Hiker
 class Grafico3D:
     def __init__(self,):
         self.figura = plt.figure()
-        self.ax = self.figura.add_subplot(111,projection='3d') 
+        self.ax = self.figura.add_subplot(111,projection='3d')
 
 
     def graficar(self):
-
+        
         diccionario = c.get_data()
        
         coordenadas = []
@@ -41,7 +41,7 @@ class Grafico3D:
         (self.ax).set_xlim(-23000,23000)
         (self.ax).set_ylim(-23000,23000)
         (self.ax).set_zlim(min(cz),max(cz))
-        (self.ax).grid(False)
+        
 
         (self.ax).set_xticks([])
         (self.ax).set_yticks([])
@@ -50,6 +50,7 @@ class Grafico3D:
   
         plt.ion()
         plt.show()
+        plt.pause(0.5)
     
         
 
