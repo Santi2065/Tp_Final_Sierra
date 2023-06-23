@@ -6,14 +6,14 @@ VELOCIDAD_MAX = 50
 
 class Hiker:
     
-    def __init__(self, nombre: str, c: MountainClient, ordenes: list = [0,VELOCIDAD_MAX]):
+    def __init__(self, nombre: str, team: str, c: MountainClient, ordenes: list = [0,VELOCIDAD_MAX]):
 
         self.nombre = nombre # Hacer esto automaticamente (que no haya que pasarlo como arg de clase)
         self.ordenes = {'direction':ordenes[0],'speed':ordenes[1]} # Es una lista así lo puedo modificar en el marco global. Lo uso como diccionario.
         self.radio_montania = 23000
         self.comms = c
         self.estado = 'quieto'
-        self.team = 'Los cracks' # Hacer esto automaticamente
+        self.team = team 
 
     def actual_pos(self):
         '''Returns actual pos (x, y, z) of the hiker'''

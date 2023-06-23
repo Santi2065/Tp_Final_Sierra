@@ -7,18 +7,18 @@ def main():
 
     c = MountainClient()
 
-    team_name = 'Los cracks'
-    jugadores = ['Gian', 'Pipe', 'Santi', 'Joaco']
-    hikers = [Hiker(name, team_name, c) for name in jugadores]
-    team = Team(team_name, hikers, c)
+    team_name = 'Los Pros'
+    jugadores = ['Edgar', 'Roberto', 'Pepe', 'Pedro']
+    hikers = [Hiker(name,team_name, c) for name in jugadores]
     
+    team = Team(team_name, hikers, c)
     c.add_team(team.nombre, jugadores)
-    c.finish_registration()
+    
     while c.is_registering_teams():
         continue
 
     estrategia(team)
 
-    
+
 if __name__ == "__main__":
     main()

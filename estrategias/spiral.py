@@ -49,7 +49,7 @@ def spiral():
             graf.coordenadas2()
             #*print(f'graf: {time.time() - start}-------------------------------------------------------')
 
-        if i % 400 == 0 and i >= 1:
+        if i % 400 == 0 and i >= 10000000:
             graf.heat_map()
 
         previous_hikers_thetas = hikers_thetas.copy()
