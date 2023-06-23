@@ -83,7 +83,7 @@ class Dashboard(customtkinter.CTk):
         self.altura_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Altura: {self.coords[self.hikers[1]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_sup_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = "Cima: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_sup_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[2]])
@@ -98,7 +98,7 @@ class Dashboard(customtkinter.CTk):
         self.altura_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Altura: {self.coords[self.hikers[2]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_izquierdo.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = "Cima: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_inf_izquierdo.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[3]])
@@ -113,7 +113,7 @@ class Dashboard(customtkinter.CTk):
         self.altura_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Altura: {self.coords[self.hikers[3]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = "Cima: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_inf_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo el rectangulo del medio donde iran los graficos
@@ -190,13 +190,13 @@ class Dashboard(customtkinter.CTk):
         self.borde_superior.configure(mode = "indeterminnate")
         self.borde_superior.start()
 
-        self.borde_izquierdo = customtkinter.CTkProgressBar(self, height = 800, orientation = "vertical")
+        self.borde_izquierdo = customtkinter.CTkProgressBar(self, height = 600, orientation = "vertical")
         self.borde_izquierdo.place(x = 0, y = 3)
 
         self.borde_izquierdo.configure(mode = "indeterminnate")
         self.borde_izquierdo.start()
 
-        self.borde_derecho = customtkinter.CTkProgressBar(self, height = 800, orientation = "vertical")
+        self.borde_derecho = customtkinter.CTkProgressBar(self, height = 600, orientation = "vertical")
         self.borde_derecho.place(x = 793, y = 3)
 
         self.borde_derecho.configure(mode = "indeterminnate")
