@@ -182,7 +182,7 @@ class Dashboard(customtkinter.CTk):
         #self.leaderboard_fondo = customtkinter.CTkLabel(self, width = 200, height = 200, bg_color = "#111111", text = "")
         #self.leaderboard_fondo.place(x = 609, y = 200)
 
-        #self.leaderboard = customtkinter.CTkLabel(self.leaderboard_fondo, text = "", text_color = "FFFFFF", font = ("Verdana", 12, "bold"), anchor = "nw")
+        #self.leaderboard = customtkinter.CTkLabel(self.leaderboard_fondo, text = "", text_color = "#FFFFFF", font = ("Verdana", 12, "bold"), anchor = "nw")
         #self.leaderboard.place(x = 0, y = 0, relwidth = 1, relheight = 1)
         #self.leaderboard.configure(text = self.generar_leader())
         #-----------------------------------------------------------------------------------------------------------------------------------------------

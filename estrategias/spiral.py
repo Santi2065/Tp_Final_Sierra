@@ -1,5 +1,6 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
+from teams import Team
 from test_hiker import Grafico_2d_equipo
 from essential_functions import magnitude, dot_product, difference, distance_between
 import matplotlib.pyplot as plt
@@ -9,19 +10,20 @@ import math
 #TODO Hacer q no pase esto: 
 #TODO WARNING: 2023-06-21 16:21:33,173 - The competition is not in the waiting_for_directions state. Current state: moving
 
-def spiral():
+def spiral(team:Team):
     # Define y registra en el servidor el equipo
     names = ['Santi', 'Joaco', 'Gian', 'Pipe']
     c = register(names)
 
-    hikers = [Hiker(name, c) for name in names]
+    hikers = [Hiker(name, team.nombre, c) for name in names]
 
     coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
     update_coords(coords, hikers)
-    graf = Grafico_2d_equipo(coords)
+    #graf = Grafico_2d_equipo(coords)
 
     # Se dirige al origen
-    all_go_to_point(hikers, c, (0, 0), graf, coords)
+    all_go_to_point(hikers, c, (0, 0), coords)
+    #all_go_to_point(hikers, c, (0, 0), graf, coords)
 
     ##print('llegue')
 
@@ -43,15 +45,15 @@ def spiral():
     while not c.is_over():
         #*s = time.time()
         #  cada cuanto    desde cual iteracion
-        #      v               v
-        if i % 20 == 0 and i >= 0:
-            #*start = time.time()
-            graf.coordenadas2()
-            #*print(f'graf: {time.time() - start}-------------------------------------------------------')
-
-        if i % 400 == 0 and i >= 10000000:
-            graf.heat_map()
-
+        ##      v               v
+        #if i % 20 == 0 and i >= 0:
+        #    #*start = time.time()
+        #    graf.coordenadas2()
+        #    #*print(f'graf: {time.time() - start}-------------------------------------------------------')
+#
+        #if i % 400 == 0 and i >= 10000000:
+        #    graf.heat_map()
+#
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
 
@@ -87,7 +89,8 @@ def spiral():
         # Se fija si hay un escalador (de cualquier equipo) que llego a la cima
         summit_loc = check_hiker_in_summit(c)
         if summit_loc:
-            all_go_to_point(hikers, c, summit_loc, graf, coords)
+            #all_go_to_point(hikers, c, summit_loc, graf, coords)
+            all_go_to_point(hikers, c, summit_loc, coords)
             all_in_summit = True
 
         update_coords(coords, hikers)
@@ -109,7 +112,8 @@ def register(names: list[str]) -> MountainClient:
         continue
     return c
 
-def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:
+#def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:
+def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float],  coords: dict[str, dict[str, list[float]]]) -> None:
     # Makes all hikers to go to the desired point
     directives, close_to_point = {}, {}
 
@@ -121,8 +125,8 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
 
     # Runs until all hikers are near the point
     while False in close_to_point.values():
-        if i % 1 == 0 and i >= 0:
-            graf.coordenadas2()
+        #if i % 1 == 0 and i >= 0:
+            #graf.coordenadas2()
 
         for hiker in hikers:
             if close_to_point[hiker.nombre]:
@@ -141,7 +145,7 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
             ##print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}, dir:{directives[hiker.nombre]["direction"]}')
 
         c.next_iteration('Los cracks', directives)
-        update_coords(coords, hikers)
+        #update_coords(coords, hikers)
         
         i += 1
 
