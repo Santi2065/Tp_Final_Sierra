@@ -57,7 +57,7 @@ def altura_maxima(equipo:str, diccionario:dict,lista_max:list) -> float:
     lista_max.append(maximo)
 
     
-    return (max(lista_max)) # santi no llores
+    return (max(lista_max)) 
 
 def altura_promedio(diccionario:dict) -> float:
  
