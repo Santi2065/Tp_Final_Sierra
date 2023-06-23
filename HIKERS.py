@@ -85,7 +85,7 @@ class Hiker:
         x_random = random.uniform(-2500, 2500)
         y_random = random.uniform(-2500, 2500)
 
-        self.change_direction(self.go_to((x_random, y_random)))
+        self.go_to((x_random, y_random))
 
     def stay_still(self):
         # Recuce la velocidad del personaje a valores insignificativos.

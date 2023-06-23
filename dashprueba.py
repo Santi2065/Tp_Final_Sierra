@@ -28,9 +28,11 @@ class Dashboard(customtkinter.CTk):
         self.data = client.get_data()
         self.team = list(self.data.keys())
         self.hikers = list(self.data[self.team[0]].keys())
+        self.hikers_cima = [False for i in self.hikers]
         self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
         self.update_coords()
         self.graph = Grafico_2d_equipo(self.coords)
+        self.cima = False
         
 
 
@@ -47,12 +49,16 @@ class Dashboard(customtkinter.CTk):
         # Establezco el color de fondo de la ventana
         
         self.configure(bg_color = "#000000")
+        # Defino la lista de colores que se pueden cambiar para cada jugador
 
+        self.colors = ["#FFB6C1", "#FFA500", "#00FFFF", "#FF69B4", "#FFFF00", "#00FF00", "#9400D3", "#FF1493"]
+        self.colores_id = [0, 1, 2, 3]
+        
         # Creo marcos para las ventanas cuadradas pequeñas de las esquinas. 
         # Configuro cada una de ellas con su respectivo color y ademas les agrego su titulo.
         # Les agrego a cada uno de ellos su respectiva posicion, altura y velocidad en tiempo real
         #-----------------------------------------------------------------------------------------------------------------------------------------------      
-        self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#64B5F6")
+        self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[0]])
         self.marco_sup_izquierdo.place(x = 10, y = 11)
 
         self.titulo_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = self.hikers[0], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -64,10 +70,10 @@ class Dashboard(customtkinter.CTk):
         self.altura_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Altura: {self.coords[self.hikers[0]]['z'][-1]:8.1f}", font = ("Verdana", 12, "bold"), text_color = "#000000")
         self.altura_sup_izquierdo.place(relx = 0.05, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Cima: ", font = ("Verdana", 12, "bold"), text_color = "#000000")
+        self.velocidad_sup_izquierdo = customtkinter.CTkLabel(self.marco_sup_izquierdo, text = f"Cima: {self.hikers_cima[0]}", font = ("Verdana", 12, "bold"), text_color = "#000000")
         self.velocidad_sup_izquierdo.place(relx = 0.05, rely = 0.75, anchor = "w")
         #----------------------------------------------------------------------------------------------------------------------------------------------- 
-        self.marco_sup_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#FF8A80")
+        self.marco_sup_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[1]])
         self.marco_sup_derecho.place(x = 609, y = 11)
 
         self.titulo_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = self.hikers[1], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -79,10 +85,10 @@ class Dashboard(customtkinter.CTk):
         self.altura_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Altura: {self.coords[self.hikers[1]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_sup_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_sup_derecho = customtkinter.CTkLabel(self.marco_sup_derecho, text = f"Cima: {self.hikers_cima[1]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_sup_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#FFF176")
+        self.marco_inf_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[2]])
         self.marco_inf_izquierdo.place(x = 10, y = 409)
 
         self.titulo_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = self.hikers[2], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -94,10 +100,10 @@ class Dashboard(customtkinter.CTk):
         self.altura_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Altura: {self.coords[self.hikers[2]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_izquierdo.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_inf_izquierdo = customtkinter.CTkLabel(self.marco_inf_izquierdo, text = f"Cima: {self.hikers_cima[2]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_inf_izquierdo.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = "#A5D6A7")
+        self.marco_inf_derecho = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[3]])
         self.marco_inf_derecho.place(x = 609, y = 409)
 
         self.titulo_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = self.hikers[3], text_color = "#000000", font = ("Verdana", 16, "bold"), anchor = "center")
@@ -109,14 +115,13 @@ class Dashboard(customtkinter.CTk):
         self.altura_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Altura: {self.coords[self.hikers[3]]['z'][-1]:8.1f}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.altura_inf_derecho.place(relx = 0.1, rely = 0.55, anchor = "w")
 
-        self.velocidad_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = "Velocidad: ", font = ("Verdana", 14, "bold"), text_color = "#000000")
+        self.velocidad_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Cima: {self.hikers_cima[3]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.velocidad_inf_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo el rectangulo del medio donde iran los graficos
 
         #self.rectangulo_fondo = customtkinter.CTkLabel(self, width = 400, height = 300, bg_color = "#111111")
         #self.rectangulo_fondo.place(x = 200, y = 150)
-
         self.graph.coordenadas2()
         self.graph.fig.set_size_inches(4.05,3)
         
@@ -187,13 +192,13 @@ class Dashboard(customtkinter.CTk):
         self.borde_superior.configure(mode = "indeterminnate")
         self.borde_superior.start()
 
-        self.borde_izquierdo = customtkinter.CTkProgressBar(self, height = 800, orientation = "vertical")
+        self.borde_izquierdo = customtkinter.CTkProgressBar(self, height = 600, orientation = "vertical")
         self.borde_izquierdo.place(x = 0, y = 3)
 
         self.borde_izquierdo.configure(mode = "indeterminnate")
         self.borde_izquierdo.start()
 
-        self.borde_derecho = customtkinter.CTkProgressBar(self, height = 800, orientation = "vertical")
+        self.borde_derecho = customtkinter.CTkProgressBar(self, height = 600, orientation = "vertical")
         self.borde_derecho.place(x = 793, y = 3)
 
         self.borde_derecho.configure(mode = "indeterminnate")
@@ -206,21 +211,23 @@ class Dashboard(customtkinter.CTk):
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
 
-        self.boton_colores1 = customtkinter.CTkButton(self.marco_sup_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores1 = customtkinter.CTkButton(self.marco_sup_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000", command = lambda : self.colores(0))
         self.boton_colores1.place(x = 160, y = 160)
 
-        self.boton_colores2 = customtkinter.CTkButton(self.marco_sup_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores2 = customtkinter.CTkButton(self.marco_sup_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000", command = lambda : self.colores(1))
         self.boton_colores2.place(x = 160, y = 160)
 
-        self.boton_colores3 = customtkinter.CTkButton(self.marco_inf_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores3 = customtkinter.CTkButton(self.marco_inf_izquierdo, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000", command = lambda : self.colores(2))
         self.boton_colores3.place(x = 160, y = 160)
 
-        self.boton_colores4 = customtkinter.CTkButton(self.marco_inf_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000")
+        self.boton_colores4 = customtkinter.CTkButton(self.marco_inf_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000", command = lambda : self.colores(3))
         self.boton_colores4.place(x = 160, y = 160)
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
     def update_timer(self):
+        if self.cima is True:
+            return
         tiempo_transcurrido = int(time.time() - self.start_time)
         horas = tiempo_transcurrido // 3600
         minutos = (tiempo_transcurrido % 3600) // 60
@@ -229,14 +236,31 @@ class Dashboard(customtkinter.CTk):
         self.timer.configure(text = f"TIMER = {string_tiempo}")
         self.timer.after(1000, self.update_timer)
 
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    def colores(self, numero:int):
+        """Starts returning 1, increases it value 1 by 1 in range 0 to 7."""
+        self.colores_id[numero] += 1
+        self.colores_id[numero] = self.colores_id[numero] % 8
+        self.marco_sup_izquierdo.configure(fg_color = self.colors[self.colores_id[0]])
+        self.marco_sup_derecho.configure(fg_color = self.colors[self.colores_id[1]])
+        self.marco_inf_izquierdo.configure(fg_color = self.colors[self.colores_id[2]])
+        self.marco_inf_derecho.configure(fg_color = self.colors[self.colores_id[3]])
 
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    def check_cima(self):
+        all_cima = True
+        for idx,hiker in enumerate(self.hikers):
+            self.hikers_cima[idx] = self.data[self.team[0]][hiker]['cima']
+            if not self.hikers_cima[idx]:
+                all_cima = False
+        self.cima = all_cima
     
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite hacer una animacion ascii en el costado izquierdo.
     # Import el modulo threading y art, ademas de tambien utilizar el modulo time.
     def generar_ascii(self):
         '''animacion = [
-' __\n ║║▄▄▄███▄▄▄   ▄▄▄███\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║▀▀▀   ▀▀▀███▀▀▀\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
+' __\n ║║▄▄▄███▄▄▄   ▄▄▄███\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║▀▀▀   ▀▀▀███▀▀▀   \n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 ' __\n ║║   ▄▄▄███▄▄▄   ▄▄▄\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║███▀▀▀   ▀▀▀███▀▀▀\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 ' __\n ║║▄▄▄   ▄▄▄███▄▄▄   \n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║▀▀▀███▀▀▀   ▀▀▀███\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 ' __\n ║║███▄▄▄   ▄▄▄███▄▄▄\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║   ▀▀▀███▀▀▀   ▀▀▀\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n'
@@ -290,10 +314,10 @@ class Dashboard(customtkinter.CTk):
         # No modificar
         while not self.client.is_over():
             self.data = self.client.get_data()
+            self.check_cima()
             time.sleep(self.time_step/1000)
-            #self.graph.close_figs()
-            self.graph = Grafico_2d_equipo(self.coords)
-            #matplotlib.pyplot.close()
+            #self.graph.ax.cla()
+            self.graph.coordenadas2()
             self.mountain_image.draw()
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
