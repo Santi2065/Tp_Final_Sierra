@@ -37,7 +37,6 @@ class Dashboard(customtkinter.CTk):
         for team_name in self.data:
             self.coords[team_name] = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.data[team_name]}
 
-        #self.coords = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.hikers}
         self.update_coords()
         self.graph = Grafico_2d_equipo(self.coords)
         self.cima = False
@@ -305,6 +304,7 @@ class Dashboard(customtkinter.CTk):
             "   / \\\n    |\\\n   \\O/\n   /|\\",
         ]
         animacion_generada = [pyfiglet.figlet_format(frame, font = "small") for frame in animacion]
+        #animacion_generada = [pyfiglet.figlet_format(frame, width=2) for frame in animacion]
         return animacion_generada
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     def animacion_ascii(self):

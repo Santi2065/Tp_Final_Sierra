@@ -242,20 +242,20 @@ class Grafico_2d_equipo:
         z_max = float('-inf')
         z_min = float('inf')
         points = []
-        for name in data:
-            for i in range(len(data[name]['x'])):
-                x = data[name]['x'][i]
-                y = data[name]['y'][i]
-                z = data[name]['z'][i]
-                points += [(x, y, z)]
-                
-                z_max = z if z > z_max else z_max
-                z_min = z if z < z_min else z_min
+        for team_name in data:
+            for name in data[team_name]:
+                for i in range(len(data[name]['x'])):
+                    x = data[team_name][name]['x'][i]
+                    y = data[team_name][name]['y'][i]
+                    z = data[team_name][name]['z'][i]
+                    points += [(x, y, z)]
+                    
+                    z_max = z if z > z_max else z_max
+                    z_min = z if z < z_min else z_min
 
                 
         if len(set(points)) < 3:
             return
-
 
 
         df= pd.DataFrame(points, columns=list('XYZ'))
