@@ -11,6 +11,7 @@ from PIL import Image
 from test_hiker import Grafico_2d_equipo
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
+import essential_functions as ef
 #from LEADERBOARD import leader_board
 
 # Esto lo que hace es darnos la herramienta para poder pasar de light a dark.
@@ -237,6 +238,11 @@ class Dashboard(customtkinter.CTk):
         self.boton_colores4 = customtkinter.CTkButton(self.marco_inf_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000", command = lambda : self.colores(3))
         self.boton_colores4.place(x = 160, y = 160)
     #-----------------------------------------------------------------------------------------------------------------------------------------------
+        self.altura_promedio = None
+        self.altura_maxima = None
+        self.leaderboard = None
+
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
     def update_timer(self):
@@ -344,6 +350,10 @@ class Dashboard(customtkinter.CTk):
             self.mountain_image.draw()
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
+
+            self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
+            self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
+            self.leaderboard = ef.leaderboard(diccionario)
             
             '''self.titulo_sup_izquierdo.configure(text = self.hikers[0])
             self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[0]]['y'][-1]:8.1f}")
@@ -389,9 +399,11 @@ class Dashboard(customtkinter.CTk):
 
 if __name__ == "__main__":
     client = MountainClient()
+    lista_max = []
     mountain_dash = Dashboard(client)
     mountain_dash.comienzo_animacion()
     mountain_dash.start()
+    diccionario = client.get_data()
 
 
 
