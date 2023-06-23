@@ -153,22 +153,25 @@ class Grafico_2d_equipo:
 
 
     #def coordenadas2(self, data: dict[str, dict[str, list[float]]]) -> None:
-    def coordenadas2(self) -> None:
+    def coordenadas2(self, team_name) -> None:
         '''
         Grafico que toma listas de coordenadas y las muestra.\n
-        data: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}
+        data: {'team1':
+                    'nombre1': {'x': [], 'y': [], 'z': []}, ...}, ...
+                'team2':
+                    ...}
         '''
 
         #plt.ion()
         #e53a3a
-        colors1 = ('#ff5454', '#fdbd2e', '#a1d832', '#87be19') # red-yel-gre
+        colors1 = ('#e53a3a', '#ff5454', '#fdbd2e', '#a1d832', '#87be19') # red-yel-gre
         colors2 = ('#ff2500', '#ffa500', '#2986cc', '#b1ea78', '#7ddc1f') # red-blu-gre
         colors3 = ('#4deeea', '#74ee15', '#ffe700', '#f000ff', '#001eff') # neon
         colors4 = ('#ff0000', '#bf0000', '#800000', '#400000', '#000000') # red -> black
         colors5 = ('#d11141', '#00b159', '#00aedb', '#f37735', '#ffc425') # red-green-cyan-oran-yel
 
 
-        data = deepcopy(self.data)
+        data = deepcopy(self.data[team_name])
 
         self.ax.cla()
 
@@ -267,5 +270,5 @@ class Grafico_2d_equipo:
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_aspect('equal')
-        fig.show()
+        #fig.show()
         plt.pause(0.001)
