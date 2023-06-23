@@ -8,6 +8,3 @@ def colores(numero:list):
     return (numero[0])
 
 
-
-for i in range(10):
-    print(colores(numero))
