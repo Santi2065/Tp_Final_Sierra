@@ -1,5 +1,6 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
+from teams import Team
 from test_hiker import Grafico_2d_equipo
 from essential_functions import magnitude, dot_product, difference, distance_between
 import matplotlib.pyplot as plt
@@ -9,19 +10,30 @@ import math
 #TODO Hacer q no pase esto: 
 #TODO WARNING: 2023-06-21 16:21:33,173 - The competition is not in the waiting_for_directions state. Current state: moving
 
-def spiral():
+def spiral(team: Team):
     # Define y registra en el servidor el equipo
     names = ['Santi', 'Joaco', 'Gian', 'Pipe']
     c = register(names)
+    #*c = MountainClient()
 
-    hikers = [Hiker(name, c) for name in names]
+    names = list(c.get_data()[team_name].values())
 
-    coords = {hiker.nombre: {'x': [], 'y': [], 'z': []} for hiker in hikers}
+    hikers = [Hiker(name, team_name, c) for name in names]
+
+    data = c.get_data()
+    coords = {}
+    for team_name in data:
+        coords[team_name] = {hiker: {'x': [], 'y': [], 'z': []} for hiker in data[team_name]}
+
+    hikers = [Hiker(name, team.nombre, c) for name in names]
+
+
     update_coords(coords, hikers)
-    graf = Grafico_2d_equipo(coords)
+    #*graf = Grafico_2d_equipo(coords)
 
     # Se dirige al origen
-    all_go_to_point(hikers, c, (0, 0), graf, coords)
+    all_go_to_point(hikers, c, (0, 0), coords)
+    #all_go_to_point(hikers, c, (0, 0), graf, coords)
 
     ##print('llegue')
 
@@ -43,14 +55,14 @@ def spiral():
     while not c.is_over():
         #*s = time.time()
         #  cada cuanto    desde cual iteracion
-        #      v               v
-        if i % 20 == 0 and i >= 0:
-            #*start = time.time()
-            graf.coordenadas2()
-            #*print(f'graf: {time.time() - start}-------------------------------------------------------')
+        ##      v               v
+        #if i % 20 == 0 and i >= 0:
+        #    #*start = time.time()
+        #    graf.coordenadas2()
+        #    #*print(f'graf: {time.time() - start}-------------------------------------------------------')
 
-        if i % 400 == 0 and i >= 10000000:
-            graf.heat_map()
+        #if i % 400 == 0 and i >= 10000000:
+        #    graf.heat_map()
 
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
@@ -68,29 +80,30 @@ def spiral():
             directives[hiker.nombre] = hiker.ordenes
 
             #print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
-            ##print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+            #*print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
 
         
         #*iteration_time += [time.time() - s]
         #*print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
 
-        previous_coords = all_hiker_coords(c, 'Los cracks')
+        previous_coords = all_hiker_coords(c, team_name)
 
-        c.next_iteration('Los cracks', directives)
+        c.next_iteration(team_name, directives)
 
         # Espera hasta que el servidor haya actualizado las posiciones
-        while previous_coords == all_hiker_coords(c, 'Los cracks'):
+        while previous_coords == all_hiker_coords(c, team_name):
             continue
 
 
         # Se fija si hay un escalador (de cualquier equipo) que llego a la cima
         summit_loc = check_hiker_in_summit(c)
         if summit_loc:
-            all_go_to_point(hikers, c, summit_loc, graf, coords)
+            #all_go_to_point(hikers, c, summit_loc, graf, coords)
+            all_go_to_point(hikers, c, summit_loc, coords)
             all_in_summit = True
 
-        update_coords(coords, hikers)
+        update_coords(coords, c)
 
 
         i += 1
@@ -99,18 +112,19 @@ def spiral():
 
 
 
-def register(names: list[str]) -> MountainClient:
-    ##print('Conectando a servidor...')
+def register(names: list[str], team_name) -> MountainClient:
+    #*print('Conectando a servidor...')
     #c = MountainClient("10.42.0.1", 8888)
     c = MountainClient()
-    c.add_team('Los cracks', names)
+    c.add_team(team_name, names)
     c.finish_registration()
     while c.is_registering_teams():
         continue
     return c
 
-def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:
-    # Makes all hikers to go to the desired point
+#def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:
+def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float],  coords: dict[str, dict[str, list[float]]]) -> None:
+    '''Makes all hikers to go to the desired point'''
     directives, close_to_point = {}, {}
 
     # Makes a dictionary that tells if hiker is near the point or not
@@ -121,10 +135,11 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
 
     # Runs until all hikers are near the point
     while False in close_to_point.values():
-        if i % 1 == 0 and i >= 0:
-            graf.coordenadas2()
+        #if i % 1 == 0 and i >= 0:
+            #graf.coordenadas2()
 
         for hiker in hikers:
+            # If it reaches the point, it stays still
             if close_to_point[hiker.nombre]:
                 hiker.change_direction(0)
                 hiker.change_speed(0)
@@ -138,7 +153,7 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
             directives[hiker.nombre] = hiker.ordenes
             close_to_point[hiker.nombre] = distance_to_point == 0 or hiker.in_summit()
 
-            ##print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}, dir:{directives[hiker.nombre]["direction"]}')
+            #*print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}, dir:{directives[hiker.nombre]["direction"]}')
 
         c.next_iteration('Los cracks', directives)
         update_coords(coords, hikers)
@@ -178,18 +193,21 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
 
     return theta2
 
-def update_coords(coords: dict[str, dict[str, list[float]]], hikers: list[Hiker]) -> None:
+def update_coords(coords: dict[str, dict[str, list[float]]], c: MountainClient) -> None:
     '''Actualiza la historia de coordenadas de todos los escaladores de un equipo'''
-    for hiker in hikers:
-        x, y, z = hiker.actual_pos()
-        coords[hiker.nombre]['x'] += [x]
-        coords[hiker.nombre]['y'] += [y]
-        coords[hiker.nombre]['z'] += [z]
+    data = c.get_data()
+    for team_name in data:
+        for name in data[team_name]:
+            x = data[team_name][name]['x']
+            y = data[team_name][name]['y']
+            z = data[team_name][name]['z']
+            coords[team_name][name]['x'] += [x]
+            coords[team_name][name]['y'] += [y]
+            coords[team_name][name]['z'] += [z]
 
-def update_coords2(coords: dict[str, dict[str, list[float]]], c: MountainClient) -> None:
+def update_coords2(coords: dict[str, dict[str, list[float]]], c: MountainClient, team_name: str) -> None:
     '''Actualiza la historia de coordenadas de todos los escaladores de un
     equipo, pero usa un get_data en vez de la cantidad de escaladores'''
-    team_name = 'Los cracks'
     hikers_locs = all_hiker_coords(c, team_name)
 
     for name in hikers_locs:
@@ -212,13 +230,13 @@ def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
     for hiker_name in hikers_thetas:
         hikers_thetas[hiker_name] += delta_theta
 
-def spiral_move_all(c: MountainClient, directives: dict[str, float]):
+def spiral_move_all(c: MountainClient, directives: dict[str, float], team_name: str):
     '''Mueve todos los escaladores'''
-    previous_coords = all_hiker_coords(c, 'Los cracks')
-    c.next_iteration('Los cracks', directives)
+    previous_coords = all_hiker_coords(c, team_name)
+    c.next_iteration(team_name, directives)
 
     # Espera hasta que el servidor haya actualizado las posiciones
-    while previous_coords == all_hiker_coords(c, 'Los cracks'):
+    while previous_coords == all_hiker_coords(c, team_name):
         continue
 
 def all_hiker_coords(c: MountainClient, team_name: str):
@@ -257,4 +275,9 @@ def test_gets():
 
 
 if __name__ == '__main__':
-    spiral()
+    names = ['Santi', 'Joaco', 'Gian', 'Pipe']
+    c = MountainClient()
+    hikers = [Hiker(name, 'Los cracks', c) for name in names]
+    team = Team('Los cracks', hikers, c)
+    c = register(names, team.nombre)
+    spiral(team)

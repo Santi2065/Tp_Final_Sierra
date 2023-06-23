@@ -71,6 +71,8 @@ class Dashboard(customtkinter.CTk):
         # Creo marcos para las ventanas cuadradas pequeñas de las esquinas. 
         # Configuro cada una de ellas con su respectivo color y ademas les agrego su titulo.
         # Les agrego a cada uno de ellos su respectiva posicion, altura y cima en tiempo real
+        #-----------------------------------------------------------------------------------------------------------------------------------------------     
+        
         #-----------------------------------------------------------------------------------------------------------------------------------------------      
         self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[0]])
         self.marco_sup_izquierdo.place(x = 10, y = 11)
@@ -131,6 +133,12 @@ class Dashboard(customtkinter.CTk):
 
         self.cima_inf_derecho = customtkinter.CTkLabel(self.marco_inf_derecho, text = f"Cima: {self.hikers_cima[3]}", font = ("Verdana", 14, "bold"), text_color = "#000000")
         self.cima_inf_derecho.place(relx = 0.1, rely = 0.75, anchor = "w")
+        
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+        self.leaderboard = customtkinter.CTkLabel(self, width = 200, height = 200, text = "")
+        self.leaderboard.place(x = 600, y = 200) 
+        self.titulo_leader = customtkinter.CTkLabel(self, text = "LEADERBOARD", text_color = "#FF80FF", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.titulo_leader.place(x = 700, y = 220, anchor = "center")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo el rectangulo del medio donde iran los graficos
 
@@ -182,13 +190,13 @@ class Dashboard(customtkinter.CTk):
         #self.leaderboard_fondo = customtkinter.CTkLabel(self, width = 200, height = 200, bg_color = "#111111", text = "")
         #self.leaderboard_fondo.place(x = 609, y = 200)
 
-        #self.leaderboard = customtkinter.CTkLabel(self.leaderboard_fondo, text = "", text_color = "FFFFFF", font = ("Verdana", 12, "bold"), anchor = "nw")
+        #self.leaderboard = customtkinter.CTkLabel(self.leaderboard_fondo, text = "", text_color = "#FFFFFF", font = ("Verdana", 12, "bold"), anchor = "nw")
         #self.leaderboard.place(x = 0, y = 0, relwidth = 1, relheight = 1)
         #self.leaderboard.configure(text = self.generar_leader())
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Barra deslizadora
         self.brillo_slider = customtkinter.CTkSlider(self, from_ = 0, to = 255, orientation = "vertical", button_length = 20, button_color = "#FFFFFF", button_corner_radius = 1)
-        self.brillo_slider.place(x = 780, y = 200)
+        self.brillo_slider.place(x = 770, y = 200)
         self.brillo_slider.set(50)
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -239,7 +247,6 @@ class Dashboard(customtkinter.CTk):
     #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.altura_promedio = None
         self.altura_maxima = None
-        self.leaderboard = None
 
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
@@ -339,6 +346,31 @@ class Dashboard(customtkinter.CTk):
         t.start()
         self.mainloop()  
 
+    def leaderboard_general(self, d):
+        """Lista de jugadores ordenados desde su z, lo guardo con equipo, nombre, altura"""
+        jugadores_ordenados = []
+        for equipo, jugadores in d.items():
+            for jugador, variables in jugadores.items():
+                altura = variables.get("z", 0)
+                jugadores_ordenados.append((equipo, jugador, altura))
+
+        """Insertion sort"""
+        n = len(jugadores_ordenados)
+        for i in range(1, n):
+            actual = jugadores_ordenados[i]
+            j = i - 1
+            while j >= 0 and actual[2] > jugadores_ordenados[j][2]:
+                jugadores_ordenados[j + 1] = jugadores_ordenados[j]
+                j -= 1
+            jugadores_ordenados[j + 1] = actual
+
+        lista_ordenada = []
+        for idx, player in enumerate(jugadores_ordenados, 1):
+            lista_ordenada.append(f"{idx}- {player[1]} de {player[0]}")
+
+        return "\n".join(lista_ordenada)
+    
+    
     def update_data(self):
         # No modificar
         while not self.client.is_over():
@@ -350,10 +382,10 @@ class Dashboard(customtkinter.CTk):
             self.mountain_image.draw()
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
-
             #self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
             #self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
-            #self.leaderboard = ef.leaderboard(diccionario)
+            self.leaderboard.configure(text = self.leaderboard_general(self.data))
+
             
             '''self.titulo_sup_izquierdo.configure(text = self.hikers[0])
             self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[0]]['y'][-1]:8.1f}")
@@ -398,6 +430,8 @@ class Dashboard(customtkinter.CTk):
 
 
 if __name__ == "__main__":
+    print('Iniciando dashboard...')
+
     client = MountainClient()
     lista_max = []
     mountain_dash = Dashboard(client)
