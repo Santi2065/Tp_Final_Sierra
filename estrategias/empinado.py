@@ -89,6 +89,4 @@ def empinado(team:Team):
 
         team.move_all()
 
-    print(f"fin {[h.in_summit() for h in team.hikers]}")
-
 

@@ -18,6 +18,8 @@ def main():
         continue
 
     estrategia(team)
+    while not c.is_over():
+        team.move_all()
 
     
 if __name__ == "__main__":

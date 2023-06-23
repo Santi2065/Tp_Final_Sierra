@@ -40,7 +40,7 @@ def spiral():
 
     i = 0
     # Comienza el proceso de ir en espiral
-    while not all_in_summit and not c.is_over():
+    while not c.is_over():
         #*s = time.time()
         #  cada cuanto    desde cual iteracion
         #      v               v
