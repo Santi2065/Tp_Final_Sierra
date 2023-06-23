@@ -11,7 +11,7 @@ import math
 
 def spiral():
     # Define y registra en el servidor el equipo
-    names = ['Santi', 'Joaco', 'Gian ', 'Pipe ']
+    names = ['Santi', 'Joaco', 'Gian', 'Pipe']
     c = register(names)
 
     hikers = [Hiker(name, c) for name in names]
@@ -23,7 +23,7 @@ def spiral():
     # Se dirige al origen
     all_go_to_point(hikers, c, (0, 0), graf, coords)
 
-    print('llegue')
+    ##print('llegue')
 
     # Angulos iniciales para que queden separados uniformemente
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
@@ -68,7 +68,7 @@ def spiral():
             directives[hiker.nombre] = hiker.ordenes
 
             #print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
-            print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
+            ##print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
 
 
         
@@ -95,12 +95,12 @@ def spiral():
 
         i += 1
 
-    print('Todos estamos en la cima :)')
+    ##print('Todos estamos en la cima :)')
 
 
 
 def register(names: list[str]) -> MountainClient:
-    print('Conectando a servidor...')
+    ##print('Conectando a servidor...')
     #c = MountainClient("10.42.0.1", 8888)
     c = MountainClient()
     c.add_team('Los cracks', names)
@@ -138,11 +138,9 @@ def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, 
             directives[hiker.nombre] = hiker.ordenes
             close_to_point[hiker.nombre] = distance_to_point == 0 or hiker.in_summit()
 
-            print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}, dir:{directives[hiker.nombre]["direction"]}')
+            ##print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}, dir:{directives[hiker.nombre]["direction"]}')
 
         c.next_iteration('Los cracks', directives)
-        
-        time.sleep(0.05)
         update_coords(coords, hikers)
         
         i += 1
@@ -214,8 +212,14 @@ def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
     for hiker_name in hikers_thetas:
         hikers_thetas[hiker_name] += delta_theta
 
-def spiral_move_all():
-    pass
+def spiral_move_all(c: MountainClient, directives: dict[str, float]):
+    '''Mueve todos los escaladores'''
+    previous_coords = all_hiker_coords(c, 'Los cracks')
+    c.next_iteration('Los cracks', directives)
+
+    # Espera hasta que el servidor haya actualizado las posiciones
+    while previous_coords == all_hiker_coords(c, 'Los cracks'):
+        continue
 
 def all_hiker_coords(c: MountainClient, team_name: str):
     '''Devuelve diccionario con la posicion de todos los escaladores, un get_data'''
