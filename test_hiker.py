@@ -270,5 +270,5 @@ class Grafico_2d_equipo:
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_aspect('equal')
-        fig.show()
+        #fig.show()
         plt.pause(0.001)
