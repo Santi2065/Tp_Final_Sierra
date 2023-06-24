@@ -430,6 +430,8 @@ class Dashboard(customtkinter.CTk):
 
 
 if __name__ == "__main__":
+    print('Iniciando dashboard...')
+
     client = MountainClient()
     lista_max = []
     mountain_dash = Dashboard(client)

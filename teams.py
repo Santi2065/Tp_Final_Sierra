@@ -3,7 +3,7 @@ from HIKERS import Hiker
 import math
 
 class Team(Hiker):
-    def __init__(self, nombre: str, hikers: list[Hiker], c:MountainClient) -> None:
+    def __init__(self, nombre: str, hikers: list[Hiker], c: MountainClient) -> None:
         self.nombre = nombre
         self.hikers = hikers
         self.comms = c
