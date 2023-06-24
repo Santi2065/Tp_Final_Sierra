@@ -235,7 +235,7 @@ class Grafico_2d_equipo:
 
         #plt.pause(0.00001)
 
-    def heat_map(self) -> None:
+    def heat_map(self,team) -> None:
         data = deepcopy(self.data)
         fig, ax = self.fig2, self.ax2
 

@@ -144,7 +144,7 @@ class Dashboard(customtkinter.CTk):
 
         #self.rectangulo_fondo = customtkinter.CTkLabel(self, width = 400, height = 300, bg_color = "#111111")
         #self.rectangulo_fondo.place(x = 200, y = 150)
-        self.graph.coordenadas2(self.actual_team)
+        self.graph.heat_map(self.actual_team)
         self.graph.fig.set_size_inches(4.05,3)
         
         self.mountain_image = FigureCanvasTkAgg(self.graph.fig,master = self)
@@ -378,7 +378,7 @@ class Dashboard(customtkinter.CTk):
             self.check_cima()
             time.sleep(self.time_step/1000)
             #self.graph.ax.cla()
-            self.graph.coordenadas2(self.actual_team)
+            self.graph.heat_map(self.actual_team)
             self.mountain_image.draw()
             self.update_coords()
             self.mountain_image.get_tk_widget().place(x=201, y=150)
