@@ -8,14 +8,14 @@ import pandas as pd
 from copy import deepcopy
 from essential_functions import difference, magnitude
 from test_hiker import Hiker
-
+import matplotlib.animation as animation
 
 
 class Grafico3D:
     def __init__(self,):
         self.figura = plt.figure()
         self.ax = self.figura.add_subplot(111,projection='3d')
-
+        self.angulo = 0 % 360
 
     def graficar(self):
         
@@ -35,8 +35,33 @@ class Grafico3D:
             cx.append(coordenadas[i][0])
             cy.append(coordenadas[i][1])
             cz.append(coordenadas[i][2])
+
+
+        z_promedio = (max(cz) + min(cz)) /2 # para usos esteticos
         
-        (self.ax).scatter(cx,cy,cz)
+
+
+        colores = []
+        for i in range(len(cz)):
+            if cz[i] <= (min(cz) + z_promedio) /2:
+                colores.append('#B57C00') # amarillo oscuro
+            elif cz[i] > (min(cz) + z_promedio) / 2 and cz[i] <= (z_promedio + max(cz)) / 2:
+                colores.append('#D85716') # naranje oscuro
+            else:
+                colores.append('#8B0000') # rojo oscuro
+        
+
+        (self.ax).set_facecolor('lightgray')
+
+        (self.ax).scatter(cx,cy,cz,c=colores)
+
+
+
+
+
+
+
+
 
         (self.ax).set_xlim(min(cx),max(cx))
         (self.ax).set_ylim(min(cy),max(cy))
@@ -47,6 +72,11 @@ class Grafico3D:
         (self.ax).set_yticks([])
         (self.ax).set_zticks([])
 
+       
+        
+        colores.clear()
+        self.ax.view_init(elev=10, azim=self.angulo)
+        self.angulo += 2.5 # Grados que rote
   
         plt.ion()
         plt.show()
