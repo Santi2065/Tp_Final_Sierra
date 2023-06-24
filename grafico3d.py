@@ -38,8 +38,8 @@ class Grafico3D:
         
         (self.ax).scatter(cx,cy,cz)
 
-        (self.ax).set_xlim(-23000,23000)
-        (self.ax).set_ylim(-23000,23000)
+        (self.ax).set_xlim(min(cx),max(cx))
+        (self.ax).set_ylim(min(cy),max(cy))
         (self.ax).set_zlim(min(cz),max(cz))
         
 
@@ -85,7 +85,6 @@ grafico = Grafico3D()
 
 while not c.is_over():
 
-    print(c.get_data())
     grafico.graficar()
 
 
