@@ -17,6 +17,7 @@ def main():
     print('Registrando equipo...')
 
     c.add_team(team.nombre, jugadores)
+    c.finish_registration()
 
     print('Esperando a comenzar...', end='\r')
     while c.is_registering_teams():
