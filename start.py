@@ -2,7 +2,7 @@ import os
 import platform
 import time
 
-files = ['start_server.py','client_official2.py', 'dashprueba.py']
+files = ['start_server.py', 'dashprueba.py','client_official.py', 'client_official2.py']
 
 for file in files:
     if platform.system() == 'Windows':
