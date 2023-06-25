@@ -153,7 +153,7 @@ class Grafico_2d_equipo:
 
 
     #def coordenadas2(self, data: dict[str, dict[str, list[float]]]) -> None:
-    def coordenadas2(self, team_name) -> None:
+    def coordenadas2(self, team_name,colors) -> None:
         '''
         Grafico que toma listas de coordenadas y las muestra.\n
         data: {'team1':
@@ -169,14 +169,14 @@ class Grafico_2d_equipo:
         colors3 = ('#4deeea', '#74ee15', '#ffe700', '#f000ff', '#001eff') # neon
         colors4 = ('#ff0000', '#bf0000', '#800000', '#400000', '#000000') # red -> black
         colors5 = ('#d11141', '#00b159', '#00aedb', '#f37735', '#ffc425') # red-green-cyan-oran-yel
-
+        colors_test = colors
 
         data = deepcopy(self.data[team_name])
 
         self.ax.cla()
 
         #colors = 'r', 'c', 'g', 'magenta', 'grey'
-        colors = colors5
+        colors = colors_test
 
         x_max = float('-inf')
         y_max = float('-inf')
@@ -244,7 +244,7 @@ class Grafico_2d_equipo:
         points = []
         for team_name in data:
             for name in data[team_name]:
-                for i in range(len(data[name]['x'])):
+                for i in range(len(data[team_name][name]['x'])):
                     x = data[team_name][name]['x'][i]
                     y = data[team_name][name]['y'][i]
                     z = data[team_name][name]['z'][i]

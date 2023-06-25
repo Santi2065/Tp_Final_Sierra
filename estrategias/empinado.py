@@ -9,8 +9,38 @@ def empinado(team:Team):
     #team.go_center()
     team.face_out()
 
-    for i in range(10000):
+    for i in range(1000):
         team.move_all()
+        for hiker in hikers_buscando:
+            if hiker.in_summit():
+
+                hiker.stay_still()
+                hiker.cambio_estado('quieto')
+
+                hikers_buscando.remove(hiker)
+
+                flag = [info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y']]
+                searching = False
+
+                while hikers_buscando:
+
+                    for hiker in hikers_buscando:
+                    
+                        if hiker.in_summit():
+                            hiker.stay_still()
+                            hiker.cambio_estado('quieto')
+                            hikers_buscando.remove(hiker)
+
+                        else:
+                            hiker.go_to(flag)
+
+                    team.move_all()
+                break
+            #si sale del loop anterior con un break, hace otro break si no continue
+        else:
+            continue
+        break
+
 
     searching = True
     info = team.comms.get_data()
@@ -42,7 +72,7 @@ def empinado(team:Team):
             if hiker.estado == 'subiendo':
 
                 if  producto_punto > 0:
-
+                    #el arcotangente al cuadrado de (inclinacion_y, inclinacion_x) me devuelve el angulo en radianes de la direccion donde se maximiza la pendiente.
                     direction = math.atan2(inclinacion_y, inclinacion_x)
                     hiker.change_direction(direction)
 
