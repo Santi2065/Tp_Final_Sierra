@@ -1,4 +1,3 @@
-
 class Timer:
     def __init__(self) -> None:
         self.dias = 0

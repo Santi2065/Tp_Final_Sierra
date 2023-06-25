@@ -112,7 +112,7 @@ class Grafico3D:
         ax.view_init(elev=10, azim=self.angulo)
         self.angulo += 2.5 # Grados que rote
   
-        #*plt.ion()
+        plt.ion()
         #plt.show(block=False)
         plt.pause(0.01)
     

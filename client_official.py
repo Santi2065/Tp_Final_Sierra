@@ -9,14 +9,14 @@ def main():
     c = MountainClient()
 
     team_name = 'Los cracks'
-    jugadores = ['Gian', 'Pipe', 'Santi', 'Joaco']
-    hikers = [Hiker(name, team_name, c) for name in jugadores]
+    names = ['Gian', 'Pipe', 'Santi', 'Joaco']
+    hikers = [Hiker(name, team_name, c) for name in names]
     team = Team(team_name, hikers, c)
     
 
     print('Registrando equipo...', end='\r')
 
-    c.add_team(team.nombre, jugadores)
+    c.add_team(team.nombre, names)
     c.finish_registration()
 
     print('Esperando a comenzar...   ', end='\r')
@@ -26,8 +26,8 @@ def main():
 
     print('Haciendo estrategia              ')
     estrategia(team)
-    while not c.is_over():
-        team.move_all()
+    #*while not c.is_over():
+    #*    team.move_all()
 
     
 if __name__ == "__main__":

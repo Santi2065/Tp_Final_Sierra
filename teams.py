@@ -1,6 +1,6 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
-import math
+import math, time
 
 class Team(Hiker):
     def __init__(self, nombre: str, hikers: list[Hiker], c: MountainClient) -> None:
@@ -15,7 +15,14 @@ class Team(Hiker):
             direction += math.pi/2
 
     def move_all(self) -> None:
-        self.comms.next_iteration(self.nombre, {h.nombre: h.ordenes for h in self.hikers})
+        prev_data = self.comms.get_data()
+
+        directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers}
+        self.comms.next_iteration(self.nombre, directives)
+
+        while prev_data == self.comms.get_data():
+            time.sleep(0.01)
+
         for hiker in self.hikers:
             if hiker.almost_out():
                 hiker.random()

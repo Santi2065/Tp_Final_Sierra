@@ -153,11 +153,11 @@ class Grafico_2d_equipo:
 
 
     #def coordenadas2(self, data: dict[str, dict[str, list[float]]]) -> None:
-    def coordenadas2(self, team_name) -> None:
+    def coordenadas2(self, team_name: str) -> None:
         '''
         Grafico que toma listas de coordenadas y las muestra.\n
         data: {'team1':
-                    'nombre1': {'x': [], 'y': [], 'z': []}, ...}, ...
+                    'nombre1': {'x': [ ], 'y': [ ], 'z': [ ]}, ...}, ...
                 'team2':
                     ...}
         '''
