@@ -15,6 +15,14 @@ class Team(Hiker):
             direction += math.pi/2
 
     def move_all(self) -> None:
+        directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers}
+        self.comms.next_iteration(self.nombre, directives)
+
+        for hiker in self.hikers:
+            if hiker.almost_out():
+                hiker.random()
+    
+    def move_all_spiral(self) -> None:
         prev_data = self.comms.get_data()
 
         directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers}

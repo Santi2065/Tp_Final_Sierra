@@ -90,8 +90,11 @@ def spiral(team: Team):
         #*previous_coords = all_hiker_coords(c, team_name)
 
         #*c.next_iteration(team_name, directives)
-        team.move_all()
 
+        s = time.time()
+        team.move_all_spiral()
+        print(time.time() - s)
+        
         #* Espera hasta que el servidor haya actualizado las posiciones
         #*while previous_coords == all_hiker_coords(c, team_name):
         #*    continue
