@@ -32,7 +32,7 @@ def magnitude(vector: tuple[float, float]) -> float:
     '''
     Calcula la magnitud de un vector. Ignora la coordenada z.
     
-    Argumentos de entrada:
+    Argumento de entrada:
         vector (tupla): Coordenadas (x,y) del vector.
     
     Salida:
@@ -98,7 +98,7 @@ def altura_maxima(equipo:str, diccionario:dict,lista_max:list) -> float:
     return (max(lista_max)) # devuelve el maximo global
 
 def altura_promedio(diccionario:dict,equipo:str) -> float:
-    
+
     """
     Calcula la altura promedio de todos los jugadores de un equipo por iteracion.
      
