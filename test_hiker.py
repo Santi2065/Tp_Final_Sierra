@@ -108,11 +108,10 @@ class Grafico_2d_equipo:
         matplotlib.use('agg')
         #self.hikers = hikers
         self.data = data
-        self.fig1, self.ax = plt.subplots()
+        self.fig1, self.ax1 = plt.subplots()
         self.fig2, self.ax2 = plt.subplots()
 
-        # Hace que sea un cuadrado la ventana
-        self.ax.set_aspect('equal')
+        self.ax1.set_aspect('equal')
         self.last_index = 0
         self.labels = []
         '''nombres = [hiker.nombre for hiker in hikers]
@@ -169,8 +168,8 @@ class Grafico_2d_equipo:
         colors_test = colors
 
         data = deepcopy(self.data[team_name])
-
-        self.ax.cla()
+        ax = self.ax1
+        ax.cla()
 
         colors = colors_test
 
@@ -178,7 +177,7 @@ class Grafico_2d_equipo:
         y_max = float('-inf')
 
         #* Borra los nombres anteriores
-        #*for text in self.ax.texts:
+        #*for text in ax.texts:
         #*    text.set_text('')
 
         for name, coords, colr in zip(data, data.values(), colors):
@@ -198,15 +197,15 @@ class Grafico_2d_equipo:
             #*new_y = y[self.last_index:]
 
             #* Grafica los nuevos puntos
-            #*self.ax.scatter(new_x, new_y, s=marker_size, color=colr)
-            self.ax.scatter(x, y, s=marker_size, color=colr)
+            #*ax.scatter(new_x, new_y, s=marker_size, color=colr)
+            ax.scatter(x, y, s=marker_size, color=colr)
 
             # Actualiza el indice del ultimo valor graficado
             self.last_index = len(x) - 1
 
             # Pone el nombre del escalador en el ultimo punto que estuvo
             last_coord = (coords['x'][-1], coords['y'][-1])
-            self.ax.text(last_coord[0], last_coord[1], name, fontsize=9)
+            ax.text(last_coord[0], last_coord[1], name, fontsize=9)
 
         #* Actualiza el indice del ultimo valor graficado
         #*for coords in data.values():
@@ -217,11 +216,11 @@ class Grafico_2d_equipo:
 
         # Ajusta la escala a medida que crece el rango
         limit += limit/10
-        self.ax.set_xlim(-limit, limit) 
-        self.ax.set_ylim(-limit, limit)
+        ax.set_xlim(-limit, limit) 
+        ax.set_ylim(-limit, limit)
 
         # Pone la imagen en el fondo
-        self.ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
+        ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
 
         # Actualiza el grafico, por performance
         #!self.fig1.canvas.draw_idle()

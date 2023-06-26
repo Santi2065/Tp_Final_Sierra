@@ -146,9 +146,9 @@ class Dashboard(customtkinter.CTk):
         #self.rectangulo_fondo.place(x = 200, y = 150)
         hiker_colors = (self.colors[0],self.colors[1],self.colors[2],self.colors[3])
         self.graph.coordenadas2(self.actual_team, hiker_colors)
-        self.graph.fig.set_size_inches(4.05,3)
+        self.graph.fig1.set_size_inches(4.05,3)
         
-        self.mountain_image = FigureCanvasTkAgg(self.graph.fig,master = self)
+        self.mountain_image = FigureCanvasTkAgg(self.graph.fig1,master = self)
         #self.mountain_image_label = customtkinter.CTkLabel(self.rectangulo, image = self.mountain_image, text = "")
         #self.mountain_image_label.place(relx = 0.5, rely = 0.5, anchor = "center")
 
