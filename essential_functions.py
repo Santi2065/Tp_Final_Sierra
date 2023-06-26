@@ -2,7 +2,7 @@ import math
 
 def difference(vector1: tuple|list, vector2: tuple|list) -> tuple:
     '''
-    Calcula las coordenadas del vector que va del vector 2 al vector 1. Ignora la coordenada z.
+    Calcula las coordenadas en R^2 del vector dezplazamiento entre dos vectores.
 
     Argumentos de entrada: 
         vector1 (tupla|lista): Coordenadas (x,y) del primer vector.
@@ -16,7 +16,7 @@ def difference(vector1: tuple|list, vector2: tuple|list) -> tuple:
 
 def dot_product(vector1: tuple|list, vector2: tuple|list) -> float:
     '''
-    Calcula el producto interno entre dos vectores. Ignora la coordenada z.
+    Calcula el producto interno entre dos vectores en R^2.
 
     Argumentos de entrada:
         vector1 (tupla|lista): Coordenadas (x,y) del primer vector.
@@ -30,7 +30,7 @@ def dot_product(vector1: tuple|list, vector2: tuple|list) -> float:
 
 def magnitude(vector: tuple[float, float]) -> float:
     '''
-    Calcula la magnitud de un vector. Ignora la coordenada z.
+    Calcula la magnitud de un vector de R^2.
     
     Argumento de entrada:
         vector (tupla): Coordenadas (x,y) del vector.
@@ -43,7 +43,7 @@ def magnitude(vector: tuple[float, float]) -> float:
 
 def distance_between(vector1: tuple[float, float], vector2: tuple[float,float]) -> float:
     '''
-    Calcula la distancia entre dos vectores. Ignora la coordenada z.
+    Calcula la distancia entre dos vectores en R^2.
     
     Argumentos de entrada:
         vector1 (tupla): Coordenadas (x,y) del primer vector.
