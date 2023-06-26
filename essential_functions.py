@@ -16,7 +16,7 @@ def difference(vector1: tuple|list, vector2: tuple|list) -> tuple:
 
 def dot_product(vector1: tuple|list, vector2: tuple|list) -> float:
     '''
-    Calcula el producto interno entre dos vectores en R^2.
+    Calcula el producto interno entre dos vectores de R^2.
 
     Argumentos de entrada:
         vector1 (tupla|lista): Coordenadas (x,y) del primer vector.
@@ -43,7 +43,7 @@ def magnitude(vector: tuple[float, float]) -> float:
 
 def distance_between(vector1: tuple[float, float], vector2: tuple[float,float]) -> float:
     '''
-    Calcula la distancia entre dos vectores en R^2.
+    Calcula la distancia entre dos vectores de R^2.
     
     Argumentos de entrada:
         vector1 (tupla): Coordenadas (x,y) del primer vector.
