@@ -108,9 +108,8 @@ class Grafico_2d_equipo:
         matplotlib.use('agg')
         #self.hikers = hikers
         self.data = data
-        self.fig, self.ax = plt.subplots()
+        self.fig1, self.ax = plt.subplots()
         self.fig2, self.ax2 = plt.subplots()
-        #!self.fig, self.ax = plt.subplots(figsize=plt.figaspect(1/1))
 
         # Hace que sea un cuadrado la ventana
         self.ax.set_aspect('equal')
@@ -152,10 +151,9 @@ class Grafico_2d_equipo:
         plt.pause(0.005)
 
 
-    #def coordenadas2(self, data: dict[str, dict[str, list[float]]]) -> None:
-    def coordenadas2(self, team_name: str, colors) -> None:
+    def coordenadas2(self, team_name: str, colors=('#d11141', '#00b159', '#00aedb', '#f37735', '#ffc425')) -> None:
         '''
-        Grafico que toma listas de coordenadas y las muestra.\n
+        Grafico que el nombre del equipo y muestra la grafica de sus puntos.\n
         data: {'team1':
                     'nombre1': {'x': [ ], 'y': [ ], 'z': [ ]}, ...}, ...
                 'team2':
@@ -163,7 +161,6 @@ class Grafico_2d_equipo:
         '''
 
         #plt.ion()
-        #e53a3a
         colors1 = ('#e53a3a', '#ff5454', '#fdbd2e', '#a1d832', '#87be19') # red-yel-gre
         colors2 = ('#ff2500', '#ffa500', '#2986cc', '#b1ea78', '#7ddc1f') # red-blu-gre
         colors3 = ('#4deeea', '#74ee15', '#ffe700', '#f000ff', '#001eff') # neon
@@ -175,7 +172,6 @@ class Grafico_2d_equipo:
 
         self.ax.cla()
 
-        #colors = 'r', 'c', 'g', 'magenta', 'grey'
         colors = colors_test
 
         x_max = float('-inf')
@@ -228,10 +224,8 @@ class Grafico_2d_equipo:
         self.ax.imshow(self.imagen, extent=[-limit, limit, -limit, limit], aspect='auto')
 
         # Actualiza el grafico, por performance
-        #!self.fig.canvas.draw_idle()
+        #!self.fig1.canvas.draw_idle()
         #!plt.show(block=False)
-
-        #* plt.savefig('graph.png')
 
         #plt.pause(0.00001)
 
@@ -241,32 +235,33 @@ class Grafico_2d_equipo:
 
         z_max = float('-inf')
         z_min = float('inf')
-        points = []
+        # Crea listas con todos los puntos conocidos
+        lx, ly, lz = [], [], []
         for team_name in data:
             for name in data[team_name]:
-                for i in range(len(data[team_name][name]['x'])):
-                    x = data[team_name][name]['x'][i]
-                    y = data[team_name][name]['y'][i]
-                    z = data[team_name][name]['z'][i]
-                    points += [(x, y, z)]
-                    
-                    z_max = z if z > z_max else z_max
-                    z_min = z if z < z_min else z_min
+                lx += data[team_name][name]['x']
+                ly += data[team_name][name]['y']
+                lz += data[team_name][name]['z']
 
-                
-        if len(set(points)) < 3:
+                # Guarda el valor maximo y minimo global de z
+                z = data[team_name][name]['z']
+                z_max = max(z) if max(z) > z_max else z_max
+                z_min = min(z) if min(z) < z_min else z_min
+
+        # Si no tiene tres puntos unicos no puede graficar nada
+        if len(set(lx)) < 3:
             return
 
 
-        df= pd.DataFrame(points, columns=list('XYZ'))
+        #tpc = ax.tripcolor(lx, ly, lz, shading='flat', cmap='hot', clim=[z_min, z_max])
+        tpc = ax.tripcolor(lx, ly, lz, shading='gouraud', cmap='hot', clim=[z_min, z_max])
 
-        #tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='flat', cmap='hot', clim=[z_min, z_max])
-        tpc = ax.tripcolor(df["X"], df["Y"], df["Z"], shading='gouraud', cmap='hot', clim=[z_min, z_max])
+        #TODO: probar colorbar en init asi no hace uno nuevo cada vez que es llamado
         colorbar = self.fig2.colorbar(tpc)
         colorbar.ax.set_ylim(z_min, z_max)
-        colorbar.ax.set_title('height', fontsize=9)
+        colorbar.ax.set_title('Height', fontsize=9)
 
-        ax.set_title("Map shape")
+        ax.set_title('Map shape')
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_aspect('equal')
