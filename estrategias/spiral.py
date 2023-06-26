@@ -48,6 +48,7 @@ def spiral(team: Team):
             current_theta = previous_hikers_thetas[hiker.nombre]
 
             next_theta = hikers_thetas[hiker.nombre]
+            # Formula del espiral es r = a + b * theta, a = 0
             next_radius = b * (next_theta - offset)
             next_loc = get_point(next_radius, next_theta)
 
