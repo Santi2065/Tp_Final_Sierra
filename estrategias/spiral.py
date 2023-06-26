@@ -11,29 +11,14 @@ import math
 #TODO WARNING: 2023-06-21 16:21:33,173 - The competition is not in the waiting_for_directions state. Current state: moving
 
 def spiral(team: Team):
-    # Define y registra en el servidor el equipo
-    #*names = ['Santi', 'Joaco', 'Gian', 'Pipe']
-    #*c = register(names, 'Los cracks')
-    #*c = MountainClient()
     c = team.comms
-    
     data = c.get_data()
 
     names = list(data[team.nombre].values())
-
-    #*hikers = [Hiker(name, team_name, c) for name in names]
     hikers = team.hikers
 
-    coords = {}
-    for team_name in data:
-        coords[team_name] = {hiker: {'x': [], 'y': [], 'z': []} for hiker in data[team_name]}
-
-    update_coords(coords, c)
-    #*graf = Grafico_2d_equipo(coords)
-
     # Se dirige al origen
-    all_go_to_point(hikers, (0, 0), coords, team)
-    #*all_go_to_point(hikers, c, (0, 0), graf, coords)
+    all_go_to_point(hikers, (0, 0), team)
 
     print('llegue a (0, 0)')
 
@@ -43,31 +28,22 @@ def spiral(team: Team):
     # Theta de cada escalador, va creciendo a medida que pasa el tiempo
     hikers_thetas = {hiker.nombre: offset for hiker, offset in zip(hikers, offsets)}
 
-    #*directives = {}
-    separation = (2 * 50) * len(names)
+    # Hace que entre cada nivel del espiral haya una separacion de 100
+    separation = (50 * 2) * len(names)
     b = separation / (2 * math.pi)
-    #*all_in_summit = False
-
-    #*iteration_time = []
+    all_in_summit = False
 
     i = 0
     # Comienza el proceso de ir en espiral
     while not c.is_over():
-        #*s = time.time()
-        #  cada cuanto    desde cual iteracion
-        ##      v               v
-        #if i % 20 == 0 and i >= 0:
-        #    #*start = time.time()
-        #    graf.coordenadas2()
-        #    #*print(f'graf: {time.time() - start}-------------------------------------------------------')
-
-        #if i % 400 == 0 and i >= 10000000:
-        #    graf.heat_map()
+        if all_in_summit:
+            team.move_all()
+            continue
 
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
 
-        #TODO: convertir este for en una funcion, ademas poner si uno llego al borde
+        #TODO: convertir este for en una funcion, ademas poner si uno llego al borde, tal vez poner go_to2
         for hiker, offset in zip(hikers, offsets):
             current_theta = previous_hikers_thetas[hiker.nombre]
 
@@ -77,137 +53,99 @@ def spiral(team: Team):
 
             hiker.go_to(next_loc)
 
-            #*directives[hiker.nombre] = hiker.ordenes
-
-            #print(f'{hiker.nombre:6s}: x={x:8.1f} y={y:8.1f} θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{current_theta/(2*math.pi):.2f} dir:{directives[hiker.nombre]["direction"]:5.2f} sp:{directives[hiker.nombre]["speed"]:.3f}')
             #*print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} sp:{hiker.ordenes["speed"]:4.1f}')
 
-
-        
-        #*iteration_time += [time.time() - s]
-        #*print(f'Iteracion entera: {sum(iteration_time)/len(iteration_time)}')
-
-        #*previous_coords = all_hiker_coords(c, team_name)
-
-        #*c.next_iteration(team_name, directives)
 
         s = time.time()
         team.move_all_spiral()
         print(time.time() - s)
-        
-        #* Espera hasta que el servidor haya actualizado las posiciones
-        #*while previous_coords == all_hiker_coords(c, team_name):
-        #*    continue
-
 
         # Se fija si hay un escalador (de cualquier equipo) que llego a la cima
         summit_loc = check_hiker_in_summit(c)
         if summit_loc:
-            #*all_go_to_point(hikers, c, summit_loc, graf, coords)
-            all_go_to_point(hikers, summit_loc, coords, team)
+            all_go_to_point(hikers, summit_loc, team)
             print('Todos estamos en la cima :)')
-            #*all_in_summit = True
-
-        update_coords(coords, c)
+            all_in_summit = True
 
         i += 1
 
-
-
-
-def register(names: list[str], team_name: str) -> MountainClient:
-    #*print('Conectando a servidor...')
-    #c = MountainClient("10.42.0.1", 8888)
-    c = MountainClient()
-    c.add_team(team_name, names)
-    c.finish_registration()
-    while c.is_registering_teams():
-        continue
-    return c
-
-#*def all_go_to_point(hikers: list[Hiker], c: MountainClient, point: tuple[float, float], graf: Grafico_2d_equipo, coords: dict[str, dict[str, list[float]]]) -> None:
-def all_go_to_point(hikers: list[Hiker], point: tuple[float, float],  coords: dict[str, dict[str, list[float]]], team: Team) -> None:
-    '''Makes all hikers to go to the desired point
+def all_go_to_point(hikers: list[Hiker], point: tuple[float, float], team: Team) -> None:
+    '''
+    Hace que todos los escaladores vayan al punto dado
 
     Arguments:
-    hikers: list containing hiker objects\n
-    point: (x, y) or (x, y, z), ignores z\n
-    coords: \n
-    {'team1':
-        {'nombre1':
-            {'x': [ ], 'y': [ ], 'z': [ ]}
-        }
-    }
+    hikers: lista con los escaladores\n
+    point: (x, y) o (x, y, z), ignora z
     '''
-    #*directives, close_to_point = {}, {}
     close_to_point = {}
 
-    # Makes a dictionary that tells if hiker is near the point or not
+    # Hace un diccionario que dice si el escalador esta cerca del punto o no
     for hiker in hikers:
         distance_to_point = distance_between(hiker.actual_pos(), point)
-        close_to_point[hiker.nombre] = distance_to_point == 0 or hiker.in_summit()
+        close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
     i = 0
 
-    # Runs until all hikers are near the point
+    # Corre hasta que todos los escaladores esten cerca del punto
     while False in close_to_point.values():
-        #if i % 1 == 0 and i >= 0:
-            #graf.coordenadas2()
-
+        #TODO hacer q use 1 o 2 get_data por iteracion (go_to2 tal vez)
         for hiker in hikers:
             distance_to_point = distance_between(hiker.actual_pos(), point)
-            close_to_point[hiker.nombre] = distance_to_point == 0 or hiker.in_summit()
+            close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
 
-            # If it reaches the point, it stays still
             if close_to_point[hiker.nombre]:
-                #*hiker.change_direction(0)
-                #*hiker.change_speed(0)
-                #*directives[hiker.nombre] = hiker.ordenes
                 hiker.stay_still()
                 continue
 
-
             hiker.go_to(point)
-
-            #*directives[hiker.nombre] = hiker.ordenes
-
             #print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
 
         team.move_all()
-        update_coords(coords, team.comms)
         
         #*i += 1
 
 def get_point(radius: float, theta: float) -> tuple[float, float]:
-    '''Returns x y coords given theta and radius'''
+    '''
+    Devuelve coordenadas x y dado un theta y un radio
+    '''
     x = radius * math.cos(theta)
     y = radius * math.sin(theta)
     return (x, y)
 
 def integral(theta: float, b: float):
-    '''Funcion usada para calcular la distancia, tal que\n
-    F(theta2) - F(theta1) = distancia'''
+    '''
+    Funcion usada para calcular la distancia, tal que\n
+    F(theta2) - F(theta1) = distancia
+    '''
     return (b * (math.log(abs(math.sqrt(theta**2 + 1) + theta)) + theta*math.sqrt(theta**2 + 1)))/2
 
 def estimate_theta2(theta1: float, b: float, distance: float) -> float:
-    '''Estima el theta2 tal que la distancia entre theta1 y theta2 ronde la distancia dada\n
+    '''
+    Estima el theta2 tal que la distancia entre theta1 y theta2 ronde la distancia dada, la
+    formula de la distancia es F(theta2) - F(theta1) = distancia\n
     Arguments:
     theta1: El theta actual en el espiral
     b: Constante del espiral (separacion / 2pi)
     distance: Distancia a recorrer desde theta1 a theta2 sobre el espiral\n
     Returns:
-    theta2: el theta2 obtenido al recorrer la distancia desde el theta1'''
+    theta2: el theta2 obtenido al recorrer la distancia desde el theta1
+    '''
     theta2 = theta1
     change = 0.1
+    # Margen de error al estimar el theta
     lower, higher = distance - 0.05, distance + 0.05
     integral1 = integral(theta1, b)
+
+    # Representa la mejor distancia conseguida sin pasarse del valor maximo del margen
     distance1 = 0
 
+    #! Fijarse si este if esta al pedo, tal vez distance1 tambien
     if higher > integral(theta2 + change, b) - integral1 > lower:
         return theta2 + change
 
+    # Corre mientras el valor de theta2 no este en el margen de error para la distancia
     while not (higher > distance1 > lower):
         distance2 = integral(theta2 + change, b) - integral1
-        #print(f'distance1: {distance1}, distance2: {distance2}, theta2:{theta2}, change:{change}')
+        #*print(f'distance1: {distance1}, distance2: {distance2}, theta2:{theta2}, change:{change}')
 
         if distance2 < lower or higher > distance2 > lower:
             distance1 = distance2
@@ -217,43 +155,14 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
 
     return theta2
 
-def update_coords(coords: dict[str, dict[str, list[float]]], c: MountainClient) -> None:
-    '''Actualiza la historia de coordenadas de todos los escaladores\n
-    Arguments:\n
-    coords: 
-    {'team1':
-        {'nombre1':
-            {'x': [ ], 'y': [ ], 'z': [ ]}
-        }
-    }
-    '''
-    data = c.get_data()
-    for team_name in data:
-        for name in data[team_name]:
-            x = data[team_name][name]['x']
-            y = data[team_name][name]['y']
-            z = data[team_name][name]['z']
-            coords[team_name][name]['x'] += [x]
-            coords[team_name][name]['y'] += [y]
-            coords[team_name][name]['z'] += [z]
-
-"""def update_coords2(coords: dict[str, dict[str, list[float]]], c: MountainClient, team_name: str) -> None:
-    '''Actualiza la historia de coordenadas de todos los escaladores de un
-    equipo, pero usa un get_data en vez de la cantidad de escaladores'''
-    hikers_locs = all_hiker_coords(c, team_name)
-
-    for name in hikers_locs:
-        x, y, z = hikers_locs[name]
-        coords[name]['x'] += [x]
-        coords[name]['y'] += [y]
-        coords[name]['z'] += [z]"""
-
 def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
-    '''Calcula la diferencia de theta1 y theta2 para recorrer una
+    '''
+    Calcula la diferencia de theta1 y theta2 para recorrer una
     distancia por el espiral y se lo aplica a todos los escaladores\n
     Arguments:
     hikers_thetas: theta actual de cada escalador {'nombre1': float, ...}
-    b: constante de espiral (separacion / 2pi)'''
+    b: constante de espiral (separacion / 2pi)
+    '''
     # Distancia a recorrer por el espiral desde el theta actual
     distance = 49.8
 
@@ -266,32 +175,11 @@ def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
     for hiker_name in hikers_thetas:
         hikers_thetas[hiker_name] += delta_theta
 
-"""
-def spiral_move_all(c: MountainClient, directives: dict[str, float], team_name: str):
-    '''Mueve todos los escaladores'''
-    previous_coords = all_hiker_coords(c, team_name)
-    c.next_iteration(team_name, directives)
-
-    # Espera hasta que el servidor haya actualizado las posiciones
-    while previous_coords == all_hiker_coords(c, team_name):
-        continue
-
-def all_hiker_coords(c: MountainClient, team_name: str):
-    '''Devuelve diccionario con la posicion de todos los escaladores\n
-    Returns:
-    hiker_coords: {'nombre1': (x, y, z), 'nombre2': ...}'''
-    team_info = c.get_data()[team_name]
-    hiker_coords = {}
-    for name in team_info:
-        x = team_info[name]['x']
-        y = team_info[name]['y']
-        z = team_info[name]['z']
-        hiker_coords[name] = (x, y, z)
-    return hiker_coords"""
-
 def check_hiker_in_summit(c: MountainClient) -> tuple|None:
-    '''Checks if any hiker of any team reached the summit, if there is it returns its location\n
-    Returns: (x, y)'''
+    '''
+    Chequea si hay un escalador (de cualquier equipo) en la cima, y si lo hay devuelve las coordenadas\n
+    Returns: (x, y) o None si nadie esta en la cima
+    '''
     info = c.get_data()
     for team in info.values():
         for hiker_data in team.values():
@@ -314,7 +202,7 @@ def test_gets():
     test_get_point()
 
 
-if __name__ == '__main__':
+"""if __name__ == '__main__':
     names = ['Santi', 'Joaco', 'Gian', 'Pipe']
     team_name = 'Los cracks'
     c = MountainClient()
@@ -323,4 +211,4 @@ if __name__ == '__main__':
     team = Team(team_name, hikers, c)
     register(names, team.nombre)
 
-    spiral(team)
+    spiral(team)"""
