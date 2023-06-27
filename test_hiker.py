@@ -172,9 +172,11 @@ class Graficador:
         tpc = ax.tripcolor(lx, ly, lz, shading='gouraud', cmap='hot', clim=[z_min, z_max])
 
         #TODO: probar colorbar en init asi no hace uno nuevo cada vez que es llamado
-        colorbar = self.fig2.colorbar(tpc)
-        colorbar.ax.set_ylim(z_min, z_max)
-        colorbar.ax.set_title('Height', fontsize=9)
+        #*colorbar = self.fig2.colorbar(tpc)
+        #*colorbar.ax.set_ylim(z_min, z_max)
+        #*colorbar.ax.set_title('Height', fontsize=9)
+        x_min, x_max = min(lx), max(lx)
+        y_min, y_max = min(lx), max(lx)
 
         ax.set_title('Map shape')
         ax.set_xlabel('X')
