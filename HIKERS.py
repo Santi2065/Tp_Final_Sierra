@@ -115,16 +115,6 @@ class Hiker:
         x, y, z = self.actual_pos()
         hiker_coords = (x, y)
         self.ordenes = {'direction': direction(hiker_coords, objectivo), 'speed': self.step_to_point2(hiker_coords, objectivo)}
-        #!self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point(objective)}
-        # return self.ordenes     <- podria agregar esto
-    
-
-    def go_to2(self, objective: list[float], loc: tuple[float, float, float]) -> None:
-        '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
-        dentro del rango entonces cambia la velociadad para que quede en el objetivo, no usa actual_pos'''
-        x, y, z = loc
-        hiker_coords = (x, y)
-        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point2(hiker_coords, objective)}
 
     def random(self)-> None:
         """ El escalador entra en un estado de aleatoriedad y se dirige a coordenads aleatorias."""

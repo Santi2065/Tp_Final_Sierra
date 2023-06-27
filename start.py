@@ -7,6 +7,6 @@ files = ['start_server.py', 'dashprueba.py', 'client_official.py', 'client_offic
 for file in files:
     if platform.system() == 'Windows':
         os.system(f'start cmd /k python {file}')
-        time.sleep(0.5)
+        time.sleep(2)
     else:
         os.system(f'gnome-terminal -- python3 {file}')
