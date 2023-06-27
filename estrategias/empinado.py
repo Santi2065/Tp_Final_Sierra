@@ -3,12 +3,18 @@ from HIKERS import Hiker
 import math
 
 def empinado(team:Team):
+    """
+    Algortimo que busca constantemente escalar la montania hasta encontrar el maximo global.
+    
+    Argumento de entrada:
+        team (Team): equipo donde se implementara el algoritmo.
+    """
 
     hikers_buscando = team.hikers
 
-    #Etapa de separacion
+    #Etapa de separacion 
     team.face_out()
-    team.separacion(1000)
+    team.separacion(1000) #los escaladores de ponen de espalda y se alejan 1000 metros entre ellos.
 
     #comienzo de estrategia
     searching = True
