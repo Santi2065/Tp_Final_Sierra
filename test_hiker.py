@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib
 import numpy as np
-import pandas as pd
 from copy import deepcopy
 from essential_functions import difference, magnitude
 

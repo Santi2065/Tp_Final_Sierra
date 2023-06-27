@@ -1,8 +1,6 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
 from teams import Team
-from test_hiker import Grafico_2d_equipo
-from essential_functions import magnitude, dot_product, difference, distance_between
 import matplotlib.pyplot as plt
 import time
 import math
