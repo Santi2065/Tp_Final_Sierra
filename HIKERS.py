@@ -89,7 +89,7 @@ class Hiker:
         # Cambia la velocidad en la que el escalador se mueve (max 50)
         self.ordenes['speed'] = new_speed
 
-    def go_to(self, objective: list[float, float]|tuple[float, float]) -> None:
+    def go_to(self, objective: list[float]|tuple[float, float]) -> None:
         '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
         dentro del rango entonces cambia la velociadad para que quede en el objetivo'''
         x, y, z = self.actual_pos()
@@ -98,7 +98,7 @@ class Hiker:
         #!self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point(objective)}
         # return self.ordenes     <- podria agregar esto
     
-    def go_to2(self, objective: list[float, float], loc: tuple[float, float, float]) -> None:
+    def go_to2(self, objective: list[float], loc: tuple[float, float, float]) -> None:
         '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
         dentro del rango entonces cambia la velociadad para que quede en el objetivo, no usa actual_pos'''
         x, y, z = loc
