@@ -245,10 +245,12 @@ class Dashboard(customtkinter.CTk):
 
         self.boton_colores4 = customtkinter.CTkButton(self.marco_inf_derecho, height = 20, width = 20, corner_radius = 5, text = "", fg_color = "#000000", command = lambda : self.colores(3))
         self.boton_colores4.place(x = 160, y = 160)
-    #-----------------------------------------------------------------------------------------------------------------------------------------------
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
         self.altura_promedio = None
         self.altura_maxima = None
-
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+        self.cambiador = customtkinter.CTkButton(self, height = 20, width = 50, corner_radius = 5, text = "Cambiar ⬇️", fg_color = "#000000")
+        self.cambiador.place(x = 300, y = 120)
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
