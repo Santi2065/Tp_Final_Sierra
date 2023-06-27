@@ -45,7 +45,7 @@ class Hiker:
         info = self.actual_pos()
         x = info[0]
         y = info[1]
-        
+
 
         next_x = x + self.ordenes['speed'] * math.cos(self.ordenes['direction']) # pos actual post iteracion (trigonometria)
         next_y = y + self.ordenes['speed'] * math.sin(self.ordenes['direction']) # pos actual post iteracion (trigonometria)
@@ -91,7 +91,7 @@ class Hiker:
         # Recuce la velocidad del personaje a valores insignificativos.
         self.change_speed(0.0000000000001)
         self.estado = 'quieto'
-    
+
     def in_summit(self) -> bool:
         '''Devuelve si esta en la cima o no'''
         return self.comms.get_data()[self.team][self.nombre]['cima']
@@ -103,7 +103,7 @@ class Hiker:
         if distance < 50:
             return distance
         return 50
-    
+
     def step_to_point2(self, pos: tuple|float, objective: tuple|float) -> float|int:
         '''Devuelve la distancia del paso que tiene que hacer hiker
         para llegar al punto, version para no hacer otro actual_pos'''

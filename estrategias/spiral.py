@@ -71,6 +71,12 @@ def spiral(team: Team):
         i += 1
 
 
+def get_point(radius: float, theta: float) -> tuple[float, float]:
+    '''Devuelve las coordenadas xy dado un radio y theta'''
+    x = radius * math.cos(theta)
+    y = radius * math.sin(theta)
+    return (x, y)
+
 def integral(theta: float, b: float):
     '''
     Funcion usada para calcular la distancia, tal que\n
