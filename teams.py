@@ -67,3 +67,38 @@ class Team(Hiker):
                 #print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
 
             self.move_all()
+
+
+    def separacion(self,pasos:int):
+        hikers_buscando = self.hikers
+        for i in range(1000):
+            self.move_all()
+            for hiker in hikers_buscando:
+                if hiker.in_summit():
+
+                    hiker.stay_still()
+                    hiker.cambio_estado('quieto')
+
+                    hikers_buscando.remove(hiker)
+                    info = self.comms.get_data()
+                    flag = [info[self.nombre][hiker.nombre]['x'],info[self.nombre][hiker.nombre]['y']]
+                    searching = False
+
+                    while hikers_buscando:
+
+                        for hiker in hikers_buscando:
+                        
+                            if hiker.in_summit():
+                                hiker.stay_still()
+                                hiker.cambio_estado('quieto')
+                                hikers_buscando.remove(hiker)
+
+                            else:
+                                hiker.go_to(flag)
+
+                        self.move_all()
+                    break
+                #si sale del loop anterior con un break, hace otro break si no continue
+            else:
+                continue
+            break
