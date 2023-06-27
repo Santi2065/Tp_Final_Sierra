@@ -11,7 +11,12 @@ from test_hiker import Hiker
 import matplotlib.animation as animation
 
 def update_coords(coords: dict[str, dict[str, list[float]]], c: MountainClient) -> None:
-    '''Actualiza la historia de coordenadas de todos los escaladores de un equipo'''
+    '''
+    Actualiza la historia de coordenadas de todos los escaladores de un equipo.
+    
+    Argumento de entrada:
+        coordenadas (diccionario): Coordenadas actualizadas de los escaladores de un equipo. 
+    '''
     data = c.get_data()
     for team_name in data:
         for name in data[team_name]:
@@ -23,17 +28,17 @@ def update_coords(coords: dict[str, dict[str, list[float]]], c: MountainClient) 
             coords[team_name][name]['z'] += [z]
 
 class Grafico3D:
-    #*def __init__(self):
+    
     def __init__(self, coords: dict[str, dict[str, dict[str, list[float]]]]):
-        '''Arguments:
-        coords: {'team1': {'hiker1': {'x': [],'y': [],'z': []}}}'''
+        ''' ...'''
         self.coords = coords
         self.figura = plt.figure()
         self.ax = self.figura.add_subplot(111, projection='3d')
-        self.angulo = 0 % 360
+        self.angulo = 0 % 359
 
     def graficar(self):
-        #!
+        """ Proyecta un grafico tridimensional actualizdo en tiempo real de la posicion actual de todos los jugadores."""
+
         fig, ax = self.figura, self.ax
 
         ax.cla()
@@ -42,20 +47,20 @@ class Grafico3D:
         #!
         #*diccionario = c.get_data()
        
-        #*coordenadas = []
-        cx = [] # todas las x
-        cy = [] # todas las y            estan relacionadas las x,y,z de cada elemento.
-        cz = [] # todas las z
+      
+        coordenadas_x = [] # todas las x de los jugadores
+        coordenadas_y = [] # todas las y de los jugadores        hay relacion elemento-jugador   
+        coordenadas_z = [] # todas las z de los jugadores
 
-        for team_name in diccionario:
-            for hiker in diccionario[team_name]:
-                x = diccionario[team_name][hiker]['x']
-                y = diccionario[team_name][hiker]['y']
-                z = diccionario[team_name][hiker]['z']
+        for Nombre_equipo in diccionario:
+            for hiker in diccionario[Nombre_equipo]:
+                x = diccionario[Nombre_equipo][hiker]['x']
+                y = diccionario[Nombre_equipo][hiker]['y']
+                z = diccionario[Nombre_equipo][hiker]['z']
                 #!
-                cx += x
-                cy += y
-                cz += z
+                coordenadas_x += x
+                coordenadas_y += y
+                coordenadas_z += z
                 #cx.append(x)
                 #cy.append(y)
                 #cz.append(z)
@@ -82,20 +87,20 @@ class Grafico3D:
                 colores.append('#8B0000') # rojo oscuro'''
         
 
-        ax.set_facecolor('lightgray')
+        ax.set_facecolor('lightgray') # Color del fondo del grafico
 
         #*ax.scatter(cx, cy, cz, c=colores)
         #!
-        sc = ax.scatter(cx, cy, cz, c=cz, cmap='hot')
+        sc = ax.scatter(coordenadas_x, coordenadas_y, coordenadas_z, c=coordenadas_z, cmap='hot')
 
 
         #print(f'cx: {cx}, len={len(cx)}')
         #print(f'cy: {cy}, len={len(cy)}')
         #print(f'cz: {cz}, len={len(cz)}')
         #!
-        ax.set_xlim(min(cx), max(cx))
-        ax.set_ylim(min(cy), max(cy))
-        ax.set_zlim(min(cz), max(cz))
+        ax.set_xlim(min(coordenadas_x), max(coordenadas_x)) 
+        ax.set_ylim(min(coordenadas_y), max(coordenadas_y))        # Los ejes en funcion del mapa descubierto
+        ax.set_zlim(min(coordenadas_z), max(coordenadas_z))
 
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -110,7 +115,7 @@ class Grafico3D:
         
         #*colores.clear()
         ax.view_init(elev=10, azim=self.angulo)
-        self.angulo += 2.5 # Grados que rote
+        self.angulo += 2.5 # Grados de rotacion del grafico por iteracion.
   
         plt.ion()
         #plt.show(block=False)
