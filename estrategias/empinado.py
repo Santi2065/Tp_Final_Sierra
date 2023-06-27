@@ -66,6 +66,7 @@ def empinado(team:Team):
 
                 flag = (info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y'])
                 # guardo la ubicacion (x,y,z) de la bandera,
+                searching = False
 
         team.move_all() # Todos avanzan.
 
