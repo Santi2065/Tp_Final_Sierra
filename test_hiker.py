@@ -181,7 +181,7 @@ class Graficador:
         ax.set_ylabel('Y')
         ax.set_aspect('equal')
         #fig.show()
-        plt.pause(0.001)
+        #plt.pause(0.001)
     
     def graf_3d(self, nombre_equipo: str) -> None:
         """Proyecta un grafico tridimensional actualizdo en tiempo real de la posicion actual de todos los jugadores."""
@@ -189,7 +189,7 @@ class Graficador:
         fig, ax = self.fig3, self.ax3
         fig.set_figwidth(4.05)
         fig.set_figheight(3)
-        fig.subplots_adjust(bottom=0.5, left=1, right=1)
+        fig.subplots_adjust(bottom=1, left=1, right=1, top=-1)
 
         ax.cla()
 
@@ -241,4 +241,4 @@ class Graficador:
   
         #plt.ion()
         #plt.show(block=False)
-        plt.pause(0.001)
+        #plt.pause(0.001)
