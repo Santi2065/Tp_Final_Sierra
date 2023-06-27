@@ -189,7 +189,9 @@ class Graficador:
         fig, ax = self.fig3, self.ax3
         fig.set_figwidth(4.05)
         fig.set_figheight(3)
-        fig.subplots_adjust(bottom=-0.5, left=1, right=1.5, top=0.2)
+
+        # TODO: Ajustar estos valores (top > bottom, right > left)
+        fig.subplots_adjust(top=0.2, bottom=-0.5, left=1, right=1.5)
 
         ax.cla()
 
