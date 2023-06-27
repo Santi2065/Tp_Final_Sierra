@@ -55,9 +55,7 @@ def spiral(team: Team):
             #*print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} sp:{hiker.ordenes["speed"]:4.1f}')
 
 
-        s = time.time()
         team.move_all_spiral()
-        print(time.time() - s)
 
         # Se fija si hay un escalador (de cualquier equipo) que llego a la cima
         summit_loc = check_hiker_in_summit(c)
