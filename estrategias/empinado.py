@@ -2,7 +2,7 @@ from teams import Team
 from HIKERS import Hiker
 import math
 
-def empinado(team:Team[Hiker]):
+def empinado(team:Team):
 
     hikers_buscando = team.hikers
 
@@ -15,9 +15,7 @@ def empinado(team:Team[Hiker]):
     info = team.comms.get_data()
     for hiker in team.hikers:
 
-        direction = pendiente_max(info)
-
-        hiker.change_direction(direction)
+        hiker.change_direction(pendiente_max(team,hiker, info))
         hiker.cambio_estado('subiendo')
 
     while searching:
@@ -38,8 +36,7 @@ def empinado(team:Team[Hiker]):
 
                 if  producto_punto > 0:
                     #el arcotangente al cuadrado de (inclinacion_y, inclinacion_x) me devuelve el angulo en radianes de la direccion donde se maximiza la pendiente.
-                    direction = pendiente_max(info)
-                    hiker.change_direction(direction)
+                    hiker.change_direction(pendiente_max(team, hiker,info))
 
                 else:
 
@@ -67,12 +64,12 @@ def empinado(team:Team[Hiker]):
 
     team.all_go_to_point(flag)
     
-    def pendiente_max(info:dict):
-        
-        inclinacion_x = info[team.nombre][hiker.nombre]['inclinacion_x']
-        inclinacion_y = info[team.nombre][hiker.nombre]['inclinacion_y']
-        
-        direccion_x = math.cos(hiker.ordenes['direction'])
-        direccion_y = math.sin(hiker.ordenes['direction'])
-        
-        return math.atan2(inclinacion_y, inclinacion_x)
+def pendiente_max(team:Team,hiker:Hiker,info:dict) -> float:
+    
+    inclinacion_x = info[team.nombre][hiker.nombre]['inclinacion_x']
+    inclinacion_y = info[team.nombre][hiker.nombre]['inclinacion_y']
+    
+    direccion_x = math.cos(hiker.ordenes['direction'])
+    direccion_y = math.sin(hiker.ordenes['direction'])
+    
+    return math.atan2(inclinacion_y, inclinacion_x)
