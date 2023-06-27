@@ -11,7 +11,7 @@ from essential_functions import difference, magnitude
 #c = MountainClient("10.42.0.1", 8888)
 c = MountainClient()
 
-class Grafico_2d_equipo:
+class Graficador:
     '''Objeto que hace graficas de posicion y altura
     \ndata: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}'''
     #def __init__(self, hikers: list[Hiker]):
@@ -19,20 +19,29 @@ class Grafico_2d_equipo:
         matplotlib.use('agg')
         #self.hikers = hikers
         self.data = data
+
         self.fig1, self.ax1 = plt.subplots()
         self.fig2, self.ax2 = plt.subplots()
-        self.fig3, self.ax3 = plt.subplots()
+        self.fig3 = plt.figure()
+        self.ax3 = self.fig3.add_subplot(111, projection='3d')
 
         self.ax1.set_aspect('equal')
+        self.ax2.set_aspect('equal')
+        self.ax3.set_aspect('equal')
+
+        self.ax1.set_xlabel('X')
+        self.ax1.set_ylabel('Y')
+
+        self.ax2.set_xlabel('X')
+        self.ax2.set_ylabel('Y')
+
+        self.ax3.set_xlabel('X')
+        self.ax3.set_ylabel('Y')
+        self.ax3.set_zlabel('Z')
+
         self.last_index = 0
-        self.labels = []
-        '''nombres = [hiker.nombre for hiker in hikers]
-
-        for i in range(len(hikers)):
-            label = self.ax.text(0, 0, nombres[i], ha='center', va='bottom')
-            self.labels.append(label)'''
-
-        self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico 
+        self.imagen = mpimg.imread('fondo.jpeg') # Fondo del grafico
+        self.angulo = 0 % 359
 
     def coordenadas(self):
         coords = [hiker.actual_pos() for hiker in self.hikers]
@@ -175,7 +184,7 @@ class Grafico_2d_equipo:
         #fig.show()
         plt.pause(0.001)
     
-    def graf_3d(self, team_name: str) -> None:
+    def graf_3d(self, nombre_equipo: str) -> None:
         """Proyecta un grafico tridimensional actualizdo en tiempo real de la posicion actual de todos los jugadores."""
 
         fig, ax = self.fig3, self.ax3
@@ -190,21 +199,20 @@ class Grafico_2d_equipo:
         coordenadas_y = [] # todas las y de los jugadores        hay relacion elemento-jugador
         coordenadas_z = [] # todas las z de los jugadores
 
-        for nombre_equipo in diccionario:
-            for hiker in diccionario[nombre_equipo]:
-                x = diccionario[nombre_equipo][hiker]['x']
-                y = diccionario[nombre_equipo][hiker]['y']
-                z = diccionario[nombre_equipo][hiker]['z']
-                #!
-                coordenadas_x += x
-                coordenadas_y += y
-                coordenadas_z += z
-                #cx.append(x)
-                #cy.append(y)
-                #cz.append(z)
-                #!
-                #*coordenadas.append([x, y, z])
-                # [ [x,y,z] ,[x,y,z] ] etcetera  
+        for nombre_escalador in diccionario[nombre_equipo]:
+            x = diccionario[nombre_equipo][nombre_escalador]['x']
+            y = diccionario[nombre_equipo][nombre_escalador]['y']
+            z = diccionario[nombre_equipo][nombre_escalador]['z']
+            #!
+            coordenadas_x += x
+            coordenadas_y += y
+            coordenadas_z += z
+            #cx.append(x)
+            #cy.append(y)
+            #cz.append(z)
+            #!
+            #*coordenadas.append([x, y, z])
+            # [ [x,y,z] ,[x,y,z] ] etcetera  
 
         ax.set_facecolor('lightgray') # Color del fondo del grafico
 
@@ -229,6 +237,6 @@ class Grafico_2d_equipo:
         ax.view_init(elev=10, azim=self.angulo)
         self.angulo += 2.5 # Grados de rotacion del grafico por iteracion.
   
-        plt.ion()
+        #plt.ion()
         #plt.show(block=False)
-        plt.pause(0.01)
+        plt.pause(0.001)

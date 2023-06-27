@@ -34,7 +34,7 @@ class Grafico3D:
         self.coords = coords
         self.figura = plt.figure()
         self.ax = self.figura.add_subplot(111, projection='3d')
-        self.angulo = 0 % 359
+
 
     def graficar(self):
         """ Proyecta un grafico tridimensional actualizdo en tiempo real de la posicion actual de todos los jugadores."""
