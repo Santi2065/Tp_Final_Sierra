@@ -64,7 +64,7 @@ def spiral(team: Team):
         # Se fija si hay un escalador (de cualquier equipo) que llego a la cima
         summit_loc = check_hiker_in_summit(c)
         if summit_loc:
-            all_go_to_point(hikers, summit_loc, team)
+            team.all_go_to_point(hikers, summit_loc, team)
             print('Todos estamos en la cima :)')
             all_in_summit = True
 
