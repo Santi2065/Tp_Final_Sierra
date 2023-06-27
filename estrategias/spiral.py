@@ -18,7 +18,7 @@ def spiral(team: Team):
     hikers = team.hikers
 
     # Se dirige al origen
-    all_go_to_point(hikers, (0, 0), team)
+    team.all_go_to_point(hikers, (0, 0), team)
 
     print('llegue a (0, 0)')
 
@@ -70,47 +70,6 @@ def spiral(team: Team):
 
         i += 1
 
-def all_go_to_point(hikers: list[Hiker], point: tuple[float, float], team: Team) -> None:
-    '''
-    Hace que todos los escaladores vayan al punto dado
-
-    Arguments:
-    hikers: lista con los escaladores\n
-    point: (x, y) o (x, y, z), ignora z
-    '''
-    close_to_point = {}
-
-    # Hace un diccionario que dice si el escalador esta cerca del punto o no
-    for hiker in hikers:
-        distance_to_point = distance_between(hiker.actual_pos(), point)
-        close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
-    i = 0
-
-    # Corre hasta que todos los escaladores esten cerca del punto
-    while False in close_to_point.values():
-        #TODO hacer q use 1 o 2 get_data por iteracion (go_to2 tal vez)
-        for hiker in hikers:
-            distance_to_point = distance_between(hiker.actual_pos(), point)
-            close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
-
-            if close_to_point[hiker.nombre]:
-                hiker.stay_still()
-                continue
-
-            hiker.go_to(point)
-            #print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
-
-        team.move_all()
-        
-        #*i += 1
-
-def get_point(radius: float, theta: float) -> tuple[float, float]:
-    '''
-    Devuelve coordenadas x y dado un theta y un radio
-    '''
-    x = radius * math.cos(theta)
-    y = radius * math.sin(theta)
-    return (x, y)
 
 def integral(theta: float, b: float):
     '''
