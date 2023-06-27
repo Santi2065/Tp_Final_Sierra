@@ -5,7 +5,6 @@ from essential_functions import difference, magnitude, distance_between, directi
 VELOCIDAD_MAX = 50
 
 class Hiker:
-
     """
     La clase realiza operaciones que tienen como finalidad lograr un control absoluto del escalador.
 
@@ -13,7 +12,7 @@ class Hiker:
         nombre (cadena) = Nombre del escalador.
         ordenes (lista) = Direccion y velocidad del escalador.
         RADIO_MONTANIA (entero) = El radio de la montania.
-        comss (MountainClient) = Cliente del servidor.
+        comms (MountainClient) = Cliente del servidor.
         estado (cadena) = Estado actual del escalador.
         equipo (cadena) = Equipo del cual forma parte el escalador.
 
@@ -32,7 +31,7 @@ class Hiker:
     """
 
 
-    def __init__(self, nombre: str, equipo: str, cliente: MountainClient, ordenes: list = [0,VELOCIDAD_MAX]):
+    def __init__(self, nombre: str, equipo: str, cliente: MountainClient, ordenes: list = [0, VELOCIDAD_MAX]):
 
         self.nombre = nombre
         self.ordenes = {'direction':ordenes[0],'speed':ordenes[1]}
@@ -46,7 +45,7 @@ class Hiker:
         Calcula la poscion actual del escalador
 
         Salida:
-            Tupla: coordenadas (x,y,z) actuales del escalador.
+            Tupla: coordenadas (x, y, z) actuales del escalador.
         """
 
         dic = self.comms.get_data()
@@ -56,7 +55,7 @@ class Hiker:
 
         return (x, y, z)
     
-    def cambio_estado(self, nuevo_estado:str) -> None:
+    def cambio_estado(self, nuevo_estado: str) -> None:
         """
         Cambia el estado del escalador.
         
@@ -90,7 +89,6 @@ class Hiker:
         Argumento de entrada:
             nueva_direccion (floate|entero): Direccion en radianes a la que se dirigira el escalador.
         """
-
         self.ordenes['direction'] = nueva_direccion # Provisional, para hacer pruebas.
 
     def change_speed(self, nueva_velocidad: float|int):
@@ -100,7 +98,6 @@ class Hiker:
         Argumento de en entrada:
             nueva_velocidad (flotante|entero): Nueva velocidad del escalador.
         """
-
         self.ordenes['speed'] = nueva_velocidad
 
     def go_to(self, objectivo: list[float, float]|tuple[float, float]) -> None: 
@@ -108,10 +105,8 @@ class Hiker:
         Dirige al escalador hacia un punto en particular 
         
         Argumento de entrada:
-            objetivo (lista|tupla): coordenadas (x,y) del punto de destino
-        
+            objetivo: coordenadas (x,y) del punto de destino. (lista|tupla)
         """
-
         x, y, z = self.actual_pos()
         hiker_coords = (x, y)
         self.ordenes = {'direction': direction(hiker_coords, objectivo), 'speed': self.step_to_point2(hiker_coords, objectivo)}
@@ -143,20 +138,19 @@ class Hiker:
         return self.comms.get_data()[self.equipo][self.nombre]['cima']
 
 
-    def step_to_point2(self, poscicion: tuple|list, objetivo: tuple|list) -> float|int:
+    def step_to_point2(self, posicion: tuple|list, objetivo: tuple|list) -> float|int:
         """
         Devuelve la distancia del paso que tiene que hacer hiker para llegar de un punto a otro.
         
         Argumentos de entrada:
-            poscicion(tupla|lista): coordenadas (x,y) del punto de partida.
-            objetivo (tupla|lista): coordenadas (x,y) del destino.
+            posicion: coordenadas (x, y) del punto de partida. (tupla|lista)
+            objetivo: coordenadas (x, y) del destino. (tupla|lista)
         
         Salida:
             Flotante|entero: distancia de paso.
         """
 
-
-        distance = distance_between(poscicion, objetivo) # distancia entre pos actual y destino
+        distance = distance_between(posicion, objetivo) # distancia entre pos actual y destino
         if distance < 50: # Si el punto esta dentro del rango, el escalador puede ir directamente (no se pasa)
             return distance 
         return 50 # Si esta mas lejos, que se mueva lo mas rapido posible.

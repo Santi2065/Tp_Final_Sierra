@@ -8,7 +8,7 @@ import pyfiglet
 import matplotlib
 from copy import deepcopy
 from PIL import Image
-from test_hiker import Grafico_2d_equipo
+from test_hiker import Graficador
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
 import essential_functions as ef
@@ -38,7 +38,7 @@ class Dashboard(customtkinter.CTk):
             self.coords[team_name] = {hiker: {'x': [], 'y': [], 'z': []} for hiker in self.data[team_name]}
 
         self.update_coords()
-        self.graph = Grafico_2d_equipo(self.coords)
+        self.graph = Graficador(self.coords)
         self.cima = False
         self.status = "Buscando"
         
