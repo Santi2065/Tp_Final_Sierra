@@ -87,7 +87,7 @@ class Team(Hiker):
                     while hikers_buscando:
 
                         for hiker in hikers_buscando:
-                        
+
                             if hiker.in_summit():
                                 hiker.stay_still()
                                 hiker.cambio_estado('quieto')
