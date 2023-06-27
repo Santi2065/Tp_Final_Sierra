@@ -187,11 +187,14 @@ class Graficador:
         """Proyecta un grafico tridimensional actualizdo en tiempo real de la posicion actual de todos los jugadores."""
 
         fig, ax = self.fig3, self.ax3
-        fig.set_figwidth(4.05)
-        fig.set_figheight(3)
+        #*fig.set_figwidth(4.05)
+        #*fig.set_figheight(3)
 
         # TODO: Ajustar estos valores (top > bottom, right > left)
-        fig.subplots_adjust(top=0.2, bottom=-0.5, left=1, right=1.5)
+        #ax.dist = 10
+        side = ((4.05 - 3) / 2) / 4.05
+        #*fig.subplots_adjust(top=1.13, bottom=0.03, left=0.05)
+        fig.subplots_adjust(top=1.03, bottom=0.03, left=side, right=(1-side))
 
         ax.cla()
 
