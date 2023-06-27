@@ -21,7 +21,7 @@ def empinado(team:Team):
 
     for hiker in team.hikers: # Los escaladores apuntan a la penidente creciente mas cercana.
 
-        hiker.change_direction(pendiente_max(team,hiker, info))
+        hiker.change_direction(pendiente_max(hiker, info))
         hiker.cambio_estado('subiendo') # estan subiendo.
 
     while searching:
@@ -44,7 +44,7 @@ def empinado(team:Team):
                 if  producto_punto > 0: # esta subiendo.
 
                     #el arcotangente al cuadrado de (inclinacion_y, inclinacion_x) me devuelve el angulo en radianes de la direccion donde se maximiza la pendiente.
-                    hiker.change_direction(pendiente_max(team, hiker,info)) # cambio la direccion del escalador a la pendiente maxima
+                    hiker.change_direction(pendiente_max(hiker,info)) # cambio la direccion del escalador a la pendiente maxima
 
                 else: # llego a un pico.
 
