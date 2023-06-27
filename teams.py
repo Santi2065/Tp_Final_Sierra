@@ -70,8 +70,9 @@ class Team(Hiker):
 
 
     def separacion(self,pasos:int):
+
         hikers_buscando = self.hikers
-        for i in range(1000):
+        for i in range(pasos):
             self.move_all()
             for hiker in hikers_buscando:
                 if hiker.in_summit():
@@ -81,22 +82,9 @@ class Team(Hiker):
 
                     hikers_buscando.remove(hiker)
                     info = self.comms.get_data()
-                    flag = [info[self.nombre][hiker.nombre]['x'],info[self.nombre][hiker.nombre]['y']]
-                    searching = False
+                    flag = (info[self.nombre][hiker.nombre]['x'],info[self.nombre][hiker.nombre]['y'])
 
-                    while hikers_buscando:
-
-                        for hiker in hikers_buscando:
-
-                            if hiker.in_summit():
-                                hiker.stay_still()
-                                hiker.cambio_estado('quieto')
-                                hikers_buscando.remove(hiker)
-
-                            else:
-                                hiker.go_to(flag)
-
-                        self.move_all()
+                    self.all_go_to_point(flag)
                     break
                 #si sale del loop anterior con un break, hace otro break si no continue
             else:
