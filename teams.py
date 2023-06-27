@@ -70,7 +70,7 @@ class Team(Hiker):
 
 
     def separacion(self,pasos:int):
-
+        self.face_out()
         hikers_buscando = self.hikers
         for i in range(pasos):
             self.move_all()
