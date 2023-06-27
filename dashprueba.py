@@ -146,7 +146,7 @@ class Dashboard(customtkinter.CTk):
         self.graph.coordenadas2(self.actual_team, hiker_colors)
         self.graph.fig1.set_size_inches(4.05,3)
         self.graph.fig2.set_size_inches(4.05,3)
-        self.graph.fig3.set_size_inches(12,5)
+        self.graph.fig3.set_size_inches(4.05,3)
 
         self.grafico_2d = FigureCanvasTkAgg(self.graph.fig1,master = self)
         self.grafico_heat = FigureCanvasTkAgg(self.graph.fig2,master = self)
@@ -394,6 +394,9 @@ class Dashboard(customtkinter.CTk):
             #self.graph.ax.cla()
             hiker_colors = (self.colors[self.colores_id[3]], self.colors[self.colores_id[2]],
                             self.colors[self.colores_id[1]], self.colors[self.colores_id[0]])
+            self.grafico_3d.get_tk_widget().delete()
+            self.grafico_2d.get_tk_widget().delete()
+            self.grafico_heat.get_tk_widget().delete()
             if self.estado_grafico == "2D":    
                 self.graph.coordenadas2(self.actual_team, hiker_colors)
                 self.grafico_2d.draw()
