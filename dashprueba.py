@@ -387,6 +387,7 @@ class Dashboard(customtkinter.CTk):
     
     def update_data(self):
         # No modificar
+        i = 0
         while not self.client.is_over():
             self.data = self.client.get_data()
             self.check_cima()
@@ -406,9 +407,12 @@ class Dashboard(customtkinter.CTk):
                 self.grafico_3d.draw()
                 self.grafico_3d.get_tk_widget().place(x=201, y=150)
             elif self.estado_grafico == "Heat":
-                self.graph.heat_map()
-                self.grafico_heat.draw()
-                self.grafico_heat.get_tk_widget().place(x=201, y=150)
+                if i % 10 == 0:
+                    self.graph.heat_map()
+                    time.sleep(0.1)
+                    self.grafico_heat.draw()
+                    self.grafico_heat.get_tk_widget().place(x=201, y=150)
+                    i += 1
             
             self.update_coords()
             #self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
