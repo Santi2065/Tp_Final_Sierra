@@ -1,6 +1,5 @@
 from teams import Team
 from HIKERS import Hiker
-import essential_functions
 import math
 
 def empinado(team:Team[Hiker]):
