@@ -190,7 +190,7 @@ class Graficador:
 
         ax.cla()
 
-        diccionario = deepcopy(self.coords)
+        diccionario = deepcopy(self.data)
         #!
         #*diccionario = c.get_data()
 
