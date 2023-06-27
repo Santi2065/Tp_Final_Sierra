@@ -1,7 +1,7 @@
 import math
 
 def difference(vector1: tuple|list, vector2: tuple|list) -> tuple:
-    '''
+    """
     Calcula las coordenadas en R^2 del vector dezplazamiento entre dos vectores.
 
     Argumentos de entrada: 
@@ -10,11 +10,11 @@ def difference(vector1: tuple|list, vector2: tuple|list) -> tuple:
 
     Salida:
         Tupla: Coordenadas (x,y) del vector desplazamiento.
-    '''
+    """
     return (vector1[0] - vector2[0], vector1[1] - vector2[1])
 
 def dot_product(vector1: tuple|list, vector2: tuple|list) -> float:
-    '''
+    """
     Calcula el producto interno entre dos vectores de R^2.
 
     Argumentos de entrada:
@@ -23,11 +23,11 @@ def dot_product(vector1: tuple|list, vector2: tuple|list) -> float:
 
     Salida:
         Flotante: Resultado del producto interno entre ambos vectores.
-    '''
+    """
     return vector1[0] * vector2[0] + vector1[1] * vector2[1]
 
 def magnitude(vector: tuple[float, float]) -> float:
-    '''
+    """
     Calcula la magnitud de un vector de R^2.
 
     Argumento de entrada:
@@ -35,11 +35,11 @@ def magnitude(vector: tuple[float, float]) -> float:
 
     Salida:
         Flotante: Magnitud del vector.
-    '''
+    """
     return math.sqrt(math.pow(vector[0], 2) + math.pow(vector[1], 2))
 
 def distance_between(vector1: tuple[float, float, float]|tuple[float, float], vector2: tuple[float, float, float]|tuple[float, float]) -> float:
-    '''
+    """
     Calcula la distancia entre dos vectores de R^2.
     
     Argumentos de entrada:
@@ -48,12 +48,12 @@ def distance_between(vector1: tuple[float, float, float]|tuple[float, float], ve
 
     Salida:
         Flotante: Distancia entre el vector 1 y el vector 2.
-    '''
+    """
     v = difference(vector1, vector2)
     return magnitude(v)
 
 def direction(coordenadas_iniciales: list|tuple[float, float], coordenadas_finales: list|tuple[float, float]) -> float:
-    '''
+    """
     Calcula el angulo necesario a seguir para ir de un punto inicial a un punto final.
 
     Argumentos de entrada:
@@ -62,7 +62,7 @@ def direction(coordenadas_iniciales: list|tuple[float, float], coordenadas_final
 
     Salida:
         Flotante: Angulo en radianes (-pi, pi] necesario para ir del punto de partida al destino.
-    '''
+    """
     distancia_x, distancia_y = difference(coordenadas_finales, coordenadas_iniciales)
     return math.atan2(distancia_y, distancia_x)
 

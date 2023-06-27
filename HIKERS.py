@@ -18,6 +18,8 @@ class Hiker:
         equipo (cadena) = Equipo del cual forma parte el escalador.
 
     Metodos:
+        change_speed(): Modifica la velocidad del hiker.
+        change_direction(): redirecciona al escalador.
         actual_pos(): Devuelve la poscicion actual del escalador.
         cambio_estado(): Cambia el estado actual del escalador.
         almost_out(): Detecta posible salida del mapa del escalador.
@@ -40,12 +42,12 @@ class Hiker:
         self.equipo = equipo 
 
     def actual_pos(self)->tuple:
-        '''
+        """
         Calcula la poscion actual del escalador
 
         Salida:
             Tupla: coordenadas (x,y,z) actuales del escalador.
-        '''
+        """
 
         dic = self.comms.get_data()
         x =  dic[self.equipo][self.nombre]['x'] # x actual
@@ -84,29 +86,42 @@ class Hiker:
         else:
             return False
 
-    def change_direction(self, new_direction: float|int):
-        # El escalador se dirige hacia la nueva direccion (radianes)
-        self.ordenes['direction'] = new_direction #Provisional, para hacer pruebas.
+    def change_direction(self, nueva_direccion: float|int)->None:
+        """ 
+        Redirecciona al escalador.
 
-    def change_speed(self, new_speed: float|int):
-        # Cambia la velocidad en la que el escalador se mueve (max 50)
-        self.ordenes['speed'] = new_speed
+        Argumento de entrada:
+            nueva_direccion (floate|entero): Direccion en radianes a la que se dirigira el escalador.
+        """
 
-    def go_to(self, objective: list[float, float]|tuple[float, float]) -> None:
-        '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
-        dentro del rango entonces cambia la velociadad para que quede en el objetivo'''
+        self.ordenes['direction'] = nueva_direccion # Provisional, para hacer pruebas.
+
+    def change_speed(self, nueva_velocidad: float|int):
+        """
+        Modifica la velocidad del escalador
+        
+        Argumento de en entrada:
+            nueva_velocidad (flotante|entero): Nueva velocidad del escalador.
+        """
+
+        self.ordenes['speed'] = nueva_velocidad
+
+    def go_to(self, objectivo: list[float, float]|tuple[float, float]) -> None: 
+        """
+        Dirige al escalador hacia un punto en particular 
+        
+        Argumento de entrada:
+            objetivo (lista|tupla): coordenadas (x,y) del punto de destino
+        
+        """
+
         x, y, z = self.actual_pos()
         hiker_coords = (x, y)
-        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point2(hiker_coords, objective)}
+        self.ordenes = {'direction': direction(hiker_coords, objectivo), 'speed': self.step_to_point2(hiker_coords, objectivo)}
         #!self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point(objective)}
         # return self.ordenes     <- podria agregar esto
     
-    def go_to2(self, objective: list[float, float], loc: tuple[float, float, float]) -> None:
-        '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
-        dentro del rango entonces cambia la velociadad para que quede en el objetivo, no usa actual_pos'''
-        x, y, z = loc
-        hiker_coords = (x, y)
-        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point2(hiker_coords, objective)}
+
 
     def random(self)-> None:
         """ El escalador entra en un estado de aleatoriedad y se dirige a coordenads aleatorias."""
@@ -125,18 +140,18 @@ class Hiker:
         self.estado = 'quieto'
 
     def in_summit(self) -> bool:
-        '''
+        """
         Comprueba si el escalador alcanzo la cima
         
         Salida:
             booleano: Verdadero si alcanzo la cima. Falso en caso contrario.
 
-        '''
+        """
         return self.comms.get_data()[self.equipo][self.nombre]['cima']
 
 
     def step_to_point2(self, poscicion: tuple|list, objetivo: tuple|list) -> float|int:
-        '''
+        """
         Devuelve la distancia del paso que tiene que hacer hiker para llegar de un punto a otro.
         
         Argumentos de entrada:
@@ -145,7 +160,7 @@ class Hiker:
         
         Salida:
             Flotante|entero: distancia de paso.
-        '''
+        """
 
 
         distance = distance_between(poscicion, objetivo) # distancia entre pos actual y destino
