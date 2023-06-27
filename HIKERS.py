@@ -44,7 +44,7 @@ class Hiker:
         Calcula la poscion actual del escalador
 
         Salida:
-            Tupla: coordenadas (x,y,z) actuales del escalador.
+            Tupla: coordenadas (x, y, z) actuales del escalador.
         '''
 
         dic = self.comms.get_data()
@@ -70,9 +70,7 @@ class Hiker:
         Salida:
             Booleano: Verdadero si se ira del mapa en la siguiente iteracion. Falso en caso contrario.
         """
-        info = self.actual_pos() # guarda la poscion actual del escalador.
-        x = info[0]
-        y = info[1]
+        x, y, z = self.actual_pos() # guarda la poscion actual del escalador.
 
         norma = magnitude((x, y)) # Norma del vector
 
