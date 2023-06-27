@@ -1,65 +1,33 @@
 from teams import Team
 from HIKERS import Hiker
 import math
-#from graph import Grafico_2d_equipo
 
-def empinado(team:Team):
+def empinado(team:Team[Hiker]):
 
     hikers_buscando = team.hikers
-    #team.go_center()
+
+    #Etapa de separacion
     team.face_out()
-
-    for i in range(1000):
-        team.move_all()
-        for hiker in hikers_buscando:
-            if hiker.in_summit():
-
-                hiker.stay_still()
-                hiker.cambio_estado('quieto')
-
-                hikers_buscando.remove(hiker)
-
-                flag = [info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y']]
-                searching = False
-
-                while hikers_buscando:
-
-                    for hiker in hikers_buscando:
-                    
-                        if hiker.in_summit():
-                            hiker.stay_still()
-                            hiker.cambio_estado('quieto')
-                            hikers_buscando.remove(hiker)
-
-                        else:
-                            hiker.go_to(flag)
-
-                    team.move_all()
-                break
-            #si sale del loop anterior con un break, hace otro break si no continue
-        else:
-            continue
-        break
-
-
+    team.separacion(1000)
+    
+    #comienzo de estrategia
     searching = True
     info = team.comms.get_data()
     for hiker in team.hikers:
-        x = info[team.nombre][hiker.nombre]['x']
-        y = info[team.nombre][hiker.nombre]['y']
+
         inclinacion_x = info[team.nombre][hiker.nombre]['inclinacion_x']
         inclinacion_y = info[team.nombre][hiker.nombre]['inclinacion_y']
+
         direction = math.atan2(inclinacion_y, inclinacion_x)
+
         hiker.change_direction(direction)
         hiker.cambio_estado('subiendo')
+
     while searching:
         
         info = team.comms.get_data()
 
         for hiker in team.hikers:
-
-            x = info[team.nombre][hiker.nombre]['x']
-            y = info[team.nombre][hiker.nombre]['y']
 
             inclinacion_x = info[team.nombre][hiker.nombre]['inclinacion_x']
             inclinacion_y = info[team.nombre][hiker.nombre]['inclinacion_y']
@@ -118,5 +86,3 @@ def empinado(team:Team):
                 hiker.go_to(flag)
 
         team.move_all()
-
-
