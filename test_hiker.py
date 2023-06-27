@@ -175,8 +175,6 @@ class Graficador:
         #*colorbar = self.fig2.colorbar(tpc)
         #*colorbar.ax.set_ylim(z_min, z_max)
         #*colorbar.ax.set_title('Height', fontsize=9)
-        x_min, x_max = min(lx), max(lx)
-        y_min, y_max = min(lx), max(lx)
 
         ax.set_title('Map shape')
         ax.set_xlabel('X')
@@ -189,6 +187,8 @@ class Graficador:
         """Proyecta un grafico tridimensional actualizdo en tiempo real de la posicion actual de todos los jugadores."""
 
         fig, ax = self.fig3, self.ax3
+        fig.set_figwidth(4.05)
+        fig.set_figheight(3)
 
         ax.cla()
 
