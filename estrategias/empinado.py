@@ -83,9 +83,6 @@ def pendiente_max(hiker:Hiker,info:dict) -> float:
 
     Salida:
         Flotante: direccion donde se encunetra la pendiente maxima mas cercana.
-
-    
-    
     """
     
     inclinacion_x = info[hiker.equipo][hiker.nombre]['inclinacion_x']

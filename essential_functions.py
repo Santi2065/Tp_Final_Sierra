@@ -110,26 +110,3 @@ def altura_promedio(diccionario:dict,equipo:str) -> float:
 
     return round(promedio,2) 
 
-
-""" 
-
-# NOSE DONDE ESTA EL NUEVO QUE HIZO PIPE
-
-def leaderboard(diccionario:dict) -> list: 
-
-    ''' returns a sorted list with the highest player per team '''
-
-    jugador_max = None # Chequear si cambian de algo
-    altura_max = None
-    lista= []
-
-    for equipo, jugadores in diccionario.items():
-        jugador_max,altura_max= max(jugadores.items(),key=lambda item:item[1]['z'])
-        lista.append([jugador_max,altura_max['z'],equipo]) # [nombre,z,equipo]
-
-    lista_ordenada = sorted(lista,key=lambda x:-x[1]) # De mas alto a mas chico, puse el '-' pq si no me la ordenaba al reves
-    
-    lista.clear() # limpia listas para no interferir con las nuevas listas, no se si sirve de algo
-
-    return (lista_ordenada) # [nombre,z,equipo]
-"""
