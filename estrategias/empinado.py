@@ -7,7 +7,6 @@ def empinado(team:Team):
     hikers_buscando = team.hikers
 
     #Etapa de separacion
-    team.face_out()
     team.separacion(1000)
 
     #comienzo de estrategia
