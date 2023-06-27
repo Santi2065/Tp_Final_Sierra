@@ -148,8 +148,8 @@ class Dashboard(customtkinter.CTk):
         self.graph.fig2.set_size_inches(4.05,3)
         self.graph.fig3.set_size_inches(4.05,3)
 
-        self.grafico_2d = FigureCanvasTkAgg(self.graph.fig1,master = self)
         self.grafico_heat = FigureCanvasTkAgg(self.graph.fig2,master = self)
+        self.grafico_2d = FigureCanvasTkAgg(self.graph.fig1,master = self)
         self.grafico_3d = FigureCanvasTkAgg(self.graph.fig3,master = self)
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo un timer que se va a ubicar en la parte superior del rectangulo.
