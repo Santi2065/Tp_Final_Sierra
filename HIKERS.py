@@ -72,10 +72,7 @@ class Hiker:
         Salida:
             Booleano: Verdadero si se ira del mapa en la siguiente iteracion. Falso en caso contrario.
         """
-
-        info = self.actual_pos() # guarda la poscion actual del escalador.
-        x = info[0]
-        y = info[1]
+        x, y, z = self.actual_pos() # guarda la poscion actual del escalador.
 
         norma = magnitude((x, y)) # Norma del vector
 
@@ -122,6 +119,12 @@ class Hiker:
         # return self.ordenes     <- podria agregar esto
     
 
+    def go_to2(self, objective: list[float], loc: tuple[float, float, float]) -> None:
+        '''Cambia las ordenes para que apunte y vaya al objetuvo, si el objetivo esta
+        dentro del rango entonces cambia la velociadad para que quede en el objetivo, no usa actual_pos'''
+        x, y, z = loc
+        hiker_coords = (x, y)
+        self.ordenes = {'direction': direction(hiker_coords, objective), 'speed': self.step_to_point2(hiker_coords, objective)}
 
     def random(self)-> None:
         """ El escalador entra en un estado de aleatoriedad y se dirige a coordenads aleatorias."""

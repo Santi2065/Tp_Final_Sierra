@@ -1,6 +1,5 @@
 from teams import Team
 from HIKERS import Hiker
-import essential_functions
 import math
 
 def empinado(team:Team[Hiker]):
@@ -62,8 +61,7 @@ def empinado(team:Team[Hiker]):
 
                 hikers_buscando.remove(hiker)
 
-                flag = [info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y']]
-                searching = False
+                flag = (info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y'])
 
         team.move_all()
 
