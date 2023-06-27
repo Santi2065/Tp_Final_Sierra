@@ -70,7 +70,6 @@ class Hiker:
         Salida:
             Booleano: Verdadero si se ira del mapa en la siguiente iteracion. Falso en caso contrario.
         """
-
         info = self.actual_pos() # guarda la poscion actual del escalador.
         x = info[0]
         y = info[1]
