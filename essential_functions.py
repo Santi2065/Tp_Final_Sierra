@@ -38,7 +38,7 @@ def magnitude(vector: tuple[float, float]) -> float:
     '''
     return math.sqrt(math.pow(vector[0], 2) + math.pow(vector[1], 2))
 
-def distance_between(vector1: tuple[float, float], vector2: tuple[float,float]) -> float:
+def distance_between(vector1: tuple[float, float, float]|tuple[float, float], vector2: tuple[float, float, float]|tuple[float, float]) -> float:
     '''
     Calcula la distancia entre dos vectores de R^2.
     
