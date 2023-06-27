@@ -142,5 +142,4 @@ def leaderboard(diccionario:dict) -> list:
     lista.clear() # limpia listas para no interferir con las nuevas listas, no se si sirve de algo
 
     return (lista_ordenada) # [nombre,z,equipo]
-
 """
