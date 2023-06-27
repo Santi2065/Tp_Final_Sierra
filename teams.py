@@ -1,6 +1,8 @@
 from communication.client.client import MountainClient
+import essential_functions
 from HIKERS import Hiker
 import math, time
+from essential_functions import distance_between
 
 class Team(Hiker):
     def __init__(self, nombre: str, hikers: list[Hiker], c: MountainClient) -> None:
@@ -21,7 +23,7 @@ class Team(Hiker):
         for hiker in self.hikers:
             if hiker.almost_out():
                 hiker.random()
-    
+
     def move_all_spiral(self) -> None:
         prev_data = self.comms.get_data()
 
@@ -35,27 +37,56 @@ class Team(Hiker):
             if hiker.almost_out():
                 hiker.random()
 
-    def go_center(self):
-        #apuntan al centro
-        for hiker in self.hikers:
-            hiker.go_to([0, 0])
+    def all_go_to_point(self, point: tuple[float, float]) -> None:
+        '''
+        Hace que todos los escaladores vayan al punto dado
 
-        #se mueven hasta que llegan
-        llegada = {x : 0 for x in self.hikers}
-        no_llegaron = True
-        while no_llegaron:
-            self.move_all()
-            info = self.comms.get_data()
+        Arguments:
+            hikers: lista con los escaladores\n
+            point: (x, y) o (x, y, z), ignora z
+        '''
+        close_to_point = {}
+
+        # Hace un diccionario que dice si el escalador esta cerca del punto o no
+        for hiker in self.hikers:
+            distance_to_point = distance_between(hiker.actual_pos(), point)
+            close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
+
+        # Corre hasta que todos los escaladores esten cerca del punto
+        while False in close_to_point.values():
+            #TODO hacer q use 1 o 2 get_data por iteracion (go_to2 tal vez)
             for hiker in self.hikers:
-                x =  info[self.nombre][hiker.nombre]['x']
-                y =  info[self.nombre][hiker.nombre]['y']
-                if -1 < x < 1 and -1 < y < 1:
-                    llegada[hiker] = 1
+                distance_to_point = distance_between(hiker.actual_pos(), point)
+                close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
+
+                if close_to_point[hiker.nombre]:
                     hiker.stay_still()
-            no_llegaron = False          #! Raro, creo q va adentro del if
-            for x in llegada.values():
-                if x == 0:
-                    no_llegaron = True
-        #! Habria q poner un go_to por cada iteracion, o cambiar el margen de error,
-        #! sino se puede pasar y seguir de largo
-        print("En el centro")
+                    continue
+
+                hiker.go_to(point)
+                #print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
+
+            self.move_all()
+
+
+    def separacion(self,pasos:int):
+
+        hikers_buscando = self.hikers
+        for i in range(pasos):
+            self.move_all()
+            for hiker in hikers_buscando:
+                if hiker.in_summit():
+
+                    hiker.stay_still()
+                    hiker.cambio_estado('quieto')
+
+                    hikers_buscando.remove(hiker)
+                    info = self.comms.get_data()
+                    flag = (info[self.nombre][hiker.nombre]['x'],info[self.nombre][hiker.nombre]['y'])
+
+                    self.all_go_to_point(flag)
+                    break
+                #si sale del loop anterior con un break, hace otro break si no continue
+            else:
+                continue
+            break

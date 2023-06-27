@@ -123,7 +123,7 @@ class Hiker:
 
         self.change_speed(0.0000000000001) # Que se mueva a esta velocidad es practcamente igual a que este quieto.
         self.estado = 'quieto'
-    
+
     def in_summit(self) -> bool:
         '''
         Comprueba si el escalador alcanzo la cima
