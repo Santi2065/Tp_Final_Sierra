@@ -141,17 +141,16 @@ class Dashboard(customtkinter.CTk):
         self.titulo_leader.place(x = 700, y = 220, anchor = "center")
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo el rectangulo del medio donde iran los graficos
-
-        #self.rectangulo_fondo = customtkinter.CTkLabel(self, width = 400, height = 300, bg_color = "#111111")
-        #self.rectangulo_fondo.place(x = 200, y = 150)
+        self.estado_grafico = "2D"
         hiker_colors = (self.colors[0],self.colors[1],self.colors[2],self.colors[3])
         self.graph.coordenadas2(self.actual_team, hiker_colors)
         self.graph.fig1.set_size_inches(4.05,3)
-        
-        self.mountain_image = FigureCanvasTkAgg(self.graph.fig1,master = self)
-        #self.mountain_image_label = customtkinter.CTkLabel(self.rectangulo, image = self.mountain_image, text = "")
-        #self.mountain_image_label.place(relx = 0.5, rely = 0.5, anchor = "center")
+        self.graph.fig2.set_size_inches(4.05,3)
+        self.graph.fig3.set_size_inches(12,5)
 
+        self.grafico_2d = FigureCanvasTkAgg(self.graph.fig1,master = self)
+        self.grafico_heat = FigureCanvasTkAgg(self.graph.fig2,master = self)
+        self.grafico_3d = FigureCanvasTkAgg(self.graph.fig3,master = self)
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Creo un timer que se va a ubicar en la parte superior del rectangulo.
 
@@ -175,8 +174,8 @@ class Dashboard(customtkinter.CTk):
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Coloco un cartel del estado del server.
 
-        self.estado = customtkinter.CTkLabel(self, text = f"STATUS: {self.status}", text_color = "#FFFFFF", font = ("Impact", 20, "bold"), anchor = "center")
-        self.estado.place(x = 425, y = 123, anchor = "w")
+        self.estado = customtkinter.CTkLabel(self, text = f"STATUS: {self.status}", text_color = "#FFFFFF", font = ("Impact", 18, "bold"), anchor = "center")
+        self.estado.place(x = 445, y = 123, anchor = "w")
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # Agrego una etiqueta entre los cuadrantes de la izquierda donde habra una animacion ascii
@@ -249,8 +248,14 @@ class Dashboard(customtkinter.CTk):
         self.altura_promedio = None
         self.altura_maxima = None
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        self.cambiador = customtkinter.CTkButton(self, height = 20, width = 50, corner_radius = 5, text = "Cambiar ⬇️", fg_color = "#000000")
-        self.cambiador.place(x = 300, y = 120)
+        self.cambiador2d = customtkinter.CTkButton(self, height = 30, width = 40, corner_radius = 5, text = "Grafico 2D", fg_color = "#181818", font = ("Verdana", 11, "bold"), command = lambda : self.cambiar_estado_graf("2D"))
+        self.cambiador2d.place(x = 198, y = 110)
+
+        self.cambiador3d = customtkinter.CTkButton(self, height = 30, width = 40, corner_radius = 5, text = "Grafico 3D", fg_color = "#181818", font = ("Verdana", 11, "bold"), command = lambda : self.cambiar_estado_graf("3D"))
+        self.cambiador3d.place(x = 282, y = 110)
+
+        self.cambiadorheat = customtkinter.CTkButton(self, height = 30, width = 40, corner_radius = 5, text = "Heat Map", fg_color = "#181818", font = ("Verdana", 11, "bold"), command = lambda : self.cambiar_estado_graf("Heat"))
+        self.cambiadorheat.place(x = 368, y = 110)
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
@@ -276,6 +281,12 @@ class Dashboard(customtkinter.CTk):
         self.marco_sup_derecho.configure(fg_color = self.colors[self.colores_id[1]])
         self.marco_inf_izquierdo.configure(fg_color = self.colors[self.colores_id[2]])
         self.marco_inf_derecho.configure(fg_color = self.colors[self.colores_id[3]])
+
+    def cambiar_estado_graf(self, modo: str):
+        """Cambia el estado de los graficos."""
+        self.estado_grafico = modo
+        print(f"me cambie a {modo}")
+        
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     def change_team(self, value:str):
         self.actual_team = value
@@ -383,15 +394,25 @@ class Dashboard(customtkinter.CTk):
             #self.graph.ax.cla()
             hiker_colors = (self.colors[self.colores_id[3]], self.colors[self.colores_id[2]],
                             self.colors[self.colores_id[1]], self.colors[self.colores_id[0]])
-            self.graph.coordenadas2(self.actual_team, hiker_colors)
-            self.mountain_image.draw()
+            if self.estado_grafico == "2D":    
+                self.graph.coordenadas2(self.actual_team, hiker_colors)
+                self.grafico_2d.draw()
+                self.grafico_2d.get_tk_widget().place(x=201, y=150)
+            elif self.estado_grafico == "3D":
+                self.graph.graf_3d(self.actual_team)
+                self.grafico_3d.draw()
+                self.grafico_3d.get_tk_widget().place(x=201, y=150)
+            elif self.estado_grafico == "Heat":
+                self.graph.heat_map()
+                self.grafico_heat.draw()
+                self.grafico_heat.get_tk_widget().place(x=201, y=150)
+            
             self.update_coords()
-            self.mountain_image.get_tk_widget().place(x=201, y=150)
             #self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
             #self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
             self.leaderboard.configure(text = self.leaderboard_general(self.data))
 
-            
+
             '''self.titulo_sup_izquierdo.configure(text = self.hikers[0])
             self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[0]]['y'][-1]:8.1f}")
             self.altura_sup_izquierdo.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[0]]['z'][-1]:8.1f}")
