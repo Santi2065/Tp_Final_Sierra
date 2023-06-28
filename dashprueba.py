@@ -24,8 +24,8 @@ class Dashboard(customtkinter.CTk):
     La clase crea una interfaz en tiempo real con los datos actualizados de la partida en curso.
 
     Argumento de entrada:
-        customtkinter.Ctk: modulo de una libereia basada en tkinter
-        client (MountainClient)
+        customtkinter.Ctk: Modulo de una libereia basada en tkinter
+        cliente (MountainClient): Cliente del servidor.
 
     Metodos:
         update_timer(): Actualiza el cronometro de la interfaz.
