@@ -9,7 +9,7 @@ class Team(Hiker):
     """
     La clase realiza operaciones que tienen como finalidad controlar todos los aspectos e integrantes de un equipo.
 
-    Argumentos:
+    Atributos:
         nombre (cadena): Nombre del equipo.
         hikers (lista): Lista con los escaladores del equipo.
         comms (MountainClient): Cliente del servidor.

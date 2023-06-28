@@ -6,7 +6,7 @@ def empinado(team:Team):
     """
     Algortimo que busca constantemente escalar la montania hasta encontrar el maximo global.
     
-    Argumento de entrada:
+    Artributo:
         team (Team): equipo donde se implementara el algoritmo.
     """
 

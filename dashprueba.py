@@ -14,15 +14,38 @@ from communication.client.client import MountainClient
 import essential_functions as ef
 #from LEADERBOARD import leader_board
 
-# Esto lo que hace es darnos la herramienta para poder pasar de light a dark.
-customtkinter.set_appearance_mode("Dark") 
-customtkinter.set_default_color_theme("blue")
 
 
-# Se define una clase para poder hacer el dashboard.
 
 class Dashboard(customtkinter.CTk):
-    # Uso el constructor como se me da en la info que tengo.
+
+
+    """ 
+    La clase crea una interfaz en tiempo real con los datos actualizados de la partida en curso.
+
+    Argumento de entrada:
+        customtkinter.Ctk: modulo de una libereia basada en tkinter
+        client (MountainClient)
+
+    Metodos:
+        update_timer(): Actualiza el cronometro de la interfaz.
+        colores(): Devuelve enteros en un rango de 0 al largo de la lista que contiene los colores.
+        cambiar_estado_graf(): Permite una rotacion de graficos en la interfaz.
+        change_team(): Permite una rotacion en los equipos sobre la lista dezplegable.
+        check_cima(): Verifica si cada uno de los escaladores llego a la cima.
+        generar_ascii(): Formatea una animación ascii.
+        animacion_ascii(): Dezpliega la animacion ascii en la interfaz.
+        comienzo_anmiacion(): Inicializa la animacion ascii al mismo tiempo que se inicializa la inetrfaz.
+        update_coords(): Actualiza las coordenadas (x,y,z) de cada escalador.
+        start(): Permite que la interfaz se ejecute en simultaneo al servidor.
+        leaderboard_general(): Devuelve una cadena ordenada ascendentemente (respecto a la altura) de todos los escaladores.
+        update_data(): Actualiza en tiempo real los datos proporcionados a la interfaz.
+    """
+
+
+
+
+
     def __init__(self, client: MountainClient):
         super().__init__()
         self.data = client.get_data()
@@ -259,7 +282,12 @@ class Dashboard(customtkinter.CTk):
     #-----------------------------------------------------------------------------------------------------------------------------------------------
     # Defino un metodo que permite actualizar el timer y comenzar cada vez que se abre la ventana
     # Ademas import el modulo time para poder hacerlo.
-    def update_timer(self):
+    def update_timer(self)->None:
+        """ 
+        Crea un temporizador que arranca en 00:00:00 (horas,minutos,segundos) e incrementa de a 1 segundo. 
+        Permite actualizar en tiempo real el temporizador de la interfaz.
+        """
+        
         if self.cima is True:
             self.status = "LLegamos!!!"
             return
@@ -272,8 +300,15 @@ class Dashboard(customtkinter.CTk):
         self.timer.after(1000, self.update_timer)
 
     #-----------------------------------------------------------------------------------------------------------------------------------------------
-    def colores(self, numero:int):
-        """Starts returning 1, increases it value 1 by 1 in range 0 to 7."""
+    def colores(self, numero:int)->None:
+        """
+        Incrementa de a 1 unidad el valor ingresado. en caso de que el numero sea mayor al largo de la lista, comenzara el
+        ciclo nuevamente desde 0. Permite configurar aspectos esteticos de la interfaz. 
+
+        Argumento de entrada:
+            numero (entero): numero inicial al cual se le ira sumando.
+        """
+
         self.colores_id[numero] += 1
         self.colores_id[numero] = self.colores_id[numero] % len(self.colors)
 
@@ -283,16 +318,31 @@ class Dashboard(customtkinter.CTk):
         self.marco_inf_derecho.configure(fg_color = self.colors[self.colores_id[3]])
 
     def cambiar_estado_graf(self, modo: str):
-        """Cambia el estado de los graficos."""
+        """
+        Cambia el estado del grafico de la interfaz.
+
+        Argumento de entrada:
+            modo (cadena): Inidica el nuevo estado del grafico.
+        """
         self.estado_grafico = modo
         print(f"me cambie a {modo}")
         
     #-----------------------------------------------------------------------------------------------------------------------------------------------
-    def change_team(self, value:str):
+    def change_team(self, value:str)->None:
+        """
+        Permite modificar la lista dezplegable para mostrar en la interfaz los valores del equipo ingresado.
+
+        Argumento de entrada:
+            value (cadena): nombre del equipo seleccionado.
+        """
         self.actual_team = value
         self.hikers = list(self.data[self.actual_team].keys())
     #-----------------------------------------------------------------------------------------------------------------------------------------------
-    def check_cima(self):
+    def check_cima(self)->None:
+        """
+        Verifica si cada escalador esta en la cima. 
+        """
+
         all_cima = True
         for idx, hiker in enumerate(self.hikers):
             self.hikers_cima[idx] = self.data[self.actual_team][hiker]['cima']
@@ -301,9 +351,12 @@ class Dashboard(customtkinter.CTk):
         self.cima = all_cima
     
     #-----------------------------------------------------------------------------------------------------------------------------------------------
-    # Defino un metodo que permite hacer una animacion ascii en el costado izquierdo.
-    # Import el modulo threading y art, ademas de tambien utilizar el modulo time.
-    def generar_ascii(self):
+
+    def generar_ascii(self)->None:
+        """
+        Formatea y prepara la animacion ascii para poder dezplegarla en la interfaz.
+        """
+
         '''animacion = [
 ' __\n ║║▄▄▄███▄▄▄   ▄▄▄███\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║▀▀▀   ▀▀▀███▀▀▀   \n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 ' __\n ║║   ▄▄▄███▄▄▄   ▄▄▄\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║██████████████████\n ║║███▀▀▀   ▀▀▀███▀▀▀\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
@@ -321,7 +374,11 @@ class Dashboard(customtkinter.CTk):
         #animacion_generada = [pyfiglet.figlet_format(frame, width=2) for frame in animacion]
         return animacion_generada
     #-----------------------------------------------------------------------------------------------------------------------------------------------
-    def animacion_ascii(self):
+    def animacion_ascii(self)->None:
+        """
+        Actualiza la animacion ascii en la interfaz para lograr el efecto de dinamismo.
+        """
+
         animacion_generada = self.generar_ascii()
 
         while True:
@@ -330,40 +387,50 @@ class Dashboard(customtkinter.CTk):
                 self.update_idletasks()
                 time.sleep(0.5) 
     #-----------------------------------------------------------------------------------------------------------------------------------------------
-    # Este metodo inicializara la animacion en un hilo separado, es decir al mismo tiempo que otro programa.
-    # Modulo threading
-    def comienzo_animacion(self):
+
+
+    def comienzo_animacion(self)-> None:
+        """
+        Inicializa la animacion ascii en un hilo separado. 
+        """
         threading.Thread(target = self.animacion_ascii).start()
 
     #-----------------------------------------------------------------------------------------------------------------------------------------------
 
-    '''def generar_leader(self):
-        leader = leader_board().graficar()
-        self.leaderboard.configure(text = leader)
-        pass'''
-
     def update_coords(self) -> None:
-        #coords = 
-        # {team1: 
-        #       {nombre1: {'x': [], 'y': [], 'z': []}}, ...},
-        #  team2:
-        #       ... 
+        """
+        Actualiza las coordenadas (x,y,z) de cada escalador por iteracion.
+        """
+
         for team_name in self.coords:
             for hiker in self.coords[team_name]:
                 self.coords[team_name][hiker]['x'] += [self.data[team_name][hiker]['x']]
                 self.coords[team_name][hiker]['y'] += [self.data[team_name][hiker]['y']]
                 self.coords[team_name][hiker]['z'] += [self.data[team_name][hiker]['z']]
         
-    def start(self):
+    def start(self)-> None:
+        """
+        Inicializa el server en simultaneo al dasboard.
+        """
+
         # No modificar
         t = threading.Thread(target=self.update_data)
         t.start()
         self.mainloop()  
 
-    def leaderboard_general(self, d):
-        """Lista de jugadores ordenados desde su z, lo guardo con equipo, nombre, altura"""
+    def leaderboard_general(self, diccionario:dict)->str:
+        """
+        Cadena de jugadores ordenados por altura.
+        
+        Argumento de entrada:
+            diccionario: Diccionario que contiene los datos de todos los jugadores.
+
+        Salida:
+            cadena con los jugadores ordenados ascendentemente respecto a su altura.
+        """
+
         jugadores_ordenados = []
-        for equipo, jugadores in d.items():
+        for equipo, jugadores in diccionario.items():
             for jugador, variables in jugadores.items():
                 altura = variables.get("z", 0)
                 jugadores_ordenados.append((equipo, jugador, altura))
@@ -385,7 +452,12 @@ class Dashboard(customtkinter.CTk):
         return "\n".join(lista_ordenada)
     
     
-    def update_data(self):
+    def update_data(self)-> None:
+        """
+        Actualiza al instante los datos suministrados en la interfaz.
+        """
+
+
         # No modificar
         i = 0
         while not self.client.is_over():
