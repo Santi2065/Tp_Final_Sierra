@@ -91,7 +91,7 @@ class Dashboard(customtkinter.CTk):
         # A- Se crea la animacion ascii y se configura.
         
         #self.animacion_et = customtkinter.CTkLabel(self, text = "", text_color = "#FFFFFF", font = ("Verdana", 8, "bold"), anchor = "nw")
-        self.animacion_et = customtkinter.CTkLabel(self, text = "", text_color = "#FFFFFF", font = ("Verdana", 9), justify='left', anchor="w")
+        self.animacion_et = customtkinter.CTkLabel(self, text = "", text_color = "#FFFFFF", font = ("Monospace", 9), justify='left', anchor="w")
         self.animacion_et.place(x = 40, y = 240)
         
         #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -348,10 +348,10 @@ class Dashboard(customtkinter.CTk):
         b = "" # "\033[31m"
         e = "" # "\033[0m"
         animacion = [
-f' __{e}\n ║║{b}▄▄██▄▄   ▄▄██{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}▀▀   ▀▀██▀▀  {e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
-f' __{e}\n ║║{b}  ▄▄██▄▄   ▄▄{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}██▀▀   ▀▀██▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
-f' __{e}\n ║║{b}▄▄   ▄▄██▄▄  {e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}▀▀██▀▀   ▀▀██{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
-f' __{e}\n ║║{b}██▄▄   ▄▄██▄▄{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}█████████████{e}\n ║║{b}  ▀▀██▀▀   ▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n'
+f' __{e}\n ║║{b}▄▄██▄▄    ▄▄██ {e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}▀▀    ▀▀██▀▀  {e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
+f' __{e}\n ║║{b}    ▄▄██▄▄    ▄▄{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}██▀▀    ▀▀██▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
+f' __{e}\n ║║{b}▄▄    ▄▄██▄▄   {e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}▀▀██▀▀    ▀▀██{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
+f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}    ▀▀██▀▀    ▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n'
 ]
         animacion2 = [
 f' __{e}\n ║║{b}▄▄██▄▄    ▄▄██▄▄{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}▀▀  ▀▀████▀▀  ▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
@@ -453,17 +453,20 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
     
     #----------------------------------------------------------------------------------------------------------------------------------------------------
     
+    def clear_canvas(canvas: FigureCanvasTkAgg):
+        pass
+    
     def update_data(self)-> None:
         """
         Actualiza al instante los datos suministrados en la interfaz.
         """
-        grafico_heat = FigureCanvasTkAgg(self.graph.fig2,master = self)
-        grafico_2d = FigureCanvasTkAgg(self.graph.fig1,master = self)
-        grafico_3d = FigureCanvasTkAgg(self.graph.fig3,master = self)
+        grafico_heat = FigureCanvasTkAgg(self.graph.fig2, master = self)
+        grafico_2d = FigureCanvasTkAgg(self.graph.fig1, master = self)
+        grafico_3d = FigureCanvasTkAgg(self.graph.fig3, master = self)
 
-        grafico_heat_2 = FigureCanvasTkAgg(self.graph.fig2,master = self)
-        grafico_2d_2 = FigureCanvasTkAgg(self.graph.fig1,master = self)
-        grafico_3d_2 = FigureCanvasTkAgg(self.graph.fig3,master = self)
+        grafico_heat_2 = FigureCanvasTkAgg(self.graph.fig2, master = self)
+        grafico_2d_2 = FigureCanvasTkAgg(self.graph.fig1, master = self)
+        grafico_3d_2 = FigureCanvasTkAgg(self.graph.fig3, master = self)
 
         # No modificar
         i = 0
@@ -485,10 +488,12 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
                 if i % 2 == 0:
                     grafico_2d.draw()
                     grafico_2d.get_tk_widget().place(x=201, y=150)
+                    time.sleep(0.1)
                     grafico_2d_2 = FigureCanvasTkAgg(self.graph.fig1,master = self)
                 else:
                     grafico_2d_2.draw()
                     grafico_2d_2.get_tk_widget().place(x=201, y=150)
+                    time.sleep(0.1)
                     grafico_2d = FigureCanvasTkAgg(self.graph.fig1, master = self)
 
             elif self.estado_grafico == "3D":
@@ -503,7 +508,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
                 grafico_heat = FigureCanvasTkAgg(self.graph.fig2, master = self)
 
                 self.graph.heat_map()
-                time.sleep(0.1)
+                time.sleep(0.01)
                 grafico_heat.draw()
                 grafico_heat.get_tk_widget().place(x=201, y=150)
 
