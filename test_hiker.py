@@ -221,7 +221,7 @@ class Graficador:
             #*coordenadas.append([x, y, z])
             # [ [x,y,z] ,[x,y,z] ] etcetera  
 
-        ax.set_facecolor('lightgray') # Color del fondo del grafico
+        #*ax.set_facecolor('lightgray') # Color del fondo del grafico
 
         #*ax.scatter(cx, cy, cz, c=colores)
         #!
