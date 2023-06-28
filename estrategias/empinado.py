@@ -12,7 +12,7 @@ def empinado(team:Team):
 
 
     #Etapa de separacion 
-    team.separacion(1000) # los escaladores se dan la espalda y se alejan 1000 pasos entre ellos.
+    team.separacion(100) # los escaladores se dan la espalda y se alejan 1000 pasos entre ellos.
 
     #comienzo de estrategia
 

@@ -324,8 +324,9 @@ class Dashboard(customtkinter.CTk):
         Argumento de entrada:
             value (cadena): nombre del equipo seleccionado.
         """
+        info = deepcopy(self.data)
         self.actual_team = value
-        self.hikers = list(self.data[self.actual_team].keys())
+        self.hikers = list(info[self.actual_team].keys())
     #----------------------------------------------------------------------------------------------------------------------------------------------------
     def check_cima(self)->None:
         """
@@ -488,12 +489,12 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
                 if i % 2 == 0:
                     grafico_2d.draw()
                     grafico_2d.get_tk_widget().place(x=201, y=150)
-                    time.sleep(0.1)
+                    time.sleep(0.01)
                     grafico_2d_2 = FigureCanvasTkAgg(self.graph.fig1,master = self)
                 else:
                     grafico_2d_2.draw()
                     grafico_2d_2.get_tk_widget().place(x=201, y=150)
-                    time.sleep(0.1)
+                    time.sleep(0.01)
                     grafico_2d = FigureCanvasTkAgg(self.graph.fig1, master = self)
 
             elif self.estado_grafico == "3D":
@@ -564,6 +565,8 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
 
 if __name__ == "__main__":
     client = MountainClient()
+    #client = MountainClient("10.42.0.1", 8888)
+
     while client.is_registering_teams():
         time.sleep(0.1)
 

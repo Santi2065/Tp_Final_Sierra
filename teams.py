@@ -79,14 +79,14 @@ class Team(Hiker):
         # Hace un diccionario que dice si el escalador esta cerca del punto o no
         for hiker in self.hikers:
             distance_to_point = distance_between(hiker.actual_pos(), punto)
-            close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
+            close_to_point[hiker.nombre] = distance_to_point < 0.005 or hiker.in_summit()
 
         # Corre hasta que todos los escaladores esten cerca del punto
         while False in close_to_point.values():
             #TODO hacer q use 1 o 2 get_data por iteracion (go_to2 tal vez)
             for hiker in self.hikers:
                 distance_to_point = distance_between(hiker.actual_pos(), punto)
-                close_to_point[hiker.nombre] = distance_to_point < 0.05 or hiker.in_summit()
+                close_to_point[hiker.nombre] = distance_to_point < 0.005 or hiker.in_summit()
 
                 if close_to_point[hiker.nombre]:
                     hiker.stay_still()

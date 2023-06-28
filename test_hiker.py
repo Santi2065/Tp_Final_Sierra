@@ -214,6 +214,11 @@ class Graficador:
             coordenadas_x += x
             coordenadas_y += y
             coordenadas_z += z
+
+            ultima_coord = [diccionario[nombre_equipo][nombre_escalador]['x'][-1],
+                            diccionario[nombre_equipo][nombre_escalador]['y'][-1],
+                            diccionario[nombre_equipo][nombre_escalador]['z'][-1]]
+            ax.text(ultima_coord[0], ultima_coord[1], ultima_coord[2], nombre_escalador, fontsize=8)
             #cx.append(x)
             #cy.append(y)
             #cz.append(z)
