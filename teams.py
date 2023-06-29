@@ -3,6 +3,7 @@ import essential_functions
 from HIKERS import Hiker
 import math, time
 from essential_functions import distance_between
+from estrategias.spiral import check_hiker_in_summit
 
 class Team(Hiker):
 
@@ -84,8 +85,11 @@ class Team(Hiker):
         # Corre hasta que todos los escaladores esten cerca del punto
         while False in close_to_point.values():
             for hiker in self.hikers:
-                #if hiker.in_summit() and cima_encontrada:
-                #    all_go_to_point(hiker.actual_pos(), True)
+
+                coord = check_hiker_in_summit(self.comms)
+                if coord and not cima_encontrada:
+                    self.all_go_to_point(hiker.actual_pos(), True)
+                    break
 
                 distance_to_point = distance_between(hiker.actual_pos(), punto)
                 close_to_point[hiker.nombre] = distance_to_point < 0.005 or hiker.in_summit()

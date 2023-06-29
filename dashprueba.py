@@ -476,7 +476,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
             self.data = self.client.get_data()
             self.check_cima()
             time.sleep(self.time_step/1000)
-            #self.graph.ax.cla()
             hiker_colors = (self.colors[self.colores_id[3]], self.colors[self.colores_id[2]],
                             self.colors[self.colores_id[1]], self.colors[self.colores_id[0]])
             
@@ -486,7 +485,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
             
 
             if self.estado_grafico == "2D":
-                self.graph.graf_2d(self.actual_team, hiker_colors)
+                '''self.graph.graf_2d(self.actual_team, hiker_colors)
                 if i % 2 == 0:
                     grafico_2d.draw()
                     grafico_2d.get_tk_widget().place(x=201, y=150)
@@ -496,21 +495,33 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
                     grafico_2d_2.draw()
                     grafico_2d_2.get_tk_widget().place(x=201, y=150)
                     time.sleep(0.01)
-                    grafico_2d = FigureCanvasTkAgg(self.graph.fig1, master = self)
+                    grafico_2d = FigureCanvasTkAgg(self.graph.fig1, master = self)'''
+                self.clear_canvas(grafico_heat)
+                self.clear_canvas(grafico_3d)
+                grafico_2d.draw()
+                grafico_2d.get_tk_widget().place(x=201, y=150)
 
             elif self.estado_grafico == "3D":
-                grafico_3d = FigureCanvasTkAgg(self.graph.fig3, master = self)
+                '''grafico_3d = FigureCanvasTkAgg(self.graph.fig3, master = self)
 
                 self.graph.graf_3d(self.actual_team)
+                grafico_3d.draw()
+                grafico_3d.get_tk_widget().place(x=201, y=150)'''
+                self.clear_canvas(grafico_heat)
+                self.clear_canvas(grafico_2d)
                 grafico_3d.draw()
                 grafico_3d.get_tk_widget().place(x=201, y=150)
 
 
             elif self.estado_grafico == "Heat":
-                grafico_heat = FigureCanvasTkAgg(self.graph.fig2, master = self)
+                '''grafico_heat = FigureCanvasTkAgg(self.graph.fig2, master = self)
 
                 self.graph.heat_map()
                 time.sleep(0.01)
+                grafico_heat.draw()
+                grafico_heat.get_tk_widget().place(x=201, y=150)'''
+                self.clear_canvas(grafico_2d)
+                self.clear_canvas(grafico_3d)
                 grafico_heat.draw()
                 grafico_heat.get_tk_widget().place(x=201, y=150)
 
