@@ -176,7 +176,7 @@ class Dashboard(customtkinter.CTk):
         
         self.estado_grafico = "2D"
         hiker_colors = (self.colors[0],self.colors[1],self.colors[2],self.colors[3])
-        self.graph.coordenadas2(self.actual_team, hiker_colors)
+        self.graph.graf_2d(self.actual_team, hiker_colors)
         self.graph.fig1.set_size_inches(4.05,3)
         self.graph.fig2.set_size_inches(4.05,3)
         self.graph.fig3.set_size_inches(4.05,3)
@@ -485,7 +485,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
             
 
             if self.estado_grafico == "2D":
-                self.graph.coordenadas2(self.actual_team, hiker_colors)
+                self.graph.graf_2d(self.actual_team, hiker_colors)
                 if i % 2 == 0:
                     grafico_2d.draw()
                     grafico_2d.get_tk_widget().place(x=201, y=150)
