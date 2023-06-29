@@ -1,5 +1,3 @@
-import tkinter
-import tkinter.messagebox
 import customtkinter
 import time
 import threading
@@ -504,8 +502,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
 
 
             self.update_coords()
-            #self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
-            #self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
             self.leaderboard.configure(text = self.leaderboard_general(self.data))
 
             # Actualiza la informacion de los escaladores de las esquinas
@@ -557,7 +553,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
 
 if __name__ == "__main__":
     client = MountainClient()
-    #client = MountainClient("10.42.0.1", 8888)
 
     while client.is_registering_teams():
         time.sleep(0.1)
@@ -568,8 +563,3 @@ if __name__ == "__main__":
     mountain_dash.comienzo_animacion()
     mountain_dash.start()
     diccionario = client.get_data()
-
-
-
-
-    #mountain_dash.leader_leader()
