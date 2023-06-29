@@ -434,10 +434,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
     
     #----------------------------------------------------------------------------------------------------------------------------------------------------
     
-    def clear_canvas(self, canvas: FigureCanvasTkAgg):
-        for item in canvas.get_tk_widget().find_all():
-            canvas.get_tk_widget().delete(item)
-    
     def update_data(self)-> None:
         """
         Actualiza al instante los datos suministrados en la interfaz.
@@ -512,6 +508,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
             #self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
             self.leaderboard.configure(text = self.leaderboard_general(self.data))
 
+            # Actualiza la informacion de los escaladores de las esquinas
             team_name = self.actual_team
             team_data = deepcopy(self.data[team_name]) # {'nombre1': {x:[],y:[],z:[]}, ...}
             
