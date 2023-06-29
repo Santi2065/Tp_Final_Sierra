@@ -154,7 +154,7 @@ class Graficador:
             return
 
         
-        tpc = ax.tripcolor(lx, ly, lz, shading='gouraud', cmap='hot', clim=[z_min, z_max]) # grafica
+        tpc = ax.tripcolor(lx, ly, lz, shading='flat', cmap='hot', clim=[z_min, z_max]) # grafica
 
     
         # Estetica

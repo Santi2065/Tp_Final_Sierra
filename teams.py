@@ -65,7 +65,7 @@ class Team(Hiker):
             if hiker.almost_out():
                 hiker.random()
 
-    def all_go_to_point(self, punto: tuple[float, float], cima_encontrada=False) -> None:
+    def all_go_to_point(self, punto: tuple[float, float]) -> None:
         """
         Hace que todos los escaladores vayan al punto dado
 
@@ -82,12 +82,6 @@ class Team(Hiker):
         # Corre hasta que todos los escaladores esten cerca del punto
         while False in close_to_point.values():
             for hiker in self.hikers:
-
-                coord = check_hiker_in_summit(self.comms)
-                if coord and not cima_encontrada:
-                    self.all_go_to_point(hiker.actual_pos(), True)
-                    break
-
                 distance_to_point = distance_between(hiker.actual_pos(), punto)
                 close_to_point[hiker.nombre] = distance_to_point < 0.005 or hiker.in_summit()
 
