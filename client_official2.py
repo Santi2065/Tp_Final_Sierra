@@ -7,6 +7,7 @@ from estrategias.empinado import empinado as estrategia
 def main():
 
     c = MountainClient()
+    #c = MountainClient("10.42.0.1", 8888)
 
     team_name = 'Los Pros'
     names = ['Edgar', 'Roberto', 'Pepe', 'Pedro']

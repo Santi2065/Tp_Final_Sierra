@@ -7,6 +7,7 @@ from estrategias.spiral import spiral as estrategia
 def main():
 
     c = MountainClient()
+    #c = MountainClient("10.42.0.1", 8888)
 
     team_name = 'Los cracks'
     names = ['Gian', 'Pipe', 'Santi', 'Joaco']
