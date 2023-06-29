@@ -71,6 +71,15 @@ def empinado(team:Team):
         team.move_all() # Todos avanzan.
 
     team.all_go_to_point(flag) # Todos van hacia la bandera.
+    #hasta que no termine, caminan hasta el pico
+    while not team.comms.is_over():
+        info = team.comms.get_data()
+        for hiker in team.hikers:
+            hiker.change_direction(pendiente_max(hiker,info)) # cambio la direccion del escalador a la pendiente maxima
+        team.move_all()
+
+
+            
     
 def pendiente_max(hiker:Hiker,info:dict) -> float:
     """
