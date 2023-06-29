@@ -5,7 +5,7 @@ import time
 files = ['start_server.py', 'dashprueba.py', 'client_official.py', 'client_official2.py']
 
 for file in files:
-    time.sleep(2)
+    time.sleep(1.5)
     if platform.system() == 'Windows':
         os.system(f'start cmd /k python {file}')
     else:
