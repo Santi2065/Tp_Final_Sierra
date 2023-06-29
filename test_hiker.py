@@ -81,41 +81,41 @@ class Graficador:
         ax.cla() # Para una graficacion rapida, borra lo viejo y grafica todo de nuevo.
 
         
-        # para buscar los (x,y) maximos
+        # Para buscar los (x,y) maximos
         x_max = float('-inf') 
         y_max = float('-inf')
 
     
 
-        for name, coords, colr in zip(data, data.values(), colores): # grafica las coordenadas con su respectivo color.
+        for name, coords, colr in zip(data, data.values(), colores): # Grafica las coordenadas con su respectivo color.
             x = np.array(coords['x'])
             y = np.array(coords['y'])
 
-            # Encuentra los maximos en estos puntos
+            # Encuentra los maximos en estos puntos.
             x_max = max(x_max, np.max(np.abs(x)))
             y_max = max(y_max, np.max(np.abs(y)))
 
-            # Achica el tamaño de los puntos a medida que hay mas
+            # Achica el tamaño de los puntos a medida que hay mas.
             num_points = len(x)
             marker_size = 10 / np.sqrt(num_points)
 
             
 
-            # Grafica los nuevos puntos
+            # Grafica los nuevos puntos.
             ax.scatter(x, y, s=marker_size, color=colr)
 
            
 
-            # Pone el nombre del escalador en el ultimo punto que estuvo
+            # Pone el nombre del escalador en el ultimo punto que estuvo.
             last_coord = (coords['x'][-1], coords['y'][-1])
             ax.text(last_coord[0], last_coord[1], name, fontsize=9)
 
        
 
-        # Encuentra el maximo de todos los valores
+        # Encuentra el maximo de todos los valores.
         limit = max(x_max, y_max)
 
-        # Ajusta la escala a medida que crece el rango
+        # Ajusta la escala a medida que crece el rango.
         limit += limit/10
         ax.set_xlim(-limit, limit) 
         ax.set_ylim(-limit, limit)
@@ -143,8 +143,6 @@ class Graficador:
                 lx += data[team_name][name]['x'] 
                 ly += data[team_name][name]['y']
                 lz += data[team_name][name]['z']
-
-
 
                 # Guarda el valor maximo y minimo global de z
                 z = data[team_name][name]['z']
@@ -195,7 +193,7 @@ class Graficador:
             x = diccionario[nombre_equipo][nombre_escalador]['x']
             y = diccionario[nombre_equipo][nombre_escalador]['y']
             z = diccionario[nombre_equipo][nombre_escalador]['z']
-            #!
+            
             coordenadas_x += x
             coordenadas_y += y
             coordenadas_z += z

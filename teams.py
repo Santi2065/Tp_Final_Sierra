@@ -20,11 +20,11 @@ class Team(Hiker):
         move_all(): Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada.
         move_all_spiral(): Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada solo si esta fue actualizada.
         all_go_to_point(): Direcciona a todos los integrantes del equipo hacia una poscicion especifica.
-        separacion(): 
+        separacion(): Los escaladores adoptan una poscion dandose la espalda entre ellos y se mueven una cantidad de pasos especifica.
     """
 
     def __init__(self, nombre: str, hikers: list[Hiker], c: MountainClient) -> None:
-        self.nombre = nombre # del equipo
+        self.nombre = nombre # Del equipo
         self.hikers = hikers
         self.comms = c # accede a las comunicaciones con el servidor
 
@@ -42,8 +42,6 @@ class Team(Hiker):
         """
         Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada.
         """
-
-
 
         directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers} # almacena la direccion y velocidad de cada escalador.
         self.comms.next_iteration(self.nombre, directives) # manda al servidor las nuevas ordenes de los escaladores
@@ -99,6 +97,7 @@ class Team(Hiker):
                     continue
 
                 hiker.go_to(punto)
+               
 
             self.move_all()
 
@@ -109,10 +108,8 @@ class Team(Hiker):
 
         Argumento de entrada:
             paso (entero): la cantidad de pasos que los escaladores se moveran.
-        
-        
-        
         """
+
         self.face_out()
         hikers_buscando = self.hikers # lista con todos los hikers
         for i in range(pasos):
