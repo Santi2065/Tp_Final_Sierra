@@ -455,7 +455,8 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
     #----------------------------------------------------------------------------------------------------------------------------------------------------
     
     def clear_canvas(canvas: FigureCanvasTkAgg):
-        pass
+        for item in canvas.get_tk_widget().find_all():
+            canvas.get_tk_widget().delete(item)
     
     def update_data(self)-> None:
         """
