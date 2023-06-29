@@ -12,9 +12,8 @@ from test_hiker import Graficador
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
 import essential_functions as ef
-#from LEADERBOARD import leader_board
 
-# Esto lo que hace es darnos la herramienta para poder pasar de light a dark.
+# Definimos la apariencia oscura.
 customtkinter.set_appearance_mode("Dark") 
 customtkinter.set_default_color_theme("dark-blue")
 
@@ -90,12 +89,19 @@ class Dashboard(customtkinter.CTk):
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # A- Se crea la animacion ascii y se configura.
         
-        #self.animacion_et = customtkinter.CTkLabel(self, text = "", text_color = "#FFFFFF", font = ("Verdana", 8, "bold"), anchor = "nw")
         self.animacion_et = customtkinter.CTkLabel(self, text = "", text_color = "#FFFFFF", font = ("Monospace", 9), justify='left', anchor="w")
-        self.animacion_et.place(x = 40, y = 240)
+        self.animacion_et.place(x = 60, y = 220)
         
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        # B- Para cada jugador del equipo, se crea un recuadro con sus respectivos datos (Nombre, posicion, altura y cima) a tiempo real.      
+        # B- Se crea, guarda y configura un espacio donde va el leaderboard en la interfaz.
+        
+        self.leaderboard = customtkinter.CTkLabel(self, width = 200, height = 200, text = "")
+        self.leaderboard.place(x = 600, y = 200) 
+        self.titulo_leader = customtkinter.CTkLabel(self, text = "LEADERBOARD", text_color = "#FF80FF", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.titulo_leader.place(x = 700, y = 220, anchor = "center")
+
+        #-----------------------------------------------------------------------------------------------------------------------------------------------
+        # C- Para cada jugador del equipo, se crea un recuadro con sus respectivos datos (Nombre, posicion, altura y cima) a tiempo real.      
 
         self.marco_sup_izquierdo = customtkinter.CTkFrame(self, width = 185, height = 185, corner_radius = 10, fg_color = self.colors[self.colores_id[0]])
         self.marco_sup_izquierdo.place(x = 10, y = 11)
@@ -164,14 +170,6 @@ class Dashboard(customtkinter.CTk):
         self.cima_inf_derecho.place(relx = 0.05, rely = 0.75, anchor = "w")
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
-        # C- Se crea, guarda y configura un espacio donde va el leaderboard en la interfaz.
-        
-        self.leaderboard = customtkinter.CTkLabel(self, width = 200, height = 200, text = "")
-        self.leaderboard.place(x = 600, y = 200) 
-        self.titulo_leader = customtkinter.CTkLabel(self, text = "LEADERBOARD", text_color = "#FF80FF", font = ("Verdana", 16, "bold"), anchor = "center")
-        self.titulo_leader.place(x = 700, y = 220, anchor = "center")
-
-        #-----------------------------------------------------------------------------------------------------------------------------------------------
         # D- Se crea el primer grafico que se ve, y se configura el tamaño de cada uno de ellos.(2D, 3D, Heat Map)
         
         self.estado_grafico = "2D"
@@ -192,14 +190,14 @@ class Dashboard(customtkinter.CTk):
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # F- Se crea en la parte inferior de la interfaz, una serie de datos que se actualizan en tiempo real. (Flag, Altura Promedio, Pico Maximo)
 
-        self.altura_max = customtkinter.CTkLabel(self, text = f"FLAG: {self.status}", text_color = "#FFFFFF", font = ("Verdana", 16, "bold"), anchor = "center")
-        self.altura_max.place(x = 220, y = 480, anchor = "w")
+        self.flag = customtkinter.CTkLabel(self, text = f"FLAG: {self.status}", text_color = "#FFFFFF", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.flag.place(x = 220, y = 480, anchor = "w")
 
         self.altura_promedio = customtkinter.CTkLabel(self, text = "ALTURA PROMEDIO: ", text_color = "#FFFFFF", font = ("Verdana", 16, "bold"), anchor = "center")
         self.altura_promedio.place(x = 220, y = 520, anchor = "w")
 
-        self.terminado = customtkinter.CTkLabel(self, text = "PICO MAXIMO: ", text_color = "#FFFFFF", font = ("Verdana", 16, "bold"), anchor = "center")
-        self.terminado.place(x = 220, y = 560, anchor = "w")
+        self.pico_maximo = customtkinter.CTkLabel(self, text = "PICO MAXIMO: ", text_color = "#FFFFFF", font = ("Verdana", 16, "bold"), anchor = "center")
+        self.pico_maximo.place(x = 220, y = 560, anchor = "w")
         
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # G- Se crea y configura una barra deslizadora.
@@ -287,6 +285,7 @@ class Dashboard(customtkinter.CTk):
         self.timer.after(1000, self.update_timer)
 
     #----------------------------------------------------------------------------------------------------------------------------------------------------
+    
     def colores(self, numero:int)->None:
         """
         Incrementa de a 1 unidad el valor ingresado. en caso de que el numero sea mayor al largo de la lista, comenzara el
@@ -314,7 +313,6 @@ class Dashboard(customtkinter.CTk):
             modo (cadena): Inidica el nuevo estado del grafico.
         """
         self.estado_grafico = modo
-        print(f"me cambie a {modo}")
         
     #----------------------------------------------------------------------------------------------------------------------------------------------------
     def change_team(self, value:str)->None:
@@ -333,12 +331,10 @@ class Dashboard(customtkinter.CTk):
         Verifica si cada escalador esta en la cima. 
         """
 
-        all_cima = True
         for idx, hiker in enumerate(self.hikers):
             self.hikers_cima[idx] = self.data[self.actual_team][hiker]['cima']
-            if not self.hikers_cima[idx]:
-                all_cima = False
-        self.cima = all_cima
+        
+        self.cima = True in self.hikers_cima 
     
     #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -361,12 +357,6 @@ f' __{e}\n ║║{b}    ▄▄██▄▄    ▄▄{e}\n ║║{b}████�
 f' __{e}\n ║║{b}▄▄    ▄▄██▄▄    {e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}  ▀▀██▀▀  ▀▀████{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}▀▀  ▀▀██▀▀  ▀▀██{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n'
 ]
-        '''animacion = [
-            "    O\n   /|\\\n    |\n   / \\",
-            "   \\O/\n    |\n   /|\\\n   / \\",
-            "    |\\\n   \\O/\n   /|\\\n   / \\",
-            "   / \\\n    |\\\n   \\O/\n   /|\\",
-        ]'''
         return animacion
     
     #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -383,6 +373,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
                 self.animacion_et.configure(text = frame)
                 self.update_idletasks()
                 time.sleep(0.5) 
+
     #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -474,17 +465,23 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
 
         # No modificar
         i = 0
+        max = -5000
+        lista_altura = []
+        lista_max = []
         while not self.client.is_over():
             self.data = self.client.get_data()
             self.check_cima()
             time.sleep(self.time_step/1000)
+
+            self.flag.configure(text = f"FLAG: {self.status}")
+
             hiker_colors = (self.colors[self.colores_id[3]], self.colors[self.colores_id[2]],
                             self.colors[self.colores_id[1]], self.colors[self.colores_id[0]])
             
-            '''self.grafico_2d.get_tk_widget().delete()
-            self.grafico_3d.get_tk_widget().delete()
-            self.grafico_heat.get_tk_widget().delete()'''
-            
+            self.altura_promedio_str = ef.altura_promedio(self.data, lista_altura, self.actual_team)
+            self.altura_maxima_str = ef.altura_maxima(self.actual_team, self.data, lista_max)
+            self.altura_promedio.configure(text = f"ALTURA PROMEDIO: {round(self.altura_promedio_str)}")
+            self.pico_maximo.configure(text = f"PICO MAXIMO: {round(self.altura_maxima_str)}")
 
             if self.estado_grafico == "2D":
                 if i != 0:
@@ -508,6 +505,8 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
                 cuadro_graf.draw()
                 cuadro_graf.get_tk_widget().place(x=201, y=150)
 
+            elif self.estado_grafico == "3D": 
+                grafico_3d = FigureCanvasTkAgg(self.graph.fig3, master = self)
             elif self.estado_grafico == "3D":
                 if i != 1:
                     cuadro_graf = FigureCanvasTkAgg(self.graph.fig3, master = self)
@@ -548,28 +547,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
             #self.altura_maxima = ef.altura_maxima(self.actual_team,diccionario,lista_max)
             #self.altura_promedio = ef.altura_promedio(diccionario,self.actual_team)
             self.leaderboard.configure(text = self.leaderboard_general(self.data))
-
-
-            '''self.titulo_sup_izquierdo.configure(text = self.hikers[0])
-            self.posicion_sup_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[0]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[0]]['y'][-1]:8.1f}")
-            self.altura_sup_izquierdo.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[0]]['z'][-1]:8.1f}")
-            self.cima_sup_izquierdo.configure(text = f"Cima: {self.hikers_cima[0]}")
-
-            self.titulo_sup_derecho.configure(text = self.hikers[1])
-            self.posicion_sup_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[1]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[1]]['y'][-1]:8.1f}")
-            self.altura_sup_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[1]]['z'][-1]:8.1f}")
-            self.cima_sup_derecho.configure(text = f"Cima: {self.hikers_cima[1]}")
-            
-            self.titulo_inf_izquierdo.configure(text = self.hikers[2])
-            self.posicion_inf_izquierdo.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[2]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[2]]['y'][-1]:8.1f}")
-            self.altura_inf_izquierdo.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[2]]['z'][-1]:8.1f}")
-            self.cima_inf_izquierdo.configure(text = f"Cima: {self.hikers_cima[2]}")
-
-            self.titulo_inf_derecho.configure(text = self.hikers[3])
-            self.posicion_inf_derecho.configure(text = f"Posicion: x: {self.coords[self.actual_team][self.hikers[3]]['x'][-1]:8.1f}\n               y: {self.coords[self.actual_team][self.hikers[3]]['y'][-1]:8.1f}")
-            self.altura_inf_derecho.configure(text = f"Altura: {self.coords[self.actual_team][self.hikers[3]]['z'][-1]:8.1f}")
-            self.cima_inf_derecho.configure(text = f"Cima: {self.hikers_cima[3]}")'''
-
 
             team_name = self.actual_team
             team_data = deepcopy(self.data[team_name]) # {'nombre1': {x:[],y:[],z:[]}, ...}

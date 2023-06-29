@@ -90,7 +90,7 @@ def altura_maxima(equipo:str, diccionario: dict, lista_max: list) -> float:
 
     return (max(lista_max)) # devuelve el maximo global
 
-def altura_promedio(diccionario:dict,equipo:str) -> float:
+def altura_promedio(diccionario : dict, lista_altura : list, equipo : str) -> float:
     """
     Calcula la altura promedio de todos los jugadores de un equipo por iteracion.
      
@@ -101,10 +101,9 @@ def altura_promedio(diccionario:dict,equipo:str) -> float:
     Salida:
         Flotante: Altura promedio local alcanzada por el equipo redondeada a dos decimales.
     """
-    lista_altura = [] # Almacena momeneamente las alturas de todos los integrantes del equipo.
 
-    for x in diccionario[equipo]:
-        lista_altura.append(diccionario[equipo][x]['z'])
+    for hiker in diccionario[equipo]:
+        lista_altura.append(diccionario[equipo][hiker]['z'])
 
     promedio = sum(lista_altura) / len(lista_altura) # Calcula la altura promedio.
 
