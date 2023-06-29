@@ -133,7 +133,6 @@ class Hiker:
         
         Salida:
             booleano: Verdadero si alcanzo la cima. Falso en caso contrario.
-
         """
         return self.comms.get_data()[self.equipo][self.nombre]['cima']
 

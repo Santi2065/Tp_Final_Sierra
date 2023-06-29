@@ -3,6 +3,7 @@ import essential_functions
 from HIKERS import Hiker
 import math, time
 from essential_functions import distance_between
+from estrategias.spiral import check_hiker_in_summit
 
 class Team(Hiker):
 
@@ -19,13 +20,13 @@ class Team(Hiker):
         move_all(): Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada.
         move_all_spiral(): Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada solo si esta fue actualizada.
         all_go_to_point(): Direcciona a todos los integrantes del equipo hacia una poscicion especifica.
-        separacion(): 
+        separacion(): Los escaladores adoptan una poscion dandose la espalda entre ellos y se mueven una cantidad de pasos especifica.
     """
 
     def __init__(self, nombre: str, hikers: list[Hiker], c: MountainClient) -> None:
-        self.nombre = nombre # del equipo
+        self.nombre = nombre # Del equipo
         self.hikers = hikers
-        self.comms = c 
+        self.comms = c # accede a las comunicaciones con el servidor
 
     def face_out(self)-> None:
         """
@@ -41,8 +42,6 @@ class Team(Hiker):
         """
         Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada.
         """
-
-
 
         directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers} # almacena la direccion y velocidad de cada escalador.
         self.comms.next_iteration(self.nombre, directives) # manda al servidor las nuevas ordenes de los escaladores
@@ -67,13 +66,13 @@ class Team(Hiker):
             if hiker.almost_out():
                 hiker.random()
 
-    def all_go_to_point(self, punto: tuple[float, float]) -> None:
-        '''
+    def all_go_to_point(self, punto: tuple[float, float], cima_encontrada=False) -> None:
+        """
         Hace que todos los escaladores vayan al punto dado
 
         Argumento de entrada:
             punto (tupla): Coordenadas (x,y) del vector destino.
-        '''
+        """
         close_to_point = {}
 
         # Hace un diccionario que dice si el escalador esta cerca del punto o no
@@ -83,8 +82,13 @@ class Team(Hiker):
 
         # Corre hasta que todos los escaladores esten cerca del punto
         while False in close_to_point.values():
-            #TODO hacer q use 1 o 2 get_data por iteracion (go_to2 tal vez)
             for hiker in self.hikers:
+
+                coord = check_hiker_in_summit(self.comms)
+                if coord and not cima_encontrada:
+                    self.all_go_to_point(hiker.actual_pos(), True)
+                    break
+
                 distance_to_point = distance_between(hiker.actual_pos(), punto)
                 close_to_point[hiker.nombre] = distance_to_point < 0.005 or hiker.in_summit()
 
@@ -93,7 +97,7 @@ class Team(Hiker):
                     continue
 
                 hiker.go_to(punto)
-                #print(f'{hiker.nombre}: x={hiker.actual_pos()[0]:8.1f}, y={hiker.actual_pos()[1]:8.1f} yendo a {point}')
+               
 
             self.move_all()
 
@@ -104,10 +108,8 @@ class Team(Hiker):
 
         Argumento de entrada:
             paso (entero): la cantidad de pasos que los escaladores se moveran.
-        
-        
-        
         """
+
         self.face_out()
         hikers_buscando = self.hikers # lista con todos los hikers
         for i in range(pasos):
