@@ -10,8 +10,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", help = "ingrese el ip con el puerto ej:192.168.1.1:8080", type = str)
     args = parser.parse_args()
-    ip,puerto = args.ip.split(":")
     if args.ip:
+        ip,puerto = args.ip.split(":")
         c = MountainClient(ip,int(puerto))
     else:
         c = MountainClient()
