@@ -11,8 +11,10 @@ def main():
     parser.add_argument("--ip", help = "ingrese el ip con el puerto ej:192.168.1.1:8080", type = str)
     args = parser.parse_args()
     ip,puerto = args.ip.split(":")
-
-    c = MountainClient(ip,int(puerto))
+    if args.ip:
+        c = MountainClient(ip,int(puerto))
+    else:
+        c = MountainClient()
 
     team_name = 'Los cracks'
     names = ['Gian', 'Pipe', 'Santi', 'Joaco']
