@@ -10,6 +10,8 @@ def main():
     if args.ip:
         ip,puerto = args.ip.split(":")   
         files = ['start_server.py', f'dashprueba.py --ip {ip}:{puerto}', f'client_official.py --ip {ip}:{puerto}', f'client_official2.py --ip {ip}:{puerto}']
+    else:
+        files = ['start_server.py', f'dashprueba.py', f'client_official.py', f'client_official2.py']
 
     for file in files:
         time.sleep(1.5)
