@@ -25,7 +25,7 @@ class Team(Hiker):
     def __init__(self, nombre: str, hikers: list[Hiker], c: MountainClient) -> None:
         self.nombre = nombre # del equipo
         self.hikers = hikers
-        self.comms = c 
+        self.comms = c # accede a las comunicaciones con el servidor
 
     def face_out(self)-> None:
         """

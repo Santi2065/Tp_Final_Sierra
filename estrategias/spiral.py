@@ -1,18 +1,19 @@
 from communication.client.client import MountainClient
-from HIKERS import Hiker
 from teams import Team
-import matplotlib.pyplot as plt
-import time
 import math
 
-#TODO Hacer q no pase esto: 
-#TODO WARNING: 2023-06-21 16:21:33,173 - The competition is not in the waiting_for_directions state. Current state: moving
 
-def spiral(team: Team):
-    c = team.comms
-    data = c.get_data()
 
-    names = list(data[team.nombre].values())
+def spiral(team: Team) -> None:
+    """
+    Estrategia basada en los principios del espiral de Arquimedes.
+    Argumento de entrada:
+        team (Team): Clase que controla los escaladores de un equipo.  
+    """
+    c = team.comms # Accede a las comunicaciones con el servidor.
+    data = c.get_data() # Contiene los datos de todos los jugadores.
+
+    names = list(data[team.nombre].values())  
     hikers = team.hikers
 
     # Se dirige al origen
@@ -41,7 +42,7 @@ def spiral(team: Team):
         previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
 
-        #TODO: convertir este for en una funcion, ademas poner si uno llego al borde, tal vez poner go_to2
+  
         for hiker, offset in zip(hikers, offsets):
             current_theta = previous_hikers_thetas[hiker.nombre]
 
@@ -52,7 +53,7 @@ def spiral(team: Team):
 
             hiker.go_to(next_loc)
 
-            #*print(f'{hiker.nombre:6s}: θ1={current_theta:6.2f} θ2={next_theta:6.2f} Δθ:{next_theta-current_theta:11.9f} rev:{min(hikers_thetas.values())/(2*math.pi):.2f} sp:{hiker.ordenes["speed"]:4.1f}')
+            
 
 
         team.move_all_spiral()
@@ -67,32 +68,49 @@ def spiral(team: Team):
         i += 1
 
 
-def get_point(radius: float, theta: float) -> tuple[float, float]:
-    '''Devuelve las coordenadas xy dado un radio y theta'''
-    x = radius * math.cos(theta)
-    y = radius * math.sin(theta)
+def get_point(radio: float, theta: float) -> tuple[float, float]:
+    """
+    Calcula una coordenada (x,y) basados en el radio y angulo donde el escalador esta parado.
+
+    Argumentos de entrada:
+        radio (flotante): Distancia desde el origen
+        theta (flotante): Angulo (en radianes)
+    Salida:
+        Tupla: coordenadas (x,y).  
+    """
+
+    # Formula matematica para obtener las coordenadas.
+    x = radio * math.cos(theta)
+    y = radio * math.sin(theta)
     return (x, y)
 
-def integral(theta: float, b: float):
-    '''
-    Funcion usada para calcular la distancia, tal que\n
-    F(theta2) - F(theta1) = distancia
-    '''
+def integral(theta: float, b: float) -> float:
+    """
+    Primitiva de la formula general para calcular arcos.
+
+    Argumentos de entrada:
+        theta (flotante): Angulo actual.
+        b (flotante): Constante del espiral (separacion / 2pi)
+    Salida:
+        Flotante: El resultado de la primitiva evaluado en theta.
+    """
     return (b * (math.log(abs(math.sqrt(theta**2 + 1) + theta)) + theta*math.sqrt(theta**2 + 1)))/2
 
 def estimate_theta2(theta1: float, b: float, distance: float) -> float:
-    '''
+    """
     Estima el theta2 tal que la distancia entre theta1 y theta2 ronde la distancia dada, la
-    formula de la distancia es F(theta2) - F(theta1) = distancia\n
-    Arguments:
-    theta1: El theta actual en el espiral
-    b: Constante del espiral (separacion / 2pi)
-    distance: Distancia a recorrer desde theta1 a theta2 sobre el espiral\n
-    Returns:
-    theta2: el theta2 obtenido al recorrer la distancia desde el theta1
-    '''
+    formula de la distancia es F(theta2) - F(theta1) = distancia
+    
+    Argumentos de entrada:
+        theta1 (flotante): El theta actual en el espiral
+        b (flotante): Constante del espiral (separacion / 2pi)
+        distance (flotante): Distancia a recorrer desde theta1 a theta2 sobre el espiral\n
+    Salida:
+        Flotante: el theta2 obtenido al recorrer la distancia desde el theta1
+    """
     theta2 = theta1
     change = 0.1
+
     # Margen de error al estimar el theta
     lower, higher = distance - 0.05, distance + 0.05
     integral1 = integral(theta1, b)
@@ -100,14 +118,14 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
     # Representa la mejor distancia conseguida sin pasarse del valor maximo del margen
     distance1 = 0
 
-    #! Fijarse si este if esta al pedo, tal vez distance1 tambien
+    # Fijarse si este if esta al pedo, tal vez distance1 tambien
     if higher > integral(theta2 + change, b) - integral1 > lower:
         return theta2 + change
 
     # Corre mientras el valor de theta2 no este en el margen de error para la distancia
     while not (higher > distance1 > lower):
         distance2 = integral(theta2 + change, b) - integral1
-        #*print(f'distance1: {distance1}, distance2: {distance2}, theta2:{theta2}, change:{change}')
+
 
         if distance2 < lower or higher > distance2 > lower:
             distance1 = distance2
@@ -118,13 +136,15 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
     return theta2
 
 def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
-    '''
+    """
     Calcula la diferencia de theta1 y theta2 para recorrer una
-    distancia por el espiral y se lo aplica a todos los escaladores\n
-    Arguments:
-    hikers_thetas: theta actual de cada escalador {'nombre1': float, ...}
-    b: constante de espiral (separacion / 2pi)
-    '''
+    distancia por el espiral y se lo aplica a todos los escaladores.
+
+    Argumentos de entrada:
+        hikers_thetas (diccionario): Theta actual de cada escalador {'nombre1': float, ...}
+        b (flotante): Constante de espiral (separacion / 2pi)
+    """
+
     # Distancia a recorrer por el espiral desde el theta actual
     distance = 49.8
 
@@ -138,19 +158,23 @@ def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
         hikers_thetas[hiker_name] += delta_theta
 
 def check_hiker_in_summit(c: MountainClient) -> tuple|None:
-    '''
-    Chequea si hay un escalador (de cualquier equipo) en la cima, y si lo hay devuelve las coordenadas\n
-    Returns: (x, y) o None si nadie esta en la cima
-    '''
+    """
+    Verifica si hay un escalador (de cualquier equipo) en la cima. de ser cierto, devuelve las coordenadas.
+    Argumento de entrada:
+        c (MountainClient): Comunicaciones con el servidorl
+    Salida: 
+        Tupla: coordenadas (x,y) de el escalador que esta en la cima | None si aun nadie la alcanzo.
+    """
+    
     info = c.get_data()
-    for team in info.values():
+    for team in info.values(): # Se fija si algun escalador esta en la cima.
         for hiker_data in team.values():
             if hiker_data['cima']:
                 x = hiker_data['x']
                 y = hiker_data['y']
                 return (x, y)
 
-
+# Testeos
 def test_gets():
     def test_get_point():
         print(f'get_point(10, pi/2):  {get_point(10, math.pi/2)}')
@@ -164,13 +188,3 @@ def test_gets():
     test_get_point()
 
 
-"""if __name__ == '__main__':
-    names = ['Santi', 'Joaco', 'Gian', 'Pipe']
-    team_name = 'Los cracks'
-    c = MountainClient()
-
-    hikers = [Hiker(name, team_name, c) for name in names]
-    team = Team(team_name, hikers, c)
-    register(names, team.nombre)
-
-    spiral(team)"""
