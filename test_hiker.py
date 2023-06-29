@@ -11,9 +11,9 @@ from essential_functions import difference, magnitude
 c = MountainClient()
 
 class Graficador:
-    '''Objeto que hace graficas de posicion y altura
-    \ndata: {'nombre1': {'x': [], 'y': [], 'z': []}, ...}'''
-    #def __init__(self, hikers: list[Hiker]):
+    """
+    
+    """
     def __init__(self, data: dict[str, dict[str, list[float]]]):
         matplotlib.use('agg')
         #self.hikers = hikers
@@ -245,5 +245,5 @@ class Graficador:
         self.angulo += 2.5 # Grados de rotacion del grafico por iteracion.
   
         #plt.ion()
-        #plt.show(block=False)
-        #plt.pause(0.001)
+        #plt.show(block=False)          
+        #plt.pause(0.001)               
