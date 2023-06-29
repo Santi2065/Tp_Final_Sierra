@@ -2,12 +2,8 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 import time
-import os
 import threading
-import pyfiglet
-import matplotlib
 from copy import deepcopy
-from PIL import Image
 from test_hiker import Graficador
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
@@ -198,13 +194,6 @@ class Dashboard(customtkinter.CTk):
 
         self.pico_maximo = customtkinter.CTkLabel(self, text = "PICO MAXIMO: ", text_color = "#FFFFFF", font = ("Verdana", 16, "bold"), anchor = "center")
         self.pico_maximo.place(x = 220, y = 560, anchor = "w")
-        
-        #-----------------------------------------------------------------------------------------------------------------------------------------------
-        # G- Se crea y configura una barra deslizadora.
-        
-        self.barra_deslizadora = customtkinter.CTkSlider(self, from_ = 0, to = 255, orientation = "vertical", button_length = 20, button_color = "#FFFFFF", button_corner_radius = 1)
-        self.barra_deslizadora.place(x = 770, y = 200)
-        self.barra_deslizadora.set(50)
 
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         # H- Se agrega para cada borde del marco de la pestaña, una barra dinamica.
@@ -445,7 +434,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
     
     #----------------------------------------------------------------------------------------------------------------------------------------------------
     
-    def clear_canvas(canvas: FigureCanvasTkAgg):
+    def clear_canvas(self, canvas: FigureCanvasTkAgg):
         for item in canvas.get_tk_widget().find_all():
             canvas.get_tk_widget().delete(item)
     
@@ -463,9 +452,10 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
 
         # No modificar
         i = 0
-        max = -5000
-        lista_altura = []
-        lista_max = []
+        max = {k: 0 for k in self.team}
+        dicc_altura = {i:[] for i in self.team}
+        dicc_max = {j:[] for j in self.team}
+
         while not self.client.is_over():
             self.data = self.client.get_data()
             self.check_cima()
@@ -476,8 +466,15 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
             hiker_colors = (self.colors[self.colores_id[3]], self.colors[self.colores_id[2]],
                             self.colors[self.colores_id[1]], self.colors[self.colores_id[0]])
             
-            self.altura_promedio_str = ef.altura_promedio(self.data, lista_altura, self.actual_team)
-            self.altura_maxima_str = ef.altura_maxima(self.actual_team, self.data, lista_max)
+            
+            for team in self.team:
+                if team != self.actual_team:
+                    ef.altura_promedio(self.data, dicc_altura[team], team)
+                    ef.altura_maxima(team, self.data, dicc_max[team])
+                else:
+                    self.altura_promedio_str = ef.altura_promedio(self.data, dicc_altura[self.actual_team], self.actual_team)
+                    self.altura_maxima_str = ef.altura_maxima(self.actual_team, self.data, dicc_max[self.actual_team])
+            
             self.altura_promedio.configure(text = f"ALTURA PROMEDIO: {round(self.altura_promedio_str)}")
             self.pico_maximo.configure(text = f"PICO MAXIMO: {round(self.altura_maxima_str)}")
 

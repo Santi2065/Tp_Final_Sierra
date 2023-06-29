@@ -1,3 +1,4 @@
+from communication.client.client import MountainClient
 import math
 
 def difference(vector1: tuple|list, vector2: tuple|list) -> tuple:
@@ -109,3 +110,19 @@ def altura_promedio(diccionario : dict, lista_altura : list, equipo : str) -> fl
 
     return round(promedio,2) 
 
+def check_hiker_in_summit(c: MountainClient) -> tuple|None:
+    """
+    Verifica si hay un escalador (de cualquier equipo) en la cima. de ser cierto, devuelve las coordenadas.
+    Argumento de entrada:
+        c (MountainClient): Comunicaciones con el servidorl
+    Salida: 
+        Tupla: coordenadas (x,y) de el escalador que esta en la cima | None si aun nadie la alcanzo.
+    """
+    
+    info = c.get_data()
+    for team in info.values(): # Se fija si algun escalador esta en la cima.
+        for hiker_data in team.values():
+            if hiker_data['cima']:
+                x = hiker_data['x']
+                y = hiker_data['y']
+                return (x, y)

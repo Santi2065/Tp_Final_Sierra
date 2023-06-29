@@ -1,7 +1,7 @@
 from communication.client.client import MountainClient
 from teams import Team
 import math
-
+from essential_functions import check_hiker_in_summit
 
 
 def spiral(team: Team) -> None:
@@ -157,22 +157,6 @@ def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
     for hiker_name in hikers_thetas:
         hikers_thetas[hiker_name] += delta_theta
 
-def check_hiker_in_summit(c: MountainClient) -> tuple|None:
-    """
-    Verifica si hay un escalador (de cualquier equipo) en la cima. de ser cierto, devuelve las coordenadas.
-    Argumento de entrada:
-        c (MountainClient): Comunicaciones con el servidorl
-    Salida: 
-        Tupla: coordenadas (x,y) de el escalador que esta en la cima | None si aun nadie la alcanzo.
-    """
-    
-    info = c.get_data()
-    for team in info.values(): # Se fija si algun escalador esta en la cima.
-        for hiker_data in team.values():
-            if hiker_data['cima']:
-                x = hiker_data['x']
-                y = hiker_data['y']
-                return (x, y)
 
 # Testeos
 def test_gets():

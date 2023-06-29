@@ -2,8 +2,7 @@ from communication.client.client import MountainClient
 import essential_functions
 from HIKERS import Hiker
 import math, time
-from essential_functions import distance_between
-from estrategias.spiral import check_hiker_in_summit
+from essential_functions import distance_between, check_hiker_in_summit
 
 class Team(Hiker):
 
