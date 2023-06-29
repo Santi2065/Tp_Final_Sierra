@@ -6,6 +6,7 @@ from test_hiker import Graficador
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
 import essential_functions as ef
+import argparse
 
 # Definimos la apariencia oscura.
 customtkinter.set_appearance_mode("Dark") 
@@ -552,7 +553,15 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    client = MountainClient()
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", help = "ingrese el ip con el puerto ej:192.168.1.1:8080", type = str)
+    args = parser.parse_args()
+    if args.ip:
+        ip,puerto = args.ip.split(":")
+        client = MountainClient(ip,int(puerto))
+    else:
+        client = MountainClient()
 
     while client.is_registering_teams():
         time.sleep(0.1)

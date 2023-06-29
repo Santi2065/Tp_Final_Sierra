@@ -1,13 +1,20 @@
 from communication.client.client import MountainClient
 from HIKERS import Hiker
 from teams import Team
+import argparse
 import time
 from estrategias.empinado import empinado as estrategia
 
 def main():
 
-    c = MountainClient()
-    #c = MountainClient("10.42.0.1", 8888)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", help = "ingrese el ip con el puerto ej:192.168.1.1:8080", type = str)
+    args = parser.parse_args()
+    if args.ip:
+        ip,puerto = args.ip.split(":")
+        c = MountainClient(ip,int(puerto))
+    else:
+        c = MountainClient()
 
     team_name = 'Los Pros'
     names = ['Edgar', 'Roberto', 'Pepe', 'Pedro']
