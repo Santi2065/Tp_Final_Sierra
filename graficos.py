@@ -1,5 +1,4 @@
 from communication.client.client import MountainClient
-import random, math, time
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib

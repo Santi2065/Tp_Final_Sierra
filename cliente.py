@@ -42,7 +42,7 @@ def main():
         time.sleep(0.01)
         continue
 
-    print('Haciendo estrategia              ')
+    print('Haciendo estrategia')
     estrategia(team)
 
     
