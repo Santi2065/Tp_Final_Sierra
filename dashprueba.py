@@ -168,8 +168,8 @@ class Dashboard(customtkinter.CTk):
         # D- Se crea el primer grafico que se ve, y se configura el tamaño de cada uno de ellos.(2D, 3D, Heat Map)
         
         self.estado_grafico = "2D"
-        hiker_colors = (self.colors[0],self.colors[1],self.colors[2],self.colors[3])
-        self.graph.graf_2d(self.actual_team, hiker_colors)
+        self.hiker_colors = (self.colors[0],self.colors[1],self.colors[2],self.colors[3])
+        self.graph.graf_2d(self.actual_team, self.hiker_colors)
         self.graph.fig1.set_size_inches(4.05,3)
         self.graph.fig2.set_size_inches(4.05,3)
         self.graph.fig3.set_size_inches(4.05,3)
@@ -447,7 +447,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
 
             self.flag.configure(text = f"FLAG: {self.status}")
 
-            hiker_colors = (self.colors[self.colores_id[3]], self.colors[self.colores_id[2]],
+            self.hiker_colors = (self.colors[self.colores_id[3]], self.colors[self.colores_id[2]],
                             self.colors[self.colores_id[1]], self.colors[self.colores_id[0]])
             
             
@@ -467,7 +467,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                 if i != 0:
                     cuadro_graf = FigureCanvasTkAgg(self.graph.fig1, master = self)
                     i = 0
-                self.graph.graf_2d(self.actual_team, hiker_colors)
+                self.graph.graf_2d(self.actual_team, self.hiker_colors)
                 cuadro_graf.draw()
                 cuadro_graf.get_tk_widget().place(x=201, y=150)
 
@@ -515,7 +515,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                 if i != 0:
                     cuadro_graf = FigureCanvasTkAgg(self.graph.fig1, master = self)
                     i = 0
-                self.graph.graf_2d(self.actual_team, hiker_colors)
+                self.graph.graf_2d(self.actual_team, self.hiker_colors)
                 cuadro_graf.draw()
                 cuadro_graf.get_tk_widget().place(x=201, y=150)
 
