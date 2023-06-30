@@ -449,7 +449,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
 
         # No modificar
         i = 0
-        max = {k: 0 for k in self.team}
         dicc_altura = {i:[] for i in self.team}
         dicc_max = {j:[] for j in self.team}
 
