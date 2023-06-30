@@ -1,7 +1,6 @@
-from communication.client.client import MountainClient
-from teams import Team
+from tpf_Montana_teams import Team
 import math
-from essential_functions import check_hiker_in_summit
+from tpf_Montana_essential_functions import check_hiker_in_summit
 
 
 def spiral(team: Team) -> None:
@@ -165,5 +164,3 @@ def test_gets():
         print(f'get_point(10, -pi): {get_point(10, -math.pi)}')
         print(f'get_point(10, 0): {get_point(10, 0)}')
     test_get_point()
-
-

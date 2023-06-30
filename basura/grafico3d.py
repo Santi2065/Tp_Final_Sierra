@@ -6,8 +6,8 @@ import matplotlib
 import numpy as np
 import pandas as pd
 from copy import deepcopy
-from essential_functions import difference, magnitude
-from graficos import Hiker
+from tpf_Montana_essential_functions import difference, magnitude
+from tpf_Montana_graficos import Hiker
 import matplotlib.animation as animation
 
 

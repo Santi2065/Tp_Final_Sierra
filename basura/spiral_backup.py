@@ -1,8 +1,8 @@
 from communication.client.client import MountainClient
-from hikers import Hiker
-from teams import Team
-from graficos import Grafico_2d_equipo
-from essential_functions import magnitude, dot_product, difference, distance_between
+from tpf_Montana_hikers import Hiker
+from tpf_Montana_teams import Team
+from tpf_Montana_graficos import Grafico_2d_equipo
+from tpf_Montana_essential_functions import magnitude, dot_product, difference, distance_between
 import matplotlib.pyplot as plt
 import time
 import math

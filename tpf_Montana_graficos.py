@@ -1,11 +1,10 @@
 from communication.client.client import MountainClient
-import random, math, time
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib
 import numpy as np
 from copy import deepcopy
-from essential_functions import difference, magnitude
+from tpf_Montana_essential_functions import difference, magnitude
 
 #c = MountainClient("10.42.0.1", 8888)
 c = MountainClient()

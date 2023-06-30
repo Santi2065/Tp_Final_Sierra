@@ -1,4 +1,4 @@
-from hikers import Hiker
+from tpf_Montana_hikers import Hiker
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 

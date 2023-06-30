@@ -1,9 +1,9 @@
 from communication.client.client import MountainClient
-from hikers import Hiker
-from teams import Team
+from tpf_Montana_hikers import Hiker
+from tpf_Montana_teams import Team
 import argparse
 import time
-from estrategias.empinado import empinado as estrategia
+from tpf_Montana_spiral import spiral as estrategia
 
 def main():
 
@@ -34,7 +34,6 @@ def main():
     print('Registrando equipo...', end='\r')
 
     c.add_team(team.nombre, names)
-    c.finish_registration()
 
     print('Esperando a comenzar...', end='\r')
     while c.is_registering_teams():

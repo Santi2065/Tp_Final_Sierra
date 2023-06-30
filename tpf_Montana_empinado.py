@@ -1,5 +1,5 @@
-from teams import Team
-from hikers import Hiker
+from tpf_Montana_teams import Team
+from tpf_Montana_hikers import Hiker
 import math
 
 def empinado(team:Team):
@@ -70,7 +70,7 @@ def empinado(team:Team):
 
         team.move_all() # Todos avanzan.
 
-    team.all_go_to_point(flag) # Todos van hacia la bandera.
+    team.all_go_to_point(flag,True) # Todos van hacia la bandera.
     # Hasta que no termine, caminan hasta el pico
     while not team.comms.is_over():
         info = team.comms.get_data()
