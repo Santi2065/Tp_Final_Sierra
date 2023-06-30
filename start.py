@@ -11,9 +11,9 @@ def main():
 
     if args.ip:
         ip, puerto = args.ip.split(":")
-        files = [f'dashboard.py --ip {ip}:{puerto}', f'cliente.py --ip {ip}:{puerto}', f'cliente2.py --ip {ip}:{puerto}']
+        files = [f'tpf_Montana_dashboard.py --ip {ip}:{puerto}', f'tpf_Montana_cliente.py --ip {ip}:{puerto}', f'tpf_Montana_cliente.py --ip {ip}:{puerto}']
     else:
-        files = ['start_server.py','dashboard.py', 'cliente.py','cliente2.py']
+        files = ['start_server.py','tpf_Montana_dashboard.py', 'tpf_Montana_cliente.py','tpf_Montana_cliente2.py']
 
     for file in files:
         time.sleep(2)
