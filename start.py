@@ -13,7 +13,7 @@ def main():
         ip, puerto = args.ip.split(":")
         files = [f'dashboard.py --ip {ip}:{puerto}', f'cliente.py --ip {ip}:{puerto}', f'client_official2.py --ip {ip}:{puerto}']
     else:
-        files = ['start_server.py','dashboard.py', 'cliente.py', 'client_official2.py']
+        files = ['start_server.py','dashboard.py', 'cliente.py']
 
     for file in files:
         time.sleep(2)
