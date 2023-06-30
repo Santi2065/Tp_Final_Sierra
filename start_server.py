@@ -11,8 +11,4 @@ import time
 
 #s = MountainServer(EasyMountain(50, 23000), (-10000, 14000), 50)
 s = MountainServer(AckleyMountain(50, 23000), (14000, 14000), 50)
-c = MountainClient()
 s.start()
-
-time.sleep(20)
-c.finish_registration()
