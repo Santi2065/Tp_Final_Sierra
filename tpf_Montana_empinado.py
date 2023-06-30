@@ -1,5 +1,5 @@
-from teams import Team
-from hikers import Hiker
+from tpf_Montana_teams import Team
+from tpf_Montana_hikers import Hiker
 import math
 
 def empinado(team:Team):

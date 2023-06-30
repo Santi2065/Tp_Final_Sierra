@@ -1,7 +1,7 @@
 from communication.client.client import MountainClient
-from hikers import Hiker
+from tpf_Montana_hikers import Hiker
 import math, time
-from essential_functions import distance_between, check_hiker_in_summit
+from tpf_Montana_essential_functions import distance_between, check_hiker_in_summit
 
 class Team(Hiker):
 

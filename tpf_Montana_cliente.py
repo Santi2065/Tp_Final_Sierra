@@ -1,9 +1,9 @@
 from communication.client.client import MountainClient
-from hikers import Hiker
-from teams import Team
+from tpf_Montana_hikers import Hiker
+from tpf_Montana_teams import Team
 import argparse
 import time
-from empinado import empinado as estrategia
+from tpf_Montana_empinado import empinado as estrategia
 
 def main():
 

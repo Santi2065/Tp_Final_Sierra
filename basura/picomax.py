@@ -1,6 +1,6 @@
 
 from communication.client.client import MountainClient
-from graficos import Hiker
+from tpf_Montana_graficos import Hiker
 import time
 
 c = MountainClient()

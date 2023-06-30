@@ -2,10 +2,10 @@ import customtkinter
 import time
 import threading
 from copy import deepcopy
-from graficos import Graficador
+from tpf_Montana_graficos import Graficador
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
-import essential_functions as ef
+import tpf_Montana_essential_functions as ef
 import argparse
 
 # Definimos la apariencia oscura.

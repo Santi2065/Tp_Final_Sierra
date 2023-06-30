@@ -1,6 +1,6 @@
 from communication.client.client import MountainClient
 import random
-from essential_functions import magnitude, distance_between, direction
+from tpf_Montana_essential_functions import magnitude, distance_between, direction
 VELOCIDAD_MAX = 50
 
 class Hiker:

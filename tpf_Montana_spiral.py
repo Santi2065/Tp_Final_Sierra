@@ -1,6 +1,6 @@
-from teams import Team
+from tpf_Montana_teams import Team
 import math
-from essential_functions import check_hiker_in_summit
+from tpf_Montana_essential_functions import check_hiker_in_summit
 
 
 def spiral(team: Team) -> None:
