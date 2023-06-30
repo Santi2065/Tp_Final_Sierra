@@ -28,7 +28,7 @@ class AlturaMaxima: # Calculo el pico maximo alcanzado por el equipo ingresado
 
 
 c.add_team('Los cracks', ['Gian','Gian2','Gian3','Gian4'])
-c.add_team('puto', ['esc1','esc2','esc3','esc4'])
+c.add_team('jamon', ['esc1','esc2','esc3','esc4'])
 c.finish_registration()
 
 directives = {'Gian':{'direction':0,'speed':50}, 'Gian2':{'direction':10,'speed':50},'Gian3':{'direction':5,'speed':50},'Gian4':{'direction':3,'speed':50}}
@@ -57,7 +57,7 @@ while not c.is_over():
     pico.calcular()
 
     c.next_iteration('Los cracks', {h.nombre: h.ordenes for h in hikers})
-    c.next_iteration('puto',{i.nombre: i.ordenes for i in escala})
+    c.next_iteration('jamon',{i.nombre: i.ordenes for i in escala})
     if hikers[0].almost_out() is True:
         hikers[0].random()
     if hikers[1].almost_out() is True:
