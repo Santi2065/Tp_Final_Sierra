@@ -1,6 +1,5 @@
 from communication.client.client import MountainClient
 import random
-import math
 from essential_functions import magnitude, distance_between, direction
 VELOCIDAD_MAX = 50
 
