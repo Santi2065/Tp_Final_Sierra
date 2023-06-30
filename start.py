@@ -18,7 +18,7 @@ def main():
         if platform.system() == 'Windows':
             os.system(f'start cmd /k python {file}')
         elif platform.system() == 'Darwin':
-            os.system(f'open -a Terminal python3 {file}')
+            os.system(f"osascript -e 'tell application \"Terminal\" to do script \"python3 {file}\"'")
         else:
             os.system(f'gnome-terminal -- python3 {file}')
 
