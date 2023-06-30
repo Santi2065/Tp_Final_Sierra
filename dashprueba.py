@@ -326,25 +326,20 @@ class Dashboard(customtkinter.CTk):
     
     #----------------------------------------------------------------------------------------------------------------------------------------------------
 
-    def generar_ascii(self)->None:
+    def generar_ascii(self)->list:
         """
         Formatea y prepara la animacion ascii para poder dezplegarla en la interfaz.
         """
         b = "" # "\033[31m"
         e = "" # "\033[0m"
+        
         animacion = [
 f' __{e}\n ║║{b}▄▄██▄▄    ▄▄██ {e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}▀▀    ▀▀██▀▀  {e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 f' __{e}\n ║║{b}    ▄▄██▄▄    ▄▄{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}██▀▀    ▀▀██▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 f' __{e}\n ║║{b}▄▄    ▄▄██▄▄   {e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}▀▀██▀▀    ▀▀██{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
 f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}████████████{e}\n ║║{b}    ▀▀██▀▀    ▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n'
 ]
-        animacion2 = [
-f' __{e}\n ║║{b}▄▄██▄▄    ▄▄██▄▄{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}▀▀  ▀▀████▀▀  ▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
-f' __{e}\n ║║{b}  ▄▄██▄▄    ▄▄██{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}██▀▀  ▀▀████▀▀  {e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
-f' __{e}\n ║║{b}    ▄▄██▄▄    ▄▄{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████▀▀  ▀▀████▀▀{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
-f' __{e}\n ║║{b}▄▄    ▄▄██▄▄    {e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}  ▀▀██▀▀  ▀▀████{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n',
-f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}████████████████{e}\n ║║{b}▀▀  ▀▀██▀▀  ▀▀██{e}\n ║║\n ║║\n ║║\n ║║\n ║║\n####\n'
-]
+        
         return animacion
     
     #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -437,13 +432,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
         """
         Actualiza al instante los datos suministrados en la interfaz.
         """
-        grafico_heat = FigureCanvasTkAgg(self.graph.fig2, master = self)
-        grafico_2d = FigureCanvasTkAgg(self.graph.fig1, master = self)
-        grafico_3d = FigureCanvasTkAgg(self.graph.fig3, master = self)
-
-        grafico_heat_2 = FigureCanvasTkAgg(self.graph.fig2, master = self)
-        grafico_2d_2 = FigureCanvasTkAgg(self.graph.fig1, master = self)
-        grafico_3d_2 = FigureCanvasTkAgg(self.graph.fig3, master = self)
 
         cuadro_graf = FigureCanvasTkAgg(self.graph.fig1, master = self)
 
