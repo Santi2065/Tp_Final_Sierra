@@ -4,14 +4,16 @@ import time
 import argparse
 
 def main():
+    # Acepta direccion de ip, si no se ingresa ninguna se intenta conectar al servidor local
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", help = "ingrese el ip con el puerto ej:192.168.1.1:8080", type = str)
+    parser.add_argument("--ip", help = "Ingrese el ip con el puerto ej: 192.168.1.1:8080\nPara acceder al servidor local, no ingrese ningun argumento", type = str)
     args = parser.parse_args()
+
     if args.ip:
-        ip,puerto = args.ip.split(":")   
-        files = ['start_server.py',f'dashprueba.py --ip {ip}:{puerto}', f'client_official.py --ip {ip}:{puerto}', f'client_official2.py --ip {ip}:{puerto}']
+        ip, puerto = args.ip.split(":")
+        files = [f'dashprueba.py --ip {ip}:{puerto}', f'cliente.py --ip {ip}:{puerto}', f'client_official2.py --ip {ip}:{puerto}']
     else:
-        files = ['start_server.py',f'dashprueba.py', f'client_official.py', f'client_official2.py']
+        files = ['dashprueba.py', 'cliente.py', 'client_official2.py']
 
     for file in files:
         time.sleep(2)

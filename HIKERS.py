@@ -1,7 +1,7 @@
 from communication.client.client import MountainClient
 import random
 import math
-from essential_functions import difference, magnitude, distance_between, direction
+from essential_functions import magnitude, distance_between, direction
 VELOCIDAD_MAX = 50
 
 class Hiker:

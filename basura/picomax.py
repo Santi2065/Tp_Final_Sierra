@@ -1,6 +1,6 @@
 
 from communication.client.client import MountainClient
-from test_hiker import Hiker
+from graficos import Hiker
 import time
 
 c = MountainClient()

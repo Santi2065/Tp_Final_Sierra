@@ -11,7 +11,7 @@ import matplotlib.image as mpimg
 from PIL import ImageTk, Image
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
-from test_hiker import Hiker
+from graficos import Hiker
 
 # Esto lo que hace es darnos la herramienta para poder pasar de light a dark.
 customtkinter.set_appearance_mode("Dark") 

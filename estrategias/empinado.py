@@ -1,5 +1,5 @@
 from teams import Team
-from HIKERS import Hiker
+from hikers import Hiker
 import math
 
 def empinado(team:Team):
@@ -65,17 +65,17 @@ def empinado(team:Team):
                 hiker.cambio_estado('quieto')
 
                 flag = (info[team.nombre][hiker.nombre]['x'],info[team.nombre][hiker.nombre]['y'])
-                # guardo la ubicacion (x,y,z) de la bandera,
+                # Guardo la ubicacion (x,y,z) de la bandera,
                 searching = False
 
         team.move_all() # Todos avanzan.
 
     team.all_go_to_point(flag) # Todos van hacia la bandera.
-    #hasta que no termine, caminan hasta el pico
+    # Hasta que no termine, caminan hasta el pico
     while not team.comms.is_over():
         info = team.comms.get_data()
         for hiker in team.hikers:
-            hiker.change_direction(pendiente_max(hiker,info)) # cambio la direccion del escalador a la pendiente maxima
+            hiker.change_direction(pendiente_max(hiker, info)) # cambio la direccion del escalador a la pendiente maxima
         team.move_all()
 
 

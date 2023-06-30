@@ -13,7 +13,7 @@ def spiral(team: Team) -> None:
     c = team.comms # Accede a las comunicaciones con el servidor.
     data = c.get_data() # Contiene los datos de todos los jugadores.
 
-    names = list(data[team.nombre].values())  
+    names = list(data[team.nombre].values())
     hikers = team.hikers
 
     # Se dirige al origen
@@ -39,21 +39,17 @@ def spiral(team: Team) -> None:
             team.move_all()
             continue
 
-        previous_hikers_thetas = hikers_thetas.copy()
         determine_next_thetas(hikers_thetas, b)
 
-  
+        # Usando el nuevo theta, calcula el proximo punto
         for hiker, offset in zip(hikers, offsets):
-            current_theta = previous_hikers_thetas[hiker.nombre]
-
             next_theta = hikers_thetas[hiker.nombre]
+
             # Formula del espiral es r = a + b * theta, a = 0
-            next_radius = b * (next_theta - offset)
+            next_radius = b * (next_theta - offset) 
             next_loc = get_point(next_radius, next_theta)
 
             hiker.go_to(next_loc)
-
-            
 
 
         team.move_all_spiral()
@@ -61,7 +57,7 @@ def spiral(team: Team) -> None:
         # Se fija si hay un escalador (de cualquier equipo) que llego a la cima
         summit_loc = check_hiker_in_summit(c)
         if summit_loc:
-            team.all_go_to_point(summit_loc)
+            team.all_go_to_point(summit_loc, True)
             print('Todos estamos en la cima :)')
             all_in_summit = True
 
@@ -137,8 +133,8 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
 
 def determine_next_thetas(hikers_thetas: dict[str, float], b: float) -> None:
     """
-    Calcula la diferencia de theta1 y theta2 para recorrer una
-    distancia por el espiral y se lo aplica a todos los escaladores.
+    Calcula la diferencia de theta1 y theta2 para recorrer una distancia por
+    el espiral y se lo aplica a todos los escaladores, modifica el diccionario.
 
     Argumentos de entrada:
         hikers_thetas (diccionario): Theta actual de cada escalador {'nombre1': float, ...}

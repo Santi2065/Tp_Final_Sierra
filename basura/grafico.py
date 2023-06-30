@@ -1,5 +1,5 @@
 from communication.client.client import MountainClient
-from test_hiker import Hiker
+from graficos import Hiker
 import matplotlib.pyplot as plt
 import time
 import matplotlib.image as mpimg

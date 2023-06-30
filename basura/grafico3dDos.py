@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from copy import deepcopy
 from essential_functions import difference, magnitude
-from test_hiker import Hiker
+from graficos import Hiker
 import matplotlib.animation as animation
 
 def update_coords(coords: dict[str, dict[str, list[float]]], c: MountainClient) -> None:

@@ -1,6 +1,5 @@
 from communication.client.client import MountainClient
-import essential_functions
-from HIKERS import Hiker
+from hikers import Hiker
 import math, time
 from essential_functions import distance_between, check_hiker_in_summit
 
@@ -42,8 +41,8 @@ class Team(Hiker):
         Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada.
         """
 
-        directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers} # almacena la direccion y velocidad de cada escalador.
-        self.comms.next_iteration(self.nombre, directives) # manda al servidor las nuevas ordenes de los escaladores
+        directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers} # Almacena la direccion y velocidad de cada escalador.
+        self.comms.next_iteration(self.nombre, directives) # Manda al servidor las nuevas ordenes de los escaladores
 
         for hiker in self.hikers: # previene que el hiker no se vaya del mapa
             if hiker.almost_out(): 
@@ -53,15 +52,15 @@ class Team(Hiker):
         """
         Dirige a los escaladores hacia la direccion ordenada por la estrategia implementada solo si esta fue actualizada.
         """
-        prev_data = self.comms.get_data() # diccionario con la informacion de todos los jugadores del server previo a la iteracion
+        prev_data = self.comms.get_data() # Diccionario con la informacion de todos los jugadores del server previo a la iteracion
 
-        directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers} # ordenes de los jugadores
-        self.comms.next_iteration(self.nombre, directives) # manda las nuevas ordenes al servidor
+        directives = {hiker.nombre: hiker.ordenes for hiker in self.hikers} # Ordenes de los jugadores
+        self.comms.next_iteration(self.nombre, directives) # Manda las nuevas ordenes al servidor
 
-        while prev_data == self.comms.get_data(): # mientras no se haya actualizado las ordenes, espera.
+        while prev_data == self.comms.get_data(): # Mientras no se haya actualizado las ordenes, espera.
             time.sleep(0.01)
 
-        for hiker in self.hikers: # previene que el hiker no se vaya del mapa.
+        for hiker in self.hikers: # Previene que el hiker no se vaya del mapa.
             if hiker.almost_out():
                 hiker.random()
 
@@ -108,22 +107,22 @@ class Team(Hiker):
         """
 
         self.face_out()
-        hikers_buscando = self.hikers # lista con todos los hikers
+        hikers_buscando = self.hikers # Lista con todos los hikers
         for i in range(pasos):
             self.move_all()
             for hiker in hikers_buscando:
-                if hiker.in_summit():  # mientras que los escaladores se mueven, verifica si pasan por la cima.
+                if hiker.in_summit():  # Mientras que los escaladores se mueven, verifica si pasan por la cima.
 
                     hiker.stay_still()
-                    hiker.cambio_estado('quieto') # llegue a la cima, me quedo aca.
+                    hiker.cambio_estado('quieto') # Llegue a la cima, me quedo aca.
 
-                    hikers_buscando.remove(hiker) # el hiker que llego, no esta buscando mas.
-                    info = self.comms.get_data() # busco las coordenadas de la cima.
-                    flag = (info[self.nombre][hiker.nombre]['x'],info[self.nombre][hiker.nombre]['y']) # guarda (x,y) de la cima.
+                    hikers_buscando.remove(hiker) # El hiker que llego, no esta buscando mas.
+                    info = self.comms.get_data() # Busco las coordenadas de la cima.
+                    flag = (info[self.nombre][hiker.nombre]['x'],info[self.nombre][hiker.nombre]['y']) # Guarda (x,y) de la cima.
 
-                    self.all_go_to_point(flag) # dirige al resto de escaladores hacia la cima.
+                    self.all_go_to_point(flag, True) # Dirige al resto de escaladores hacia la cima.
                     break
-                #si sale del loop anterior con un break, hace otro break si no continue
+                # Si sale del loop anterior con un break, hace otro break si no continue
             else:
                 continue
             break

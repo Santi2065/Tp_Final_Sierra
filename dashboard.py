@@ -2,7 +2,7 @@ import customtkinter
 import time
 import threading
 from copy import deepcopy
-from test_hiker import Graficador
+from graficos import Graficador
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from communication.client.client import MountainClient
 import essential_functions as ef
@@ -541,18 +541,26 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", help = "ingrese el ip con el puerto ej:192.168.1.1:8080", type = str)
+    parser.add_argument("--ip", help = "Ingrese el ip con el puerto ej: 192.168.1.1:8080", type = str)
     args = parser.parse_args()
     if args.ip:
-        ip,puerto = args.ip.split(":")
-        client = MountainClient(ip,int(puerto))
+        ip, puerto = args.ip.split(":")
+        try:
+            client = MountainClient(ip, int(puerto))
+        except:
+            print("No se pudo establecer conexion con el servidor, intente de nuevo")
+            exit()
     else:
-        client = MountainClient()
+        try:
+            client = MountainClient()
+        except:
+            print("No se pudo establecer una conexion con el servidor local, intente de nuevo")
+            exit()
 
     while client.is_registering_teams():
         time.sleep(0.1)
 
-    print('Iniciando dashboard...')
+    print("Iniciando dashboard...")
     mountain_dash = Dashboard(client)
     mountain_dash.comienzo_animacion()
     mountain_dash.start()
