@@ -552,8 +552,7 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄  {e}\n ║║{b}███
             
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-if __name__ == "__main__":
-    
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", help = "ingrese el ip con el puerto ej:192.168.1.1:8080", type = str)
     args = parser.parse_args()
@@ -567,8 +566,10 @@ if __name__ == "__main__":
         time.sleep(0.1)
 
     print('Iniciando dashboard...')
-    lista_max = []
     mountain_dash = Dashboard(client)
     mountain_dash.comienzo_animacion()
     mountain_dash.start()
-    diccionario = client.get_data()
+
+
+if __name__ == "__main__":
+    main()
