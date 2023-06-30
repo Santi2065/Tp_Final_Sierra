@@ -18,7 +18,7 @@ def main():
         if platform.system() == 'Windows':
             os.system(f'start cmd /k python {file}')
         elif platform.system() == 'Darwin':
-            script_directory = '/ruta/al/directorio/donde/se/encuentra/el/script'
+            script_directory = 'users/gianlucamusmarra/Dekstop/primer semestre 2023/Pensamiento computacional/Python/Tp_final_Sierra/'
             os.system(f"osascript -e 'tell application \"Terminal\" to do script \"cd {script_directory} && python3 {file}\"'")
         else:
             os.system(f'gnome-terminal -- python3 {file}')
