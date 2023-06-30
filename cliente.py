@@ -3,7 +3,7 @@ from hikers import Hiker
 from teams import Team
 import argparse
 import time
-from estrategias.empinado import empinado as estrategia
+from empinado import empinado as estrategia
 
 def main():
 

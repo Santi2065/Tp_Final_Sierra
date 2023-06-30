@@ -3,7 +3,7 @@ from hikers import Hiker
 from teams import Team
 import argparse
 import time
-from estrategias.spiral import spiral as estrategia
+from spiral import spiral as estrategia
 
 def main():
 
