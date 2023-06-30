@@ -15,12 +15,14 @@ def main():
         ip, puerto = args.ip.split(":")
         try:
             c = MountainClient(ip, int(puerto))
+            c.get_data()
         except:
             print("No se pudo establecer conexion con el servidor, intente de nuevo")
             exit()
     else:
         try:
             c = MountainClient()
+            c.get_data()
         except:
             print("No se pudo establecer una conexion con el servidor local, intente de nuevo")
             exit()
@@ -34,7 +36,7 @@ def main():
     print('Registrando equipo...', end='\r')
 
     c.add_team(team.nombre, names)
-    c.finish_registration()
+    #c.finish_registration()
 
     print('Esperando a comenzar...', end='\r')
     while c.is_registering_teams():

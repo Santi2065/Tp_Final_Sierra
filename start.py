@@ -11,9 +11,9 @@ def main():
 
     if args.ip:
         ip, puerto = args.ip.split(":")
-        files = [f'dashprueba.py --ip {ip}:{puerto}', f'cliente.py --ip {ip}:{puerto}', f'client_official2.py --ip {ip}:{puerto}']
+        files = [f'dashboard.py --ip {ip}:{puerto}', f'cliente.py --ip {ip}:{puerto}', f'client_official2.py --ip {ip}:{puerto}']
     else:
-        files = ['dashprueba.py', 'cliente.py', 'client_official2.py']
+        files = ['dashboard.py', 'cliente.py', 'client_official2.py']
 
     for file in files:
         time.sleep(2)

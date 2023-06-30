@@ -68,7 +68,7 @@ class Graficador:
             colores (tupla): Los colores que se usaran para graficar.
         """
 
-        
+        # Opcional - cambia la paleta de colores para los escaladores.
         colors1 = ('#e53a3a', '#ff5454', '#fdbd2e', '#a1d832', '#87be19') # rojo - amarillo - verde
         colors2 = ('#ff2500', '#ffa500', '#2986cc', '#b1ea78', '#7ddc1f') # rojo - azul - verde
         colors3 = ('#4deeea', '#74ee15', '#ffe700', '#f000ff', '#001eff') # neon
@@ -77,15 +77,14 @@ class Graficador:
         
 
         data = deepcopy(self.data[nombre_equipo]) # Previene errores de indice. 
-        ax = self.ax1 # Para ahorrar gramatica.
-        ax.cla() # Para una graficacion rapida, borra lo viejo y grafica todo de nuevo.
+        ax = self.ax1
+        ax.cla() # Borra lo viejo y grafica todo de nuevo.
 
         
         # Para buscar los (x,y) maximos
         x_max = float('-inf') 
         y_max = float('-inf')
 
-    
 
         for name, coords, colr in zip(data, data.values(), colores): # Grafica las coordenadas con su respectivo color.
             x = np.array(coords['x'])
@@ -99,24 +98,19 @@ class Graficador:
             num_points = len(x)
             marker_size = 10 / np.sqrt(num_points)
 
-            
-
             # Grafica los nuevos puntos.
             ax.scatter(x, y, s=marker_size, color=colr)
-
-           
 
             # Pone el nombre del escalador en el ultimo punto que estuvo.
             last_coord = (coords['x'][-1], coords['y'][-1])
             ax.text(last_coord[0], last_coord[1], name, fontsize=9)
 
-       
 
         # Encuentra el maximo de todos los valores.
         limit = max(x_max, y_max)
 
         # Ajusta la escala a medida que crece el rango.
-        limit += limit/10
+        limit *= 1.1
         ax.set_xlim(-limit, limit) 
         ax.set_ylim(-limit, limit)
 
@@ -135,6 +129,7 @@ class Graficador:
 
         z_max = float('-inf')
         z_min = float('inf')
+
         # Crea listas con todos los puntos conocidos
         lx, ly, lz = [], [], [] # contiene todos los (x,y,z): lista x, lista y, lista z.
         for team_name in data:
@@ -153,16 +148,14 @@ class Graficador:
         if len(set(lx)) < 3:
             return
 
-        
-        tpc = ax.tripcolor(lx, ly, lz, shading='flat', cmap='hot', clim=[z_min, z_max]) # grafica
 
-    
-        # Estetica
+        ax.tripcolor(lx, ly, lz, shading='flat', cmap='hot', clim=[z_min, z_max]) # Grafica
+
+
+        # Rotulos
         ax.set_title('Heat map')
         ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_aspect('equal')
-        
+        ax.set_ylabel('Y')        
     
     def graf_3d(self, nombre_equipo: str) -> None:
         """
@@ -173,51 +166,47 @@ class Graficador:
         """
 
         fig, ax = self.fig3, self.ax3
-      
 
-       
+
         side = ((4.05 - 3) / 2) / 4.05
-        
+
         fig.subplots_adjust(top=1.03, bottom=0.03, left=side, right=(1-side))
 
         ax.cla()
 
-        diccionario = deepcopy(self.data)
-        
+        info = deepcopy(self.data)
+
 
         coordenadas_x = [] # todas las x de los jugadores
         coordenadas_y = [] # todas las y de los jugadores        hay relacion elemento-jugador
         coordenadas_z = [] # todas las z de los jugadores
 
-        for nombre_escalador in diccionario[nombre_equipo]:
-            x = diccionario[nombre_equipo][nombre_escalador]['x']
-            y = diccionario[nombre_equipo][nombre_escalador]['y']
-            z = diccionario[nombre_equipo][nombre_escalador]['z']
+        for nombre_escalador in info[nombre_equipo]:
+            x = info[nombre_equipo][nombre_escalador]['x']
+            y = info[nombre_equipo][nombre_escalador]['y']
+            z = info[nombre_equipo][nombre_escalador]['z']
             
             coordenadas_x += x
             coordenadas_y += y
             coordenadas_z += z
 
-            ultima_coord = [diccionario[nombre_equipo][nombre_escalador]['x'][-1],
-                            diccionario[nombre_equipo][nombre_escalador]['y'][-1],
-                            diccionario[nombre_equipo][nombre_escalador]['z'][-1]]
+            ultima_coord = [info[nombre_equipo][nombre_escalador]['x'][-1],
+                            info[nombre_equipo][nombre_escalador]['y'][-1],
+                            info[nombre_equipo][nombre_escalador]['z'][-1]]
+
             ax.text(ultima_coord[0], ultima_coord[1], ultima_coord[2], nombre_escalador, fontsize=8)
            
-        sc = ax.scatter(coordenadas_x, coordenadas_y, coordenadas_z, c=coordenadas_z, cmap='hot') # Grafica
+        ax.scatter(coordenadas_x, coordenadas_y, coordenadas_z, c=coordenadas_z, cmap='hot') # Grafica
         
         # Estetica
-
-
         ax.set_xlim(min(coordenadas_x), max(coordenadas_x)) 
-        ax.set_ylim(min(coordenadas_y), max(coordenadas_y))        # Los ejes en funcion del mapa descubierto
+        ax.set_ylim(min(coordenadas_y), max(coordenadas_y)) # Los ejes en funcion del mapa descubierto
         ax.set_zlim(min(coordenadas_z), max(coordenadas_z))
 
+        # Rotulos
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
-
-      
-
         
         ax.view_init(elev=10, azim=self.angulo)
         self.angulo += 2.5 # Grados de rotacion del grafico por iteracion.

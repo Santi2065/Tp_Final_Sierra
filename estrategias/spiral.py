@@ -43,6 +43,7 @@ def spiral(team: Team) -> None:
 
         # Usando el nuevo theta, calcula el proximo punto
         for hiker, offset in zip(hikers, offsets):
+
             next_theta = hikers_thetas[hiker.nombre]
 
             # Formula del espiral es r = a + b * theta, a = 0
@@ -121,7 +122,6 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
     # Corre mientras el valor de theta2 no este en el margen de error para la distancia
     while not (higher > distance1 > lower):
         distance2 = integral(theta2 + change, b) - integral1
-
 
         if distance2 < lower or higher > distance2 > lower:
             distance1 = distance2

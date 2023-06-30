@@ -547,12 +547,14 @@ def main():
         ip, puerto = args.ip.split(":")
         try:
             client = MountainClient(ip, int(puerto))
+            client.get_data()
         except:
             print("No se pudo establecer conexion con el servidor, intente de nuevo")
             exit()
     else:
         try:
             client = MountainClient()
+            client.get_data()
         except:
             print("No se pudo establecer una conexion con el servidor local, intente de nuevo")
             exit()
