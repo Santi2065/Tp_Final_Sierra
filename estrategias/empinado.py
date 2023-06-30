@@ -70,7 +70,7 @@ def empinado(team:Team):
 
         team.move_all() # Todos avanzan.
 
-    team.all_go_to_point(flag) # Todos van hacia la bandera.
+    team.all_go_to_point(flag,True) # Todos van hacia la bandera.
     # Hasta que no termine, caminan hasta el pico
     while not team.comms.is_over():
         info = team.comms.get_data()
