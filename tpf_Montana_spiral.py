@@ -114,7 +114,6 @@ def estimate_theta2(theta1: float, b: float, distance: float) -> float:
     # Representa la mejor distancia conseguida sin pasarse del valor maximo del margen
     distance1 = 0
 
-    # Fijarse si este if esta al pedo, tal vez distance1 tambien
     if higher > integral(theta2 + change, b) - integral1 > lower:
         return theta2 + change
 

@@ -510,31 +510,34 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                 pos.configure(text = f"Posicion: x: {self.coords[team_name][hiker]['x'][-1]:8.1f}\n               y: {self.coords[team_name][hiker]['y'][-1]:8.1f}")
                 altura.configure(text = f"Altura: {self.coords[team_name][hiker]['z'][-1]:8.1f}")
                 cima.configure(text = f"Cima: {self.data[team_name][hiker]['cima']}")
+        
         while True:
             if self.estado_grafico == "2D":
                 if i != 0:
                     cuadro_graf = FigureCanvasTkAgg(self.graph.fig1, master = self)
+                    cuadro_graf.draw()
+                    cuadro_graf.get_tk_widget().place(x=201, y=150)
                     i = 0
-                self.graph.graf_2d(self.actual_team, self.hiker_colors)
-                cuadro_graf.draw()
-                cuadro_graf.get_tk_widget().place(x=201, y=150)
+                #self.graph.graf_2d(self.actual_team, self.hiker_colors)
+                
+                
 
             elif self.estado_grafico == "3D":
                 if i != 1:
                     cuadro_graf = FigureCanvasTkAgg(self.graph.fig3, master = self)
+                    cuadro_graf.get_tk_widget().place(x=201, y=150)
                     i = 1
-                self.graph.graf_3d(self.actual_team)
+                self.graph.graf_3d(self.actual_team, True)
                 cuadro_graf.draw()
-                cuadro_graf.get_tk_widget().place(x=201, y=150)
 
 
             elif self.estado_grafico == "Heat":
                 if i != 2:
                     cuadro_graf = FigureCanvasTkAgg(self.graph.fig2, master = self)
+                    self.graph.heat_map()
+                    cuadro_graf.draw()
+                    cuadro_graf.get_tk_widget().place(x=201, y=150)
                     i = 2
-                self.graph.heat_map()
-                cuadro_graf.draw()
-                cuadro_graf.get_tk_widget().place(x=201, y=150)
 
             
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------

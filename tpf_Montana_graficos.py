@@ -156,7 +156,7 @@ class Graficador:
         ax.set_xlabel('X')
         ax.set_ylabel('Y')        
     
-    def graf_3d(self, nombre_equipo: str) -> None:
+    def graf_3d(self, nombre_equipo: str, terminado=False) -> None:
         """
         Proyecta un grafico tridimensional actualizdo en tiempo real de la posicion actual de todos los jugadores.
         
@@ -165,7 +165,12 @@ class Graficador:
         """
 
         fig, ax = self.fig3, self.ax3
+        
+        ax.view_init(elev=10, azim=self.angulo)
+        self.angulo += 2.5 # Grados de rotacion del grafico por iteracion.
 
+        if terminado:
+            return
 
         side = ((4.05 - 3) / 2) / 4.05
 
@@ -207,8 +212,7 @@ class Graficador:
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
         
-        ax.view_init(elev=10, azim=self.angulo)
-        self.angulo += 2.5 # Grados de rotacion del grafico por iteracion.
+        
     
   
                       
