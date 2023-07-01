@@ -29,8 +29,8 @@ def main():
             print("No se pudo establecer una conexion con el servidor local, intente de nuevo")
             exit()
 
-    team_name = 'Los finos'
-    names = ['♥', '♦', '♣', '♠']
+    team_name = 'Los cracks'
+    names = ['Santi', 'Gian', 'Joaco', 'Pipe']
     hikers = [Hiker(name, team_name, c) for name in names]
     team = Team(team_name, hikers, c)
     
