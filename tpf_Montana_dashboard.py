@@ -511,9 +511,11 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                 altura.configure(text = f"Altura: {self.coords[team_name][hiker]['z'][-1]:8.1f}")
                 cima.configure(text = f"Cima: {self.data[team_name][hiker]['cima']}")
         
+        displayed_team = self.actual_team
         while True:
             time.sleep(self.time_step/1000)
-            if self.estado_grafico == "2D" and i != 0:
+            if (self.estado_grafico == "2D" and i != 0) or (i == 0 and displayed_team != self.actual_team):
+                displayed_team = self.actual_team
                 self.graph.graf_2d(self.actual_team, self.hiker_colors)
                 cuadro_graf = FigureCanvasTkAgg(self.graph.fig1, master = self)
                 cuadro_graf.draw()
@@ -521,9 +523,11 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                 i = 0
 
             elif self.estado_grafico == "3D":
-                if i != 1:
+                if i != 1 or displayed_team != self.actual_team:
+                    displayed_team = self.actual_team
                     cuadro_graf = FigureCanvasTkAgg(self.graph.fig3, master = self)
                     cuadro_graf.get_tk_widget().place(x=201, y=150)
+                    self.graph.graf_3d(self.actual_team)
                     i = 1
                 self.graph.graf_3d(self.actual_team, True)
                 cuadro_graf.draw()
