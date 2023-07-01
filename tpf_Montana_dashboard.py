@@ -512,15 +512,13 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                 cima.configure(text = f"Cima: {self.data[team_name][hiker]['cima']}")
         
         while True:
-            if self.estado_grafico == "2D":
-                if i != 0:
-                    cuadro_graf = FigureCanvasTkAgg(self.graph.fig1, master = self)
-                    cuadro_graf.draw()
-                    cuadro_graf.get_tk_widget().place(x=201, y=150)
-                    i = 0
-                #self.graph.graf_2d(self.actual_team, self.hiker_colors)
-                
-                
+            time.sleep(self.time_step/1000)
+            if self.estado_grafico == "2D" and i != 0:
+                self.graph.graf_2d(self.actual_team, self.hiker_colors)
+                cuadro_graf = FigureCanvasTkAgg(self.graph.fig1, master = self)
+                cuadro_graf.draw()
+                cuadro_graf.get_tk_widget().place(x=201, y=150)
+                i = 0
 
             elif self.estado_grafico == "3D":
                 if i != 1:
@@ -546,11 +544,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", help = "Ingrese el ip con el puerto ej: 192.168.1.1:8080", type = str)
     args = parser.parse_args()
+
     if args.ip:
         ip, puerto = args.ip.split(":")
         try:
             client = MountainClient(ip, int(puerto))
             client.get_data()
+            print('Se establecio correctamente una conexion con el servidor.')
         except:
             print("No se pudo establecer conexion con el servidor, intente de nuevo")
             exit()
@@ -558,6 +558,7 @@ def main():
         try:
             client = MountainClient()
             client.get_data()
+            print('Se establecio correctamente una conexion con el servidor local.')
         except:
             print("No se pudo establecer una conexion con el servidor local, intente de nuevo")
             exit()

@@ -14,8 +14,9 @@ def main():
     if args.ip:
         ip, puerto = args.ip.split(":")
         try:
-            c = MountainClient(ip, int(puerto))
-            c.get_data()
+            client = MountainClient(ip, int(puerto))
+            client.get_data()
+            print('Se establecio correctamente una conexion con el servidor.')
         except:
             print("No se pudo establecer conexion con el servidor, intente de nuevo")
             exit()
@@ -23,12 +24,13 @@ def main():
         try:
             c = MountainClient()
             c.get_data()
+            print('Se establecio correctamente una conexion con el servidor local.')
         except:
             print("No se pudo establecer una conexion con el servidor local, intente de nuevo")
             exit()
 
-    team_name = 'Los cracks'
-    names = ['Gian', 'Pipe', 'Santi', 'Joaco']
+    team_name = 'mama de pipe 🔥'
+    names = ['🔥', '🔥🔥', '🔥🔥🔥', '🔥🔥🔥🔥']
     hikers = [Hiker(name, team_name, c) for name in names]
     team = Team(team_name, hikers, c)
     
@@ -42,7 +44,7 @@ def main():
         time.sleep(0.01)
         continue
 
-    print('Haciendo estrategia')
+    print('Haciendo estrategia    ')
     estrategia(team)
 
     
