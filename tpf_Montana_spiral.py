@@ -18,8 +18,6 @@ def spiral(team: Team) -> None:
     # Se dirige al origen
     team.all_go_to_point((0, 0))
 
-    print('llegue a (0, 0)')
-
     # Angulos iniciales para que queden separados uniformemente
     offsets = [(2*math.pi / len(names)) * i for i in range(len(names))]
 

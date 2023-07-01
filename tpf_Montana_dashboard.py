@@ -510,7 +510,8 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                 pos.configure(text = f"Posicion: x: {self.coords[team_name][hiker]['x'][-1]:8.1f}\n               y: {self.coords[team_name][hiker]['y'][-1]:8.1f}")
                 altura.configure(text = f"Altura: {self.coords[team_name][hiker]['z'][-1]:8.1f}")
                 cima.configure(text = f"Cima: {self.data[team_name][hiker]['cima']}")
-        
+
+
         displayed_team = self.actual_team
         while True:
             time.sleep(self.time_step/1000)
@@ -531,7 +532,6 @@ f' __{e}\n ║║{b}██▄▄    ▄▄██▄▄ {e}\n ║║{b}███�
                     i = 1
                 self.graph.graf_3d(self.actual_team, True)
                 cuadro_graf.draw()
-
 
             elif self.estado_grafico == "Heat":
                 if i != 2:
