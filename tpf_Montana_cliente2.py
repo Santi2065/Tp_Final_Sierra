@@ -14,8 +14,8 @@ def main():
     if args.ip:
         ip, puerto = args.ip.split(":")
         try:
-            client = MountainClient(ip, int(puerto))
-            client.get_data()
+            c = MountainClient(ip, int(puerto))
+            c.get_data()
             print('Se establecio correctamente una conexion con el servidor.')
         except:
             print("No se pudo establecer conexion con el servidor, intente de nuevo")
@@ -45,7 +45,7 @@ def main():
         time.sleep(0.01)
         continue
 
-    print('Haciendo estrategia    ')
+    print('Haciendo estrategia     ')
     estrategia(team)
 
 
